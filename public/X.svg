@@ -1,0 +1,27 @@
+<svg width="1384" height="1415" viewBox="0 0 1384 1415" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g opacity="0.5" filter="url(#filter0_d_1188_196)">
+<path d="M1320.09 12.1855C1348.43 12.1855 1350.01 45.7341 1335.84 63.4898L937.784 571.053L790.881 379.042L1050.88 39.8044C1063.47 22.0535 1076.07 12.1855 1101.26 12.1855H1320.09Z" fill="url(#paint0_linear_1188_196)"/>
+<path d="M321.92 12.1855C347.108 12.1866 359.706 22.0497 372.3 39.8044L1357.87 1341.88C1372.04 1359.64 1370.48 1393.18 1342.15 1393.19H1113.86C1088.67 1393.19 1076.07 1383.32 1061.9 1365.57L687.177 868.399L310.902 1365.57C296.734 1383.32 285.706 1393.18 260.522 1393.19H40.0961C11.7566 1393.19 11.7539 1359.64 25.9236 1341.88L539.191 673.1L76.304 63.4898C62.1342 45.7341 63.7143 12.1855 92.0537 12.1855H321.92Z" fill="url(#paint1_linear_1188_196)"/>
+</g>
+<defs>
+<filter id="filter0_d_1188_196" x="0.000212431" y="-0.000234365" width="1383.23" height="1414.23" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="3.3234" operator="erode" in="SourceAlpha" result="effect1_dropShadow_1188_196"/>
+<feOffset dy="4.43119"/>
+<feGaussianBlur stdDeviation="9.97019"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.639141 0 0 0 0 0.954893 0 0 0 0 1 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1188_196"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1188_196" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_1188_196" x1="16.6172" y1="1224.69" x2="1168.43" y2="1508.23" gradientUnits="userSpaceOnUse">
+<stop offset="0.55" stop-color="#021118"/>
+<stop offset="1" stop-color="#002E43"/>
+</linearGradient>
+<linearGradient id="paint1_linear_1188_196" x1="16.6172" y1="1224.69" x2="1168.43" y2="1508.23" gradientUnits="userSpaceOnUse">
+<stop offset="0.55" stop-color="#021118"/>
+<stop offset="1" stop-color="#002E43"/>
+</linearGradient>
+</defs>
+</svg>
