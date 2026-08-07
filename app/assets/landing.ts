@@ -38,6 +38,7 @@ if (toggle) {
   })
 }
 
+
 gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin)
 
 const DIST = { card: 26, section: 32, lateral: 36 }
@@ -176,6 +177,30 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     })
   })
 })
+
+// --- réplica da plataforma (seção 02) -----------------------------------
+// Troca de telas do app-demo: [data-app-nav data-target] ativa o
+// [data-app-screen] correspondente e sincroniza o estado de todos os
+// controles que apontam para a mesma tela (pills, sidebar, botões).
+const appDemo = document.querySelector<HTMLElement>('[data-app-demo]')
+if (appDemo) {
+  const telas = Array.from(appDemo.querySelectorAll<HTMLElement>('[data-app-screen]'))
+  const controles = Array.from(appDemo.querySelectorAll<HTMLElement>('[data-app-nav]'))
+  const mostrar = (id: string) => {
+    telas.forEach((tela) => {
+      tela.dataset.on = tela.dataset.appScreen === id ? 'true' : 'false'
+    })
+    controles.forEach((c) => {
+      c.dataset.on = c.dataset.target === id ? 'true' : 'false'
+    })
+  }
+  controles.forEach((c) => {
+    c.addEventListener('click', () => {
+      const alvo = c.dataset.target
+      if (alvo) mostrar(alvo)
+    })
+  })
+}
 
 // --- hero carrossel (/v2) -----------------------------------------------
 // Port do hero React/framer-motion: autoplay com barra de progresso em rAF,
