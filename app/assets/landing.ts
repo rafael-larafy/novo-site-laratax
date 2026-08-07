@@ -124,7 +124,9 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
   })
 
   // Linha de progresso da timeline: desenha com o scroll (scaleY, sem pin).
+  // A linha do "Como funciona" fica de fora — o bloco data-steps-pin cuida dela.
   document.querySelectorAll<HTMLElement>('[data-progress-line]').forEach((line) => {
+    if (line.closest('[data-steps-pin]')) return
     gsap.fromTo(
       line,
       { scaleY: 0 },
@@ -177,6 +179,44 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     })
   })
 })
+
+// --- como funciona: scroll lateral dos passos 1→7 -------------------------
+// O trilho é um overflow-x nativo (swipe no mobile, funciona sem JS); no
+// desktop a seção pina e o scroll vertical vira scroll lateral via GSAP.
+// Marcação (data-on / data-now) e linha reagem ao scroll real do trilho,
+// então valem para o pin e para o swipe.
+const stepsWrap = document.querySelector<HTMLElement>('[data-steps-pin]')
+const trilho = stepsWrap?.querySelector<HTMLElement>('ol')
+if (stepsWrap && trilho) {
+  const passos = Array.from(trilho.querySelectorAll<HTMLElement>(':scope > li'))
+  const linha = stepsWrap.querySelector<HTMLElement>('[data-progress-line]')
+  const sobra = () => trilho.scrollWidth - trilho.clientWidth
+  const pintar = () => {
+    const max = sobra()
+    const p = max > 0 ? trilho.scrollLeft / max : 1
+    const n = Math.min(passos.length - 1, Math.floor(p * passos.length))
+    passos.forEach((el, i) => {
+      el.dataset.on = i <= n ? 'true' : 'false'
+      el.dataset.now = i === n ? 'true' : 'false'
+    })
+    if (linha) linha.style.transform = `scaleX(${p})`
+  }
+  trilho.addEventListener('scroll', pintar, { passive: true })
+  pintar()
+  mm.add('(min-width: 721px) and (prefers-reduced-motion: no-preference)', () => {
+    ScrollTrigger.create({
+      trigger: stepsWrap,
+      start: 'center center',
+      end: () => '+=' + sobra(),
+      pin: true,
+      scrub: true,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        trilho.scrollLeft = self.progress * sobra()
+      },
+    })
+  })
+}
 
 // --- réplica da plataforma (seção 02) -----------------------------------
 // Troca de telas do app-demo: [data-app-nav data-target] ativa o

@@ -529,22 +529,10 @@ function ConexaoCotovelo(id: string) {
 
 // ponytail: logo em texto estilizado; trocar pelos letterforms do Figma se
 // virarem asset no repo.
-function Logo() {
+export function Logo() {
   return (
-    <p
-      mix={css({
-        margin: 0,
-        padding: '16px 0',
-        fontSize: '20px',
-        fontWeight: 800,
-        letterSpacing: '-0.02em',
-        lineHeight: 1,
-        color: A.navy,
-      })}
-    >
-      LaraTA<span mix={css({ color: A.cyanVivo })}>X</span>
-    </p>
-  )
+    <img src="/logo-laratax.svg" alt="Logo LaraTAX" mix={css({ display:'flex',width:'70%' , padding:'10px'})} />
+  );
 }
 
 function BuscaSidebar() {

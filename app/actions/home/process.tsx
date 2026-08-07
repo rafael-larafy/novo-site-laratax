@@ -36,39 +36,42 @@ export function Process() {
         <h2 data-reveal="" mix={heading2}>
           Da procuração ao crédito recuperado
         </h2>
-        <div mix={css({ position: 'relative', margin: '56px 0 0', paddingLeft: '22px' })}>
+        <div data-steps-pin="" mix={css({ margin: '56px 0 0' })}>
           <div
             data-progress-line=""
             aria-hidden="true"
             mix={css({
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              width: '2px',
-              height: '100%',
+              height: '2px',
               borderRadius: '2px',
               background: COLORS.cyanBright,
-              transformOrigin: 'top',
+              transformOrigin: 'left',
+              marginBottom: '20px',
             })}
           />
           <ol
             role="list"
-            data-stagger=""
             mix={css({
               margin: 0,
               padding: 0,
               listStyle: 'none',
               display: 'flex',
-              flexDirection: 'column',
               gap: '12px',
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+              '&::-webkit-scrollbar': { display: 'none' },
             })}
           >
           {STEPS.map((step, i) => (
             <li
               mix={css({
+                flex: '0 0 min(400px, 82vw)',
                 background: 'var(--surface-3)',
                 borderRadius: '12px',
                 padding: '20px 24px',
+                // Estados do scrub 1→7 (landing.ts): sem JS ninguém dim.
+                transition: 'opacity 350ms ease, box-shadow 350ms ease',
+                '&[data-on="false"]': { opacity: 0.35 },
+                '&[data-now="true"]': { boxShadow: 'inset 2px 0 0 var(--accent)' },
                 '@media (max-width: 720px)': { padding: '18px' },
               })}
             >
