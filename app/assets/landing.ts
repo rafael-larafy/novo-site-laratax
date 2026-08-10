@@ -400,3 +400,18 @@ if (dockItems.length && 'IntersectionObserver' in window) {
     })
   }
 }
+
+// viewport cravado
+
+const vv = window.visualViewport
+const header = document.querySelector<HTMLElement>('header')
+const dock = document.querySelector<HTMLElement>('data-floating-dock')
+if (vv && dock) {
+  const colar = () => {
+  if (header) header.style.transform = `(translateY(${vv.offsetTop}px)`
+  const sobra = window.innerHeight - vv.height - vv.offsetTop
+  dock.style.transform = `translateY(${-sobra}px)`
+}
+vv.addEventListener('resize', colar)
+vv.addEventListener('scroll', colar)
+}
