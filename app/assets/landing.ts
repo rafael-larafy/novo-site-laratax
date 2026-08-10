@@ -180,11 +180,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
   })
 })
 
-// --- como funciona: scroll lateral dos passos 1→7 -------------------------
-// O trilho é um overflow-x nativo (swipe no mobile, funciona sem JS); no
-// desktop a seção pina e o scroll vertical vira scroll lateral via GSAP.
-// Marcação (data-on / data-now) e linha reagem ao scroll real do trilho,
-// então valem para o pin e para o swipe.
+// scroll lateral dos passos 1→7 .
 const stepsWrap = document.querySelector<HTMLElement>('[data-steps-pin]')
 const trilho = stepsWrap?.querySelector<HTMLElement>('ol')
 if (stepsWrap && trilho) {
@@ -205,7 +201,7 @@ if (stepsWrap && trilho) {
   pintar()
   mm.add('(min-width: 721px) and (prefers-reduced-motion: no-preference)', () => {
     ScrollTrigger.create({
-      trigger: stepsWrap,
+      trigger: stepsWrap.closest('section') ?? stepsWrap,
       start: 'center center',
       end: () => '+=' + sobra(),
       pin: true,
