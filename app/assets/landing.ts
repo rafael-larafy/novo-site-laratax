@@ -91,8 +91,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     })
   }
 
-  // Cards escalonados: o container marca data-stagger; batch agrupa só os
-  // filhos que entram juntos no viewport (2ª linha não espera a 1ª).
+
   ScrollTrigger.batch('[data-stagger] > *', {
     start: 'top 85%',
     once: true,
@@ -107,8 +106,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       }),
   })
 
-  // Parallax SÓ em decoração (dots, glows, diagramas): data-parallax="-10"
-  // = yPercent ao longo da passagem da seção inteira pelo viewport.
+
   gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((el) => {
     gsap.to(el, {
       yPercent: parseFloat(el.dataset.parallax || '-10'),

@@ -86,6 +86,7 @@ export function Reforma() {
           </p>
           <ul
             role="list"
+            data-stagger=""
             mix={css({
               listStyle: 'none',
               margin: '0 0 40px',

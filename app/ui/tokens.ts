@@ -1,26 +1,20 @@
 import { css } from 'remix/ui'
 
-// Cores fixas da marca — as que NÃO mudam com o tema (logo, botão primário,
-// grafismos ciano). Valores extraídos do laratax.com.br em produção.
-// Tudo que depende de tema vem das variáveis em theme.ts.
 export const COLORS = {
   navy: '#002E43',
   cyan: '#00C2EF',
   cyanBright: '#07E0FF',
-  white: '#F5FFFD', // off-white da marca, não o branco puro
+  white: '#F5FFFD', 
   ink: '#021118',
 }
 
 export const FONT_SANS =
   "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-// Kode Mono é a mono da marca (eyebrows e números grandes no site atual).
+
 export const FONT_MONO =
   "'Kode Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace"
 
-// Superfícies por PAPEL, não por cor: uma seção declara se é a página (base)
-// ou um bloco de pontuação (contrast), e o tema resolve as cores.
-// Ambas mapeiam para o mesmo conjunto de variáveis locais, então os mixins
-// compartilhados e os componentes funcionam nos dois contextos sem alteração.
+
 export const surfaceBase = css({
   '--surface': 'var(--t-base-bg)',
   '--surface-2': 'var(--t-base-bg-2)',
@@ -61,7 +55,7 @@ export const container = css({
 export const section = css({
   padding: '112px 0',
   position: 'relative',
-  scrollMarginTop: '84px', // header fixo de 68px + folga, para âncoras #...
+  scrollMarginTop: '84px', 
   '@media (max-width: 720px)': { padding: '72px 0' },
 })
 
@@ -72,9 +66,8 @@ export const darkPanel = css({
   '@media (max-width: 720px)': { borderRadius: '20px', padding: '56px 24px' },
 })
 
-// Rótulo pequeno em mono uppercase, estilo williamsgptech.
-// Kode Mono 14px/600 com 2px de tracking — o mesmo do "1º Robô Tributário do
-// Brasil" no site atual.
+
+
 export const eyebrow = css({
   margin: '0 0 20px',
   fontFamily: FONT_MONO,
@@ -95,8 +88,6 @@ export const eyebrow = css({
   },
 })
 
-// H2 do site atual: 48px, peso 700, line-height 1.0 e tracking normal.
-// Uso 1.05 porque maiúsculas acentuadas (Ç/Ã) encostam com 1.0.
 export const heading2 = css({
   margin: '0 0 16px',
   fontSize: 'clamp(30px, 4.2vw, 48px)',
