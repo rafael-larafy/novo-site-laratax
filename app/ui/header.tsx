@@ -18,6 +18,7 @@ export function Header() {
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         borderBottom: '1px solid var(--line)',
+        '@media (max-width:860px)' : {position: 'absolute'}
       })}
     >
       <div

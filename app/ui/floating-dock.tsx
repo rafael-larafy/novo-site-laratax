@@ -76,7 +76,7 @@ const DOCK_ITEMS = [
 const dockShell = css({
   position: 'fixed',
   left: 0,
-  right: 0,
+  right: 12,
   bottom: 'calc(12px + env(safe-area-inset-bottom))',
   zIndex: 90,
   display: 'flex',
@@ -88,16 +88,16 @@ const dockShell = css({
 const dockBar = css({
   pointerEvents: 'auto',
   display: 'flex',
-  alignItems: 'end',
+  alignItems: 'center',
   gap: '8px',
-  padding: '10px 14px 12px',
+  padding: '10px 12px 12px',
   borderRadius: '22px',
   border: '1px solid var(--line)',
   background: 'color-mix(in srgb, var(--t-header-bg) 92%, transparent)',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
   boxShadow: '0 10px 40px rgba(1, 46, 67, 0.14)',
-  '@media(max-width: 480 px)': {gap:'6px', padding: '8px 10px 10px'}
+  '@media(max-width:80px)': {gap:'6px', padding: '8px 10px 10px'}
 })
 
 const dockItem = css({
