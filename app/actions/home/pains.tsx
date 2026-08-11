@@ -4,10 +4,10 @@ import {
   FONT_MONO,
   card,
   container,
-  darkPanel,
   eyebrow,
   heading2,
   section,
+  stage,
   surfaceContrast,
 } from '../../ui/tokens.ts'
 
@@ -32,19 +32,18 @@ const PAINS = [
 
 export function Pains() {
   return () => (
-    <section id="problema" mix={section}>
-      <div mix={container}>
+    <section id="problema" mix={css({padding:'12px 0', scrollMarginTop:'84px'})}>
         <div
           mix={[
             surfaceContrast,
-            darkPanel,
+            stage,
             css({
               backgroundImage:
                 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(7,224,255,0.07), transparent 70%)',
-              borderTop: '1px solid rgba(7,224,255,0.18)',
             }),
           ]}
         >
+        <div mix={container}>
           <p mix={eyebrow}>01 / O problema</p>
           <h2 data-reveal="" mix={heading2}>
             A rotina fiscal manual não escala
@@ -118,6 +117,6 @@ export function Pains() {
           </div>
         </div>
       </div>
-    </section>
+      </section>
   )
 }

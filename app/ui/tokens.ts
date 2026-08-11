@@ -66,6 +66,15 @@ export const darkPanel = css({
   '@media (max-width: 720px)': { borderRadius: '20px', padding: '56px 24px' },
 })
 
+export const stage = css ({
+  width:'min(1360px, calc(100% - 32px))',
+  margin:'0 auto',
+  borderRadius:'clamp(20px, 2.5vw,32px)',
+  overflow:'hidden',
+  padding:'96px 0',
+  border:'1px solid rgba (7,224,255,0.14)',
+  '@media (max-width:720px)':{padding: '64px 0'},
+})
 
 
 export const eyebrow = css({
