@@ -288,6 +288,8 @@ const appBody = css({
   display: 'flex',
   alignItems: 'stretch',
   minWidth: '1366px',
+  // janela fixa no frame do Figma (1366×768): telas maiores rolam por dentro
+  height: '768px',
   zoom: 0.84,
   color: A.text,
   fontSize: '14px',
@@ -295,7 +297,13 @@ const appBody = css({
   textAlign: 'left',
 })
 
-const telaRaiz = css({ display: 'flex', width: '100%', background: A.bg })
+const telaRaiz = css({
+  display: 'flex',
+  width: '100%',
+  height: '100%',
+  overflowY: 'auto',
+  background: A.bg,
+})
 
 // coluna de conteúdo: painel branco flutuando à direita do menu
 const colConteudo = css({
@@ -618,6 +626,10 @@ function SidebarPrincipal(ativo: 'inicio' | 'projetos') {
       mix={css({
         width: '290px',
         flexShrink: 0,
+        // gruda no topo enquanto o conteúdo rola dentro da janela de 768px
+        position: 'sticky',
+        top: 0,
+        height: '768px',
         display: 'flex',
         flexDirection: 'column',
         gap: '24px',
