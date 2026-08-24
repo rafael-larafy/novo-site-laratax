@@ -230,6 +230,79 @@ if (appDemo) {
     c.addEventListener('click', () => {
       const alvo = c.dataset.target
       if (alvo) mostrar(alvo)
+      // atalho opcional: além de trocar a tela, abre uma aba interna dela
+      // (ex.: card "Usuários" do início → Configurações já na aba Usuários)
+      const aba = c.dataset.abaAlvo
+      if (alvo && aba) {
+        appDemo
+          .querySelector<HTMLElement>(`[data-app-screen="${alvo}"] [data-sub-nav][data-sub-target="${aba}"]`)
+          ?.click()
+      }
+    })
+  })
+
+  // Modais globais da janela: [data-modal-abre="id"] liga o [data-app-modal="id"]
+  // por cima da tela atual (sem navegar); [data-modal-fecha] desliga todos.
+  const modais = Array.from(appDemo.querySelectorAll<HTMLElement>('[data-app-modal]'))
+  appDemo.querySelectorAll<HTMLElement>('[data-modal-abre]').forEach((b) => {
+    b.addEventListener('click', () => {
+      modais.forEach((m) => {
+        m.dataset.on = m.dataset.appModal === b.dataset.modalAbre ? 'true' : 'false'
+      })
+    })
+  })
+  appDemo.querySelectorAll<HTMLElement>('[data-modal-fecha]').forEach((b) => {
+    b.addEventListener('click', () => {
+      modais.forEach((m) => {
+        m.dataset.on = 'false'
+      })
+    })
+  })
+
+  // Expandir: fullscreen nativo no demo inteiro (o botão continua visível e
+  // vira "Sair"; Esc também sai). O zoom encaixa a altura de 1038 na tela e a
+  // LARGURA da janela cresce para preencher o monitor — os layouts internos
+  // são fluidos, então as telas adaptam como app responsivo (sem tarja lateral).
+  const expandir = appDemo.querySelector<HTMLElement>('[data-app-expandir]')
+  const corpoApp = appDemo.querySelector<HTMLElement>('[data-app-body]')
+  const rotuloExpandir = appDemo.querySelector<HTMLElement>('[data-app-expandir-rotulo]')
+  if (expandir && corpoApp) {
+    if (!document.fullscreenEnabled) expandir.style.display = 'none'
+    expandir.addEventListener('click', () => {
+      if (document.fullscreenElement) document.exitFullscreen()
+      else appDemo.requestFullscreen().catch(() => {})
+    })
+    document.addEventListener('fullscreenchange', () => {
+      const cheio = document.fullscreenElement === appDemo
+      if (cheio) {
+        const zoom = (window.innerHeight - 96) / 1038
+        corpoApp.style.setProperty('zoom', String(zoom))
+        // largura pós-zoom = tela inteira (menos o padding do fullscreen)
+        corpoApp.style.width = Math.max(1845, Math.floor((window.innerWidth - 48) / zoom)) + 'px'
+      } else {
+        corpoApp.style.setProperty('zoom', '')
+        corpoApp.style.width = ''
+      }
+      if (rotuloExpandir) rotuloExpandir.textContent = cheio ? 'Sair' : 'Expandir'
+    })
+  }
+
+  // Abas internas de uma tela (detalhe de projeto): [data-sub-nav] ativa o
+  // [data-sub-screen] do MESMO [data-sub-scope]; escopos aninham (abas do topo
+  // > categorias laterais) sem vazar um no outro.
+  appDemo.querySelectorAll<HTMLElement>('[data-sub-scope]').forEach((scope) => {
+    const donos = (el: HTMLElement) => el.parentElement?.closest('[data-sub-scope]') === scope
+    const botoes = Array.from(scope.querySelectorAll<HTMLElement>('[data-sub-nav]')).filter(donos)
+    const paineis = Array.from(scope.querySelectorAll<HTMLElement>('[data-sub-screen]')).filter(donos)
+    botoes.forEach((b) => {
+      b.addEventListener('click', () => {
+        botoes.forEach((x) => {
+          x.dataset.on = x === b ? 'true' : 'false'
+        })
+        paineis.forEach((p) => {
+          p.dataset.on = p.dataset.subScreen === b.dataset.subTarget ? 'true' : 'false'
+        })
+      })
     })
   })
 }
