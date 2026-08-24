@@ -87,7 +87,7 @@ export function CaseStudy() {
         >
           <article data-reveal-left="" mix={card}>
             <h3 mix={[cardTitle, css({ color: 'var(--muted)' })]}>Análise tradicional</h3>
-            <dl mix={css({ margin: 0 })}>
+            <dl data-stagger="" mix={css({ margin: 0 })}>
               {TRADITIONAL.map((row) => (
                 <div mix={rowItem}>
                   <dt mix={rowLabel}>{row.label}</dt>

@@ -8,21 +8,21 @@ import {
   eyebrow,
   heading2,
   lead,
-  section,
+  stage,
   surfaceContrast,
 } from '../../ui/tokens.ts'
 
 export function FinalCta() {
   return () => (
     <section
-      id="contato"
+      id="contato" mix={css({padding:'12px 0', scrollMarginTop:'84px'})}>
+      <div
       mix={[
-        section,
         surfaceContrast,
+        stage,
         css({
           backgroundImage:
             'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(7,224,255,0.07), transparent 70%)',
-          borderTop: '1px solid rgba(7,224,255,0.18)',
         }),
       ]}
     >
@@ -93,6 +93,7 @@ export function FinalCta() {
           </div>
         </div>
       </div>
+    </div>
     </section>
   )
 }

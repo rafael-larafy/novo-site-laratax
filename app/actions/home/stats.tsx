@@ -69,7 +69,7 @@ export function Stats() {
           Dados falam mais que palavras
         </h2>
         <div
-          data-reveal=""
+          data-stagger=""
           mix={css({
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',

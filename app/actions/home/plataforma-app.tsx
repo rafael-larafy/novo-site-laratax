@@ -1,14 +1,9 @@
 import { css } from 'remix/ui'
 
 import { FONT_MONO } from '../../ui/tokens.ts'
+import button from 'remix/ui/button';
+import { buttonStyle } from 'remix/ui/menu';
 
-// Réplica navegável da plataforma (app.laratax.com.br) com dados fictícios,
-// replicando 1:1 os frames do Figma "Motions": Home (78:18822), Projects - All
-// (78:10268), Create Project (78:9274) e Analytics - Reforma - Dashboard Geral
-// (78:14474). Paleta, ícones (SVGs exportados do arquivo) e medidas vêm do
-// design system oficial. Estudo do produto em docs/estudo-plataforma.md.
-// Navegação: [data-app-nav data-target] troca [data-app-screen] via landing.ts;
-// sem JS a Visão geral fica estática.
 
 // Paleta oficial do design system (variáveis do arquivo Figma)
 const A = {
@@ -150,12 +145,11 @@ type Projeto = {
   status: string
   cor: 'verde' | 'laranja' | 'vermelho' | 'neutro'
   marca: 'diagnostico' | 'baixa'
-  abreReforma?: boolean
 }
 
 const PROJETOS: Projeto[] = [
   { data: '31/12/2023', hora: '12:47h', grupo: 'Innovative', empresa: 'Innovative Solutions for Tomorrow Enterprises', cnpj: '12.345.678/0001-90', tipo: 'Baixa de notas fiscais', chips: ["1.128.200 xml's"], status: 'Concluído', cor: 'verde', marca: 'baixa' },
-  { data: '30/11/2023', hora: '09:32h', grupo: 'Synergy', empresa: 'Global Synergy Technologies and Services Inc.', cnpj: '98.765.432/0001-21', de: '01/2020', ate: '02/2025', tipo: 'Diagnóstico tributário', chips: ['Completo'], status: 'Aguardando arquivos', cor: 'laranja', marca: 'diagnostico', abreReforma: true },
+  { data: '30/11/2023', hora: '09:32h', grupo: 'Synergy', empresa: 'Global Synergy Technologies and Services Inc.', cnpj: '98.765.432/0001-21', de: '01/2020', ate: '02/2025', tipo: 'Diagnóstico tributário', chips: ['Completo'], status: 'Aguardando arquivos', cor: 'laranja', marca: 'diagnostico' },
   { data: '29/10/2023', hora: '15:18h', grupo: 'Dynamic Ventures', empresa: 'Dynamic Ventures International Holdings', cnpj: '11.222.333/0001-45', de: '03/2020', ate: '04/2025', tipo: 'Baixa de obrigações acessórias', chips: ['Receita BX', 'e-CAC', 'e-Social'], status: 'Processando...', cor: 'neutro', marca: 'baixa' },
   { data: '28/09/2023', hora: '18:03h', grupo: 'Creative', empresa: 'Creative Minds Digital Agency LLC', cnpj: '22.333.444/0001-67', de: '05/2020', ate: '06/2025', tipo: 'Baixa de obrigações acessórias', chips: ['e-Social'], status: 'Procuração inválida', cor: 'vermelho', marca: 'baixa' },
   { data: '27/08/2023', hora: '07:29h', grupo: 'Nextgen', empresa: 'Nextgen Innovations and Technology Corp.', cnpj: '33.444.555/0001-89', de: '07/2020', ate: '08/2025', tipo: 'Baixa de obrigações acessórias', chips: ['e-CAC', 'e-Social', 'Simples Nacional'], status: 'Falha no processamento', cor: 'vermelho', marca: 'baixa' },
@@ -169,18 +163,18 @@ const PROJETOS: Projeto[] = [
 const NAV_PRINCIPAL: Array<{ label: string; target?: string; icon: IconDef }> = [
   { label: 'Início', target: 'inicio', icon: ICONE.home },
   { label: 'Projetos', target: 'projetos', icon: ICONE.layers },
-  { label: 'Controle PERD/COMP', icon: ICONE.receiptLong },
-  { label: 'Clientes', icon: ICONE.usuarios },
-  { label: 'Configurações', icon: ICONE.config },
-  { label: 'Faturamento', icon: ICONE.dinheiro },
+  { label: 'Controle PER/DCOMP', target: 'perdcomp', icon: ICONE.receiptLong },
+  { label: 'Clientes', target: 'clientes', icon: ICONE.usuarios },
+  { label: 'Configurações', target: 'config', icon: ICONE.config },
+  { label: 'Faturamento', target: 'faturamento', icon: ICONE.dinheiro },
   { label: 'Ajuda e treinamentos', icon: ICONE.ajuda },
 ]
 
-const ACOES_RAPIDAS: Array<{ rotulo: string; target?: string; icon: IconDef }> = [
+const ACOES_RAPIDAS: Array<{ rotulo: string; target?: string; aba?: string; icon: IconDef }> = [
   { rotulo: 'Projetos', target: 'projetos', icon: ICONE.layers },
-  { rotulo: 'Clientes', icon: ICONE.usuarios },
-  { rotulo: 'Faturamento', icon: ICONE.dinheiro },
-  { rotulo: 'Usuários', icon: ICONE.pessoas },
+  { rotulo: 'Clientes', target: 'clientes', icon: ICONE.usuarios },
+  { rotulo: 'Faturamento', target: 'faturamento', icon: ICONE.dinheiro },
+  { rotulo: 'Usuários', target: 'config', aba: 'usuarios', icon: ICONE.pessoas },
 ]
 
 const WIZARD = [
@@ -271,7 +265,7 @@ const MENU_REFORMA: Array<{ label: string; icon: IconDef }> = [
   { label: 'Memória de cálculo', icon: ICONE.menuMemoria },
 ]
 
-// --- estilos base ---------------------------------------------------------
+//  estilos base 
 
 const chrome = css({
   borderRadius: '16px',
@@ -282,26 +276,35 @@ const chrome = css({
   background: A.bg,
 })
 
-// O app é desenhado nos 1366px exatos do Figma e reduzido com zoom para
-// caber na coluna do site sem quebrar as proporções.
 const appBody = css({
   display: 'flex',
   alignItems: 'stretch',
-  minWidth: '1366px',
-  zoom: 0.84,
+  position: 'relative', // âncora dos modais globais
+  minWidth: '1845px',
+  // telas maiores que a janela rolam por dentro, menores esticam
+  height: 'var(--app-h, 1038px)',
+  zoom: 0.62,
   color: A.text,
   fontSize: '14px',
   lineHeight: 1.5,
   textAlign: 'left',
 })
 
-const telaRaiz = css({ display: 'flex', width: '100%', background: A.bg })
+const telaRaiz = css({
+  display: 'flex',
+  width: '100%',
+  height: '100%',
+  overflowY: 'auto',
+  background: A.bg,
+})
 
-// coluna de conteúdo: painel branco flutuando à direita do menu
+
 const colConteudo = css({
   flex: 1,
   minWidth: 0,
   padding: '16px 16px 16px 0',
+  display: 'flex',
+  flexDirection: 'column',
 })
 
 const painel = css({
@@ -310,13 +313,13 @@ const painel = css({
   borderRadius: '6px',
 })
 
-// conteúdo da tela com o degradê ciano no topo
 const painelConteudo = css({
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   gap: '24px',
   padding: '32px',
+  flex: 1,
 })
 
 const degradeTopo = css({
@@ -418,9 +421,7 @@ const inputFake = css({
 
 const num = css({ fontVariantNumeric: 'tabular-nums' })
 
-// --- decorativos (SVGs do arquivo Figma) ----------------------------------
 
-// padrão quadriculado dos cards de ações rápidas (176×100)
 function QuadriculadoCard() {
   return (
     <svg
@@ -596,7 +597,9 @@ function CardTokens() {
       {MarcaToken()}
       <div mix={css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' })}>
         <strong mix={css({ color: '#ffffff', fontSize: '14px', fontWeight: 700 })}>Meus tokens</strong>
-        <span mix={css({ color: A.cyanVivo, fontSize: '14px', fontWeight: 500, cursor: 'pointer' })}>Recarregar</span>
+        <button type="button" data-modal-abre="recarga" mix={css({ border: 'none', background: 'none', padding: 0, font: 'inherit', color: A.cyanVivo, fontSize: '14px', fontWeight: 500, cursor: 'pointer' })}>
+          Recarregar
+        </button>
       </div>
       <div mix={css({ display: 'flex', flexDirection: 'column', gap: '8px', position: 'relative' })}>
         <p mix={[num, css({ margin: 0, display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: A.faint })]}>
@@ -612,12 +615,16 @@ function CardTokens() {
   )
 }
 
-function SidebarPrincipal(ativo: 'inicio' | 'projetos') {
+function SidebarPrincipal(ativo: 'inicio' | 'projetos'| 'perdcomp' | 'clientes' | 'config' | 'faturamento') {
   return (
     <aside
       mix={css({
         width: '290px',
         flexShrink: 0,
+        // gruda no topo enquanto o conteúdo rola dentro da janela
+        position: 'sticky',
+        top: 0,
+        height: 'var(--app-h, 1038px)',
         display: 'flex',
         flexDirection: 'column',
         gap: '24px',
@@ -736,7 +743,7 @@ function LinhaProjeto(p: Projeto) {
           </>
         ) : null}
       </div>
-      <div mix={css({ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '4px', width: '210px', minWidth: '144px', height: '64px', flexShrink: 0 })}>
+      <div mix={css({ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '4px', width: '210px', minWidth: '144px', height: '64px',flex:'0 1 210px'})}>
         <span mix={css({ fontSize: '14px', lineHeight: 1 })}>{p.tipo}</span>
         <span mix={css({ display: 'flex', flexWrap: 'wrap', gap: '4px' })}>
           {p.chips.map((c) => (
@@ -793,21 +800,16 @@ function LinhaProjeto(p: Projeto) {
       {Icone(p.marca === 'diagnostico' ? ICONE.monitorHeart : ICONE.baixando, 20)}
     </span>
   )
-  return p.abreReforma ? (
+  return (
     <button
       type="button"
       data-app-nav=""
-      data-target="reforma"
+      data-target="projetos-detalhe"
       mix={[painel, base, css({ cursor: 'pointer', '&:hover': { borderColor: A.cyan } })]}
     >
       {marca}
       {conteudo}
     </button>
-  ) : (
-    <div mix={[painel, base]}>
-      {marca}
-      {conteudo}
-    </div>
   )
 }
 
@@ -862,7 +864,7 @@ function TelaInicio() {
                   </>
                 )
                 return acao.target ? (
-                  <button type="button" data-app-nav="" data-target={acao.target} mix={[painel, cardCss, css({ cursor: 'pointer', '&:hover': { borderColor: A.cyan } })]}>
+                  <button type="button" data-app-nav="" data-target={acao.target} data-aba-alvo={acao.aba || ''} mix={[painel, cardCss, css({ cursor: 'pointer', '&:hover': { borderColor: A.cyan } })]}>
                     {miolo}
                   </button>
                 ) : (
@@ -872,13 +874,14 @@ function TelaInicio() {
             </div>
           </div>
 
-          <div mix={[painel, css({ position: 'relative' })]}>
+          {/* 4 linhas para a tela fechar em 1038; o painel estica e o botão desce */}
+          <div mix={[painel, css({ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column' })]}>
             <div mix={css({ padding: '18px' })}>
               <p mix={tituloPainel}>Últimos projetos executados</p>
             </div>
-            <div mix={css({ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '0 15.75px 15.75px' })}>
-              {PROJETOS.slice(0, 5).map((p) => LinhaProjeto(p))}
-              <button type="button" data-app-nav="" data-target="projetos" mix={btnContorno}>
+            <div mix={css({ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '0 15.75px 15.75px' })}>
+              {PROJETOS.slice(0, 4).map((p) => LinhaProjeto(p))}
+              <button type="button" data-app-nav="" data-target="projetos" mix={[btnContorno, css({ marginTop: 'auto' })]}>
                 Ver todos os projetos
               </button>
             </div>
@@ -1050,7 +1053,7 @@ function TelaNovoProjeto() {
             </label>
           ))}
         </div>
-        <div mix={css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '48px' })}>
+        <div mix={css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '48px' })}>
           <button type="button" data-app-nav="" data-target="inicio" mix={[btnContorno, css({ background: A.card, color: A.slate, borderColor: A.cinza })]}>
             Sair da criação
             {Icone(ICONE.fechar, 14)}
@@ -1096,7 +1099,7 @@ function SidebarRail() {
         position: 'sticky',
         top: 0,
         alignSelf: 'flex-start',
-        height: '768px',
+        height: 'var(--app-h, 1038px)',
         '@media (max-width: 1023px)': { display: 'none' },
       })}
     >
@@ -1136,6 +1139,25 @@ function SidebarRail() {
 }
 
 function MenuReforma() {
+  const itemMenu = (ativo: boolean) =>
+    css({
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: '8px',
+      padding: '10px 8px',
+      borderRadius: '10px',
+      fontSize: '11px',
+      fontWeight: 600,
+      letterSpacing: '0.02em',
+      textTransform: 'uppercase',
+      textAlign: 'center',
+      lineHeight: 1.3,
+      color: ativo ? A.cyanVivo : A.lineForte,
+      background: ativo ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
+      cursor: 'pointer',
+      '&:hover': { background: 'rgba(255, 255, 255, 0.05)' },
+    })
   return (
     <aside
       mix={css({
@@ -1145,53 +1167,43 @@ function MenuReforma() {
         position: 'sticky',
         top: 0,
         alignSelf: 'flex-start',
-        height: '768px',
         '@media (max-width: 1023px)': { display: 'none' },
       })}
     >
+      {/* painel flutuante que abraça o conteúdo (não estica até o pé da tela) */}
       <div
         mix={css({
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '20px',
-          height: '100%',
-          padding: '0 12px',
-          borderRadius: '12px',
+          gap: '18px',
+          padding: '20px 10px 14px',
+          borderRadius: '16px',
           background: `linear-gradient(186deg, ${A.ink}, ${A.navy})`,
+          boxShadow: '0 12px 28px rgba(2, 17, 24, 0.35)',
         })}
       >
-        <p mix={css({ margin: 0, width: '100%', textAlign: 'center', fontSize: '12px', fontWeight: 500, textTransform: 'uppercase', color: A.faint })}>
+        <p mix={css({ margin: 0, width: '100%', textAlign: 'center', fontSize: '11px', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', color: A.faint })}>
           Reforma Tributária
         </p>
-        <div mix={css({ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' })}>
+        <div mix={css({ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%' })}>
           {MENU_REFORMA.map((item, i) => (
-            <span
-              mix={css({
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '8px',
-                borderRadius: '8px',
-                fontSize: '12px',
-                fontWeight: 600,
-                textAlign: 'center',
-                lineHeight: 1.25,
-                color: i === 0 ? A.cyanVivo : A.lineForte,
-                background: i === 0 ? 'rgba(255, 255, 255, 0.06)' : 'transparent',
-                cursor: 'pointer',
-              })}
-            >
+            <span mix={itemMenu(i === 0)}>
               {Icone(item.icon, 20)}
               {item.label}
-              {i === 0 ? (
-                <span mix={css({ position: 'absolute', right: '-14px', top: '50%', transform: 'translateY(-50%)', width: '4px', height: '32px', borderRadius: '99px', background: A.cyanVivo })} />
-              ) : null}
             </span>
           ))}
+        </div>
+        <div mix={css({ height: '1px', background: 'rgba(255, 255, 255, 0.14)' })} />
+        <div mix={css({ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%' })}>
+          {/* ponytail: ícones aproximados do set (checklist/usuarios) */}
+          <span mix={[itemMenu(false), css({ textTransform: 'none', fontSize: '12px' })]}>
+            {Icone(ICONE.checklist, 20)}
+            Minhas análises
+          </span>
+          <span mix={[itemMenu(false), css({ textTransform: 'none', fontSize: '12px', color: A.faint, cursor: 'default', '&:hover': { background: 'transparent' } })]}>
+            {Icone(ICONE.usuarios, 20)}
+            Apresentações
+          </span>
         </div>
       </div>
     </aside>
@@ -1493,22 +1505,1645 @@ export function PlataformaApp() {
       <style>{`
         [data-app-screen] { display: none; }
         [data-app-screen][data-on='true'] { display: flex; animation: app-screen-in 0.25s ease; }
+        [data-sub-screen] { display: none; }
+        [data-sub-screen][data-on='true'] { display: block; }
+        [data-app-modal] { display: none; }
+        [data-app-modal][data-on='true'] { display: block; }
+        [data-sub-nav][data-on='true'] [data-radio] { border-color: #00c4e5; }
+        [data-sub-nav][data-on='true'] [data-ponto] { opacity: 1; }
         @keyframes app-screen-in { from { opacity: 0; transform: translateY(6px); } }
         @media (prefers-reduced-motion: reduce) {
           [data-app-screen][data-on='true'] { animation: none; }
         }
+        [data-app-demo]:fullscreen {
+          background: var(--surface, #f8fbfc);
+          padding: 16px 24px 24px;
+          overflow: auto;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        [data-app-demo]:fullscreen [data-app-chrome] {
+          width: fit-content;
+          max-width: 100%;
+          margin: 0 auto;
+        }
       `}</style>
 
-      <p mix={css({ margin: '40px 0 12px', fontFamily: FONT_MONO, fontSize: '11px', letterSpacing: '0.06em', color: 'var(--muted)' })}>
-        Demonstração interativa · dados fictícios
-      </p>
+      <div mix={css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', margin: '40px 0 12px' })}>
+        <p mix={css({ margin: 0, fontFamily: FONT_MONO, fontSize: '11px', letterSpacing: '0.06em', color: 'var(--muted)' })}>
+          Demonstração interativa · dados fictícios
+        </p>
+        <button
+          type="button"
+          data-app-expandir=""
+          mix={css({
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '6px 12px',
+            borderRadius: '8px',
+            border: '1px solid var(--line)',
+            background: 'transparent',
+            font: 'inherit',
+            fontSize: '13px',
+            fontWeight: 600,
+            color: 'var(--muted)',
+            cursor: 'pointer',
+            transition: 'color 150ms ease, border-color 150ms ease',
+            '&:hover': { color: 'var(--accent)', borderColor: 'var(--accent)' },
+            '&:focus-visible': { outline: '2px solid var(--accent)', outlineOffset: '2px' },
+          })}
+        >
+          {Icone(ICONE.expandir, 16)} <span data-app-expandir-rotulo="">Expandir</span>
+        </button>
+      </div>
 
-      <div mix={chrome}>
-        <div mix={appBody}>
+      <div data-app-chrome="" mix={chrome}>
+        <div data-app-body="" mix={appBody}>
           {TelaInicio()}
           {TelaProjetos()}
           {TelaNovoProjeto()}
           {TelaReforma()}
+          {TelaPerdcompDash()}
+          {TelaPerdcompClientes()}
+          {TelaPerdcompCliente()}
+          {TelaClientes()}
+          {TelaCliente()}
+          {TelaConfig()}
+          {TelaFaturamento()}
+          {ModalRecarga()}
+          {TelaProjeto()}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+//PER/DCOMP - dados
+
+const MESES = ['09/25', '10/25', '11/25', '12/25', '01/26', '02/26', '03/26', '04/26', '05/26', '06/26', '07/26', '08/26']
+
+const KPIS_PERDCOMP = [
+  {icone:ICONE.dinheiro,rotulo: 'Crédito original',valor:'R$ 28.262.210,02'},  
+  {icone:ICONE.sync,rotulo:'Crédito atualizado',valor:'R$ 29.110.077,37'},
+  {icone:ICONE.receiptLong,rotulo:'Saldo compensado',valor:'R$ 30.781.997,51'},
+  {icone:ICONE.dinheiro,rotulo:'Saldo disponível',valor:'-R$ 2.519.787,49',destaque: true},  
+]
+
+const KPIS_CLIENTES = [
+{icone:ICONE.dinheiro,rotulo:'Crédito original',valor:'R$ 239.649,80',},
+{icone:ICONE.sync,rotulo:'Crédito atualizado',valor:'R$ 239.741,32',},
+{icone:ICONE.receiptLong,rotulo:'Saldo compensado',valor:'R$ 194.542,53',},
+{icone:ICONE.dinheiro,rotulo:'Saldo disponível',valor:'R$ 45.107,27',destaque: true},  
+]
+
+const G_CREDITO = {titulo:'Crédito atualizado',serie:[23.5, 25.6, 26.4, 26.9, 28.6, 28.9, 29, 29.1, 29.1, 29.1, 29.1, 29.1],rotulo:['R$ 23,5 mi', 'R$ 25,6 mi', 'R$ 26,4 mi', 'R$ 26,9 mi', 'R$ 28,6 mi', 'R$ 28,9 mi', 'R$ 29 mi', 'R$ 29,1 mi', 'R$ 29,1 mi', 'R$ 29,1 mi', 'R$ 29,1 mi', 'R$ 29,1 mi'],eixo:['R$ 29,1 mi', 'R$ 14,6 mi', 'R$ 0'] as [string,string,string]}
+const G_COMPENSADO = {titulo:'Saldo compensado',serie:[24.8, 25.9, 26.9, 28.2, 29.2, 29.6, 30.1, 31, 31.8, 31.8, 31.8, 31.8],rotulo:['R$ 24,8 mi', 'R$ 25,9 mi', 'R$ 26,9 mi', 'R$ 28,2 mi', 'R$ 29,2 mi', 'R$ 29,6 mi', 'R$ 30,1 mi', 'R$ 31 mi', 'R$ 31,8 mi', 'R$ 31,8 mi', 'R$ 31,8 mi', 'R$ 31,8 mi'],eixo:['R$ 31,8 mi', 'R$ 15,9 mi', 'R$ 0'] as [string,string,string]}
+const G_DISPONIVEL = {titulo:'Saldo disponível',serie:[-1.3, -0.32, -0.5, -1.3, -0.55, -0.7, -1.2, -1.9, -2.7, -2.7, -2.7, -2.5],rotulo:['R$ -1,3 mi', 'R$ -316,2 mil', 'R$ -501,7 mil', 'R$ -1,3 mi', 'R$ -550,6 mil', 'R$ -697 mil', 'R$ -1,2 mi', 'R$ -1,9 mi', 'R$ -2,7 mi', 'R$ -2,7 mi', 'R$ -2,7 mi', 'R$ -2,5 mi'],eixo:['R$ 0', 'R$ -1,4 mi', 'R$ -2,7 mi'] as [string,string,string]}
+
+const QTD_EMPRESAS = {titulo:'Quantidade de empresas',serie:[0, 0, 0, 0, 0, 0, 0, 0, 12, 2, 0, 0],escala:12}
+const QTD_PERDCOMP = {titulo:'Quantidade de PER/DCOMP',serie:[3, 16, 15, 13, 16, 8, 5, 47, 80, 0, 0, 0],escala:80}
+
+const EMPRESAS_TOP = [
+  {nome:'EMPRESA EXEMPLO 1',credito:19.2,saldo:23.6,rc:'R$ 19.161.402',rs:'R$ 23.612.673'},
+  {nome:'EMPRESA EXEMPLO 2',credito:6.5,saldo:4.6,rc:'R$ 6.484.133',rs:'R$ 4.593.711'},
+  {nome:'EMPRESA EXEMPLO 3',credito:2.9,saldo:2.1,rc:'R$ 2.856.778',rs:'R$ 2.143.871'},
+  {nome:'EMPRESA EXEMPLO 4',credito:0.19,saldo:0.19,rc:'R$ 239.741',rs:'R$ 194.543'},
+  {nome:'EMPRESA EXEMPLO 5',credito:0.2,saldo:0.09,rc:'R$ 204.982',rs:'R$ 94.137'},
+]
+
+type ClientePerdcomp = {empresa:string;cnpj:string;hora:string;de:string;resp:string;email:string;}
+const CLIENTES_PERDCOMP: ClientePerdcomp [] = [
+  {empresa:'EMPRESA EXEMPLO 1',cnpj:'01.234.567/0001-01',hora:'11:05h',de:'06/2021',resp:'Tecnico 1',email:'tecnicoum@laratax.com.br'},
+  {empresa:'EMPRESA EXEMPLO 2',cnpj:'01.234.567/0001-02',hora:'11:05h',de:'06/2021',resp:'Tecnico 2',email:'tecnicodois@laratax.com.br'},
+  {empresa:'EMPRESA EXEMPLO 3',cnpj:'01.234.567/0001-03',hora:'11:06h',de:'06/2021',resp:'Tecnico 4',email:'tecnicoquatro@laratax.com.br'},
+  {empresa:'EMPRESA EXEMPLO 4',cnpj:'01.234.567/0001-04',hora:'10:31h',de:'06/2021',resp:'Tecnico 2',email:'tecnicodois@laratax.com.br'},
+  {empresa:'EMPRESA EXEMPLO 5',cnpj:'01.234.567/0001-05',hora:'16:01h',de:'06/2021',resp:'Tecnico 3',email:'tecnicotres@laratax.com.br'},
+]
+
+type Registro = {doc:string; situacao:'Em análise' | 'Retificado' | 'Cancelado'; apuracao:string; data:string; credito:string; usado:string; saldo:string }
+const HISTORICO: Registro [] = [
+  {doc:'09171.6583',situacao:'Em análise',apuracao:'20/05/2026',data:'19/05/2026',credito:'R$ 16.033,05',usado:'R$ 8.827,33',saldo:'R$ 5.453,92',},
+  {doc:'10427.5956',situacao:'Em análise',apuracao:'19/05/2026',data:'18/05/2026',credito:'R$ 7.205,72',usado:'R$ 708,53',saldo:'R$ 11.598,94',},
+  {doc:'32349.5984',situacao:'Retificado',apuracao:'20/05/2026',data:'19/05/2026',credito:'R$ 10.147,46',usado:'R$ 10.147,46',saldo:'R$ 7.105,35',},
+  {doc:'01992.0021',situacao:'Em análise',apuracao:'22/05/2026',data:'21/05/2026',credito:'R$ 10.647,59',usado:'R$ 581,88',saldo:'R$ 14.171,76',},
+  {doc:'27525.2403',situacao:'Em análise',apuracao:'25/03/2026',data:'24/03/2026',credito:'R$ 19.601,80',usado:'R$ 8.954,21',saldo:'R$ 7.933,53',},
+  {doc:'31176.3380',situacao:'Cancelado',apuracao:'16/04/2026',data:'12/04/2026',credito:'R$ 10.832,06',usado:'R$ 3.285,00',saldo:'R$ 23.453,28',},
+  {doc:'08013.7602',situacao:'Em análise',apuracao:'13/06/2026',data:'10/06/2026',credito:'R$ 17.753,13',usado:'R$ 6.439,07',saldo:'R$ 21.135,99',},
+  {doc:'08650.0787',situacao:'Retificado',apuracao:'20/03/2026',data:'18/03/2026',credito:'R$ 23.507,83',usado:'R$ 7.236,12',saldo:'-',},
+  {doc:'08751.0168',situacao:'Retificado',apuracao:'07/05/2026',data:'06/05/2026',credito:'R$ 54.026,14',usado:'R$ 26.956,53',saldo:'R$ 33.154,26',},
+]
+
+//PER/DCOMP:peças
+
+const azulBg = '#eff6ff'
+const azul = '#1d4ed8' 
+
+const tituloGrafico = css ({padding:'16px 20px', borderBottom:`1px solid ${A.line}`,fontSize:'15px', fontWeight:'700',color: A.text})
+
+function CabecalhoPerdcomp (ativa: 'dash' | 'clientes') {
+  const aba = (rotulo:string,target:string,on:boolean) =>
+  (
+    <button type='button'
+    data-app-nav=""
+    data-target={target}
+    mix={css({ padding:'10px 4px',border:'none',background:'none',font:'inherit',fontSize:'14px',fontWeight:600,cursor:'pointer',
+      color:on ? A.cyan : A.slate, borderBottom:`2px solid ${on ? A.cyan : 'transparent'}`,marginBottom:'-1px',
+    })}
+>
+  {rotulo}
+    </button>
+  )
+  return(
+    <div mix={css({display:'flex',flexDirection:'column',gap:'16px'})}>
+      <div>
+        <h3 mix={h1}>Controle PER/DCOMP</h3>
+        <p mix={css({margin:'4px 0 0', fontSize:'14px',color:A.muted})}>Gerencie e acompanhe suas PER/DCOMP.</p>
+      </div>
+      <div mix={css({display:'flex',gap:'24px', borderBottom:`1px solid ${A.line}`})}>
+        {aba('Dashboard consolidado', 'perdcomp', ativa === 'dash')}
+        {aba('Consultar cliente', 'perdcomp-clientes', ativa === 'clientes')}
+      </div>
+    </div>
+  )
+}
+
+function KpiPerdcomp(k: (typeof KPIS_PERDCOMP)[number]) {
+  return (
+    <div mix={[painel, css({ position: 'relative', overflow: 'hidden', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' })]}>
+      {QuadriculadoCard()}
+      <span mix={css({ position: 'relative', color: A.cyan })}>{Icone(k.icone, 24)}</span>
+      <span mix={css({ position: 'relative' })}>
+        <span mix={css({ display: 'block', fontSize: '14px', color: A.slate })}>{k.rotulo}</span>
+        <strong mix={[num, css({ fontSize: '20px', fontWeight: 700, color: k.destaque ? A.cyan : A.text })]}>{k.valor}</strong>
+      </span>
+    </div>
+  )
+}
+
+// linha com área: um componente, três usos (crédito, compensado, disponível)
+function GraficoLinha(g: typeof G_CREDITO) {
+  const max = Math.max(...g.serie)
+  const min = Math.min(...g.serie)
+  const px = (i: number) => 60 + (i * 480) / (g.serie.length - 1)
+  const py = (v: number) => 28 + ((max - v) * 128) / (max - min || 1)
+  const pts = g.serie.map((v, i) => `${px(i)},${py(v)}`).join(' ')
+  return (
+    <div mix={painel}>
+      <div mix={tituloGrafico}>{g.titulo}</div>
+      <svg viewBox="0 0 560 200" role="img" aria-label={g.titulo} mix={css({ width: '100%', height: 'auto', display: 'block', padding: '8px 8px 4px' })}>
+        <defs>
+          <linearGradient id="perdcomp-area" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="rgba(7, 224, 255, 0.25)" />
+            <stop offset="1" stop-color="rgba(7, 224, 255, 0)" />
+          </linearGradient>
+        </defs>
+        {[28, 92, 156].map((y, i) => (
+          <g>
+            <line x1="60" y1={y} x2="540" y2={y} stroke={A.line} stroke-dasharray="3 4" />
+            <text x="52" y={y + 3} text-anchor="end" font-size="10" fill={A.muted}>{g.eixo[i]}</text>
+          </g>
+        ))}
+        <polygon points={`${pts} ${px(g.serie.length - 1)},156 60,156`} fill="url(#perdcomp-area)" />
+        <polyline points={pts} fill="none" stroke={A.cyan} stroke-width="2" />
+        {g.serie.map((v, i) => (
+          <g>
+            <circle cx={px(i)} cy={py(v)} r="3.5" fill={A.card} stroke={A.cyan} stroke-width="1.5" />
+            {i % 2 === 0 ? (
+              <text x={px(i)} y={py(v) - 9} text-anchor="middle" font-size="9" fill={A.slate}>{g.rotulo[i]}</text>
+            ) : null}
+          </g>
+        ))}
+        {MESES.map((m, i) => (i % 2 === 0 ? <text x={px(i)} y="182" text-anchor="middle" font-size="10" fill={A.muted}>{m}</text> : null))}
+      </svg>
+    </div>
+  )
+}
+
+// colunas verticais: divs com altura em %
+function GraficoColunas(g: typeof QTD_EMPRESAS) {
+  return (
+    <div mix={painel}>
+      <div mix={tituloGrafico}>{g.titulo}</div>
+      <div mix={css({ display: 'flex', alignItems: 'flex-end', gap: '10px', height: '170px', padding: '28px 20px 0' })}>
+        {g.serie.map((v) => (
+          <div mix={css({ flex: 1, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' })}>
+            <strong mix={[num, css({ fontSize: '12px', color: A.navy })]}>{v}</strong>
+            <div
+              style={{ height: `${(v / g.escala) * 100}%` }}
+              mix={css({ width: '100%', maxWidth: '32px', minHeight: '2px', borderRadius: '4px 4px 0 0', background: A.navy })}
+            />
+          </div>
+        ))}
+      </div>
+      <div mix={css({ display: 'flex', gap: '10px', padding: '8px 20px 20px' })}>
+        {MESES.map((m) => (
+          <span mix={[num, css({ flex: 1, textAlign: 'center', fontSize: '10px', color: A.muted, transform: 'rotate(-35deg)' })]}>{m}</span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// barras horizontais agrupadas: divs com largura em %
+function GraficoEmpresas() {
+  const max = 24
+  const barra = (frac: number, cor: string, rotulo: string) => (
+    <span mix={css({ display: 'flex', alignItems: 'center', gap: '8px' })}>
+      <span style={{ width: `${(frac / max) * 100}%` }} mix={css({ height: '10px', minWidth: '2px', borderRadius: '0 4px 4px 0', background: cor })} />
+      <span mix={[num, css({ fontSize: '11px', color: A.slate, whiteSpace: 'nowrap' })]}>{rotulo}</span>
+    </span>
+  )
+  return (
+    <div mix={painel}>
+      <div mix={tituloGrafico}>5 principais empresas</div>
+      <div mix={css({ display: 'flex', flexDirection: 'column', gap: '16px', padding: '20px' })}>
+        {EMPRESAS_TOP.map((e) => (
+          <div mix={css({ display: 'grid', gridTemplateColumns: '180px 1fr', gap: '12px', alignItems: 'center' })}>
+            <span mix={css({ fontSize: '11px', color: A.slate, textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' })}>{e.nome}</span>
+            <span mix={css({ display: 'flex', flexDirection: 'column', gap: '4px' })}>
+              {barra(e.credito, 'rgba(0, 196, 229, 0.55)', e.rc)}
+              {barra(e.saldo, A.navy, e.rs)}
+            </span>
+          </div>
+        ))}
+        <div mix={css({ display: 'flex', justifyContent: 'center', gap: '20px', fontSize: '12px', color: A.slate })}>
+          <span mix={css({ display: 'flex', alignItems: 'center', gap: '6px' })}>
+            <span mix={css({ width: '12px', height: '12px', borderRadius: '3px', background: 'rgba(0, 196, 229, 0.55)' })} /> Crédito atualizado
+          </span>
+          <span mix={css({ display: 'flex', alignItems: 'center', gap: '6px' })}>
+            <span mix={css({ width: '12px', height: '12px', borderRadius: '3px', background: A.navy })} /> Saldo compensado
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function LinhaCliente(c: ClientePerdcomp) {
+  return (
+    <button
+      type="button"
+      data-app-nav=""
+      data-target="perdcomp-cliente"
+      mix={[painel, css({
+        position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', width: '100%',
+        padding: '16px 16px 16px 56px', font: 'inherit', textAlign: 'left', color: A.text, cursor: 'pointer',
+        '&:hover': { borderColor: A.cyan },
+      })]}
+    >
+      <span mix={css({ position: 'absolute', top: 0, bottom: 0, left: 0, width: '56px', borderRadius: '5px 0 0 5px', background: `linear-gradient(90deg, ${A.cyanSoft}, rgba(255, 255, 255, 0))`, display: 'grid', placeItems: 'center', color: A.cyan })}>
+        {Icone(ICONE.monitorHeart, 20)}
+      </span>
+      <span mix={css({ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignSelf: 'stretch', flexShrink: 0 })}>
+        <span mix={css({ fontSize: '14px', fontWeight: 500, lineHeight: 1 })}>Solicitado</span>
+        <span mix={[num, css({ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', lineHeight: 1, whiteSpace: 'nowrap' })]}>
+          20/05/2026
+          <span mix={css({ display: 'inline-flex', alignItems: 'center', gap: '2px', color: A.muted })}>{Icone(ICONE.relogio, 12)}{c.hora}</span>
+        </span>
+      </span>
+      <span mix={css({ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '4px', lineHeight: 1 })}>
+        <span mix={css({ fontSize: '14px', fontWeight: 500, textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' })}>{c.empresa}</span>
+        <span mix={[num, css({ fontSize: '14px', color: A.muted, whiteSpace: 'nowrap' })]}>{c.cnpj}</span>
+      </span>
+      <span mix={css({ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignSelf: 'stretch', width: '85px', flexShrink: 0, lineHeight: 1 })}>
+        <span mix={css({ fontSize: '14px', fontWeight: 500 })}>Período</span>
+        <span mix={[num, css({ fontSize: '14px' })]}>De {c.de}<br />Até 05/2026</span>
+      </span>
+      <span mix={css({ width: '160px', flexShrink: 0, fontSize: '14px' })}>Controle PER/DCOMP</span>
+      <span mix={css({ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2px' })}>
+        <strong mix={css({ fontSize: '14px', fontWeight: 700 })}>{c.resp}</strong>
+        <span mix={css({ fontSize: '13px', color: A.muted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' })}>{c.email}</span>
+      </span>
+      <span mix={[tag(A.cyanSoft, A.teal), css({ flexShrink: 0 })]}>Sincronização ativa</span>
+    </button>
+  )
+}
+
+// --- PER/DCOMP: telas ------------------------------------------------------
+
+function TelaPerdcompDash() {
+  return (
+    <div data-app-screen="perdcomp" data-on="false" mix={telaRaiz}>
+      {SidebarPrincipal('perdcomp')}
+      <div mix={colConteudo}>
+        <div mix={[painel, painelConteudo]}>
+          <div mix={degradeTopo} />
+          {CabecalhoPerdcomp('dash')}
+          <div mix={css({ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' })}>
+            {KPIS_PERDCOMP.map((k) => KpiPerdcomp(k))}
+          </div>
+          <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' })}>
+            {GraficoEmpresas()}
+            {GraficoColunas(QTD_EMPRESAS)}
+            {GraficoLinha(G_CREDITO)}
+            {GraficoLinha(G_COMPENSADO)}
+            {GraficoLinha(G_DISPONIVEL)}
+            {GraficoColunas(QTD_PERDCOMP)}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TelaPerdcompClientes() {
+  return (
+    <div data-app-screen="perdcomp-clientes" data-on="false" mix={telaRaiz}>
+      {SidebarPrincipal('perdcomp')}
+      <div mix={colConteudo}>
+        <div mix={[painel, painelConteudo]}>
+          <div mix={degradeTopo} />
+          {CabecalhoPerdcomp('clientes')}
+          <div mix={[inputFake, css({ width: '256px' })]}>
+            {Icone(ICONE.busca, 14)} Buscar cliente por razão
+          </div>
+          <div mix={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
+            {CLIENTES_PERDCOMP.map((c) => LinhaCliente(c))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TelaPerdcompCliente() {
+  const th = css({ padding: '12px 16px', fontSize: '14px', fontWeight: 700, color: A.text, textAlign: 'left', whiteSpace: 'nowrap', borderBottom: `1px solid ${A.line}` })
+  const td = css({ padding: '12px 16px', fontSize: '14px', color: A.slate, whiteSpace: 'nowrap', borderBottom: `1px solid ${A.cinza}` })
+  const badgeSituacao = (s: Registro['situacao']) => (s === 'Cancelado' ? tag(A.redBg, A.red) : tag(azulBg, azul))
+  return (
+    <div data-app-screen="perdcomp-cliente" data-on="false" mix={telaRaiz}>
+      {SidebarPrincipal('perdcomp')}
+      <div mix={colConteudo}>
+        <div mix={[painel, painelConteudo]}>
+          <div mix={degradeTopo} />
+          {CabecalhoPerdcomp('clientes')}
+
+          {/* barra do cliente selecionado */}
+          <div mix={[painel, css({ display: 'flex', alignItems: 'center', gap: '24px', padding: '12px 20px', borderColor: A.cyan })]}>
+            <span mix={css({ color: A.cyan })}>{Icone(ICONE.usuarios, 24)}</span>
+            <span mix={css({ flex: 1, minWidth: 0 })}>
+              <strong mix={css({ display: 'block', fontSize: '15px', fontWeight: 700 })}>EMPRESA EXEMPLO 1</strong>
+              <span mix={[num, css({ fontSize: '13px', color: A.muted })]}>01.234.567/0001-01</span>
+            </span>
+            <span mix={css({ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', fontWeight: 500 })}>
+              Sincronização ativa
+              <span mix={css({ width: '40px', height: '22px', borderRadius: '999px', background: A.cyan, position: 'relative', '&::after': { content: '""', position: 'absolute', top: '3px', right: '3px', width: '16px', height: '16px', borderRadius: '50%', background: A.card } })} />
+            </span>
+            <span mix={css({ lineHeight: 1.2 })}>
+              <span mix={css({ display: 'block', fontSize: '12px', color: A.muted })}>Total de PER/DCOMP</span>
+              <strong mix={num}>64</strong>
+            </span>
+            <button type="button" data-app-nav="" data-target="perdcomp-clientes" mix={btnContorno}>
+              {Icone(ICONE.sync, 14)} Trocar cliente
+            </button>
+          </div>
+
+          {/* ações */}
+          <div mix={css({ display: 'flex', justifyContent: 'flex-end', gap: '8px' })}>
+            <span mix={[painel, css({ display: 'grid', placeItems: 'center', width: '36px', height: '36px', color: A.slate })]}>{Icone(ICONE.download, 16)}</span>
+            <span mix={[btnPrimario, css({ display: 'inline-flex', alignItems: 'center', gap: '6px' })]}>{Icone(ICONE.filtro, 14)} Filtrar registros</span>
+          </div>
+
+          <div mix={css({ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' })}>
+            {KPIS_CLIENTES.map((k) => KpiPerdcomp(k))}
+          </div>
+
+          {/* histórico */}
+          <div mix={painel}>
+            <div mix={css({ display: 'flex', alignItems: 'baseline', gap: '16px', padding: '16px 20px' })}>
+              <strong mix={css({ fontSize: '15px', fontWeight: 700 })}>Histórico de PER/DCOMP</strong>
+              <span mix={css({ fontSize: '13px', color: A.muted })}>Última atualização: — · Próxima atualização: —</span>
+              <span mix={css({ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600 })}>
+                Agrupar <span mix={css({ width: '18px', height: '18px', borderRadius: '4px', border: `1px solid ${A.lineForte}` })} />
+              </span>
+            </div>
+            <div mix={css({ overflowX: 'auto' })}>
+              <table mix={css({ borderCollapse: 'collapse', width: '100%', minWidth: '1560px' })}>
+                <thead>
+                  <tr>
+                    {['Nº documento', 'Situação receita', 'Tipo', 'CNPJ', 'Razão social', 'Tipo de crédito', 'Apuração do crédito', 'Data transmissão', 'Crédito atualizado', 'Crédito utilizado', 'Saldo disponível'].map((c) => (
+                      <th mix={th}>{c}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* 5 linhas para a tela fechar em 1038 (paginador é decorativo) */}
+                  {HISTORICO.slice(0, 5).map((r) => (
+                    <tr>
+                      <td mix={td}>
+                        <span mix={css({ display: 'inline-flex', alignItems: 'center', gap: '6px', color: A.laranja })}>
+                          {Icone(ICONE.alertaLaranja, 14)}
+                          <strong mix={[num, css({ color: A.text })]}>{r.doc}</strong>
+                        </span>
+                      </td>
+                      <td mix={td}><span mix={badgeSituacao(r.situacao)}>{r.situacao}</span></td>
+                      <td mix={td}><span mix={tag(A.orangeBg, A.orange)}>Vinculado</span></td>
+                      <td mix={[td, num]}>01.234.567/...</td>
+                      <td mix={td}>EMPRESA EXEMPLO 1...</td>
+                      <td mix={td}>Saldo Negativo de CSLL</td>
+                      <td mix={[td, num]}>{r.apuracao}</td>
+                      <td mix={[td, num]}>{r.data}</td>
+                      <td mix={[td, num, css({ textAlign: 'right' })]}>{r.credito}</td>
+                      <td mix={[td, num, css({ textAlign: 'right' })]}>{r.usado}</td>
+                      <td mix={[td, num, css({ textAlign: 'right', fontWeight: 700, color: A.green })]}>{r.saldo}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div mix={css({ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '16px', padding: '12px 16px', fontSize: '14px', color: A.slate })}>
+              Tamanho da Página:
+              <span mix={[inputFake, css({ width: '64px', height: '32px' })]}>10 {Icone(ICONE.chevronBaixo, 14)}</span>
+              <span mix={num}>1 até 5 de 64</span>
+              {['|<', '<'].map((s) => <span mix={[painel, css({ display: 'grid', placeItems: 'center', width: '32px', height: '32px', color: A.faint })]}>{s}</span>)}
+              <span mix={num}>Página 1 de 7</span>
+              {['>', '>|'].map((s) => <span mix={[painel, css({ display: 'grid', placeItems: 'center', width: '32px', height: '32px', color: A.slate })]}>{s}</span>)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// --- detalhe de projeto: Baixa Automática Completa --------------------------
+// Sub-abas via [data-sub-nav]/[data-sub-screen] (landing.ts) — as 5 abas do
+// topo são um escopo; as categorias de Arquivos e Relatórios são escopos
+// aninhados dentro dos seus painéis.
+
+const CNPJ_ARQ = '12345678000190'
+
+const MESES_ARQ = [
+  { rot: 'Janeiro/2021', ini: '20210101', fim: '20210131' },
+  { rot: 'Fevereiro/2021', ini: '20210201', fim: '20210228' },
+  { rot: 'Março/2021', ini: '20210301', fim: '20210331' },
+  { rot: 'Abril/2021', ini: '20210401', fim: '20210430' },
+  { rot: 'Maio/2021', ini: '20210501', fim: '20210531' },
+  { rot: 'Junho/2021', ini: '20210601', fim: '20210630' },
+  { rot: 'Julho/2021', ini: '20210701', fim: '20210731' },
+  { rot: 'Agosto/2021', ini: '20210801', fim: '20210831' },
+]
+type MesArq = (typeof MESES_ARQ)[number]
+
+// hash fake determinístico (nada de Math.random num render server-side)
+const hexId = (n: number) =>
+  Array.from({ length: 32 }, (_, i) => '0123456789ABCDEF'[((n + 3) * 31 + (i + 1) * (i + 2) * 7 + n * i * 11) % 16]).join('')
+
+type CatArq = {
+  id: string
+  rotulo: string
+  grupo: 'SPEDs' | 'E-Cac' | 'Notas Fiscais'
+  n?: string
+  rec?: boolean
+  arquivo: (m: MesArq, i: number) => string
+}
+const arquivoPadrao = (slug: string) => (m: MesArq, i: number) =>
+  `${slug}_${CNPJ_ARQ}_${m.ini}_${m.fim}_${hexId(i + slug.length * 3)}`
+const cat = (id: string, rotulo: string, grupo: CatArq['grupo'], slug: string): CatArq =>
+  ({ id, rotulo, grupo, arquivo: arquivoPadrao(slug) })
+
+// ponytail: dupes do app real ("cnd" minúsculo, "processados") ficaram de fora
+const CATS_ARQ: CatArq[] = [
+  { id: 'efd-contribuicoes', rotulo: 'EFD CONTRIBUIÇÕES', grupo: 'SPEDs', n: '118 arquivos', rec: true, arquivo: (m, i) => `PISCOFINS_${m.ini}_${m.fim}_${CNPJ_ARQ}_${i === 0 ? 'Retificadora' : 'Original'}_${m.ini}165037_${hexId(i + 1)}` },
+  { id: 'efd-fiscal', rotulo: 'EFD-FISCAL', grupo: 'SPEDs', n: '116 arquivos', arquivo: (m, i) => `${CNPJ_ARQ}-1234567890-${m.ini}-${m.fim}-${i % 2}-${hexId(i + 40)}-SPED-EFD` },
+  cat('ecd', 'ECD', 'SPEDs', 'ECD'),
+  cat('ecf', 'ECF', 'SPEDs', 'ECF'),
+  cat('reinf', 'REINF', 'SPEDs', 'REINF'),
+  cat('xml-zip', 'XML ZIP', 'SPEDs', 'XML'),
+  cat('apuracao-assistida', 'APURACAO ASSISTIDA', 'SPEDs', 'APURACAO'),
+  cat('capacidade-pagamento', 'CAPACIDADE PAGAMENTO', 'SPEDs', 'CAPACIDADE'),
+  cat('cnd', 'CND', 'SPEDs', 'CND'),
+  cat('divida-ativa', 'DIVIDA ATIVA', 'SPEDs', 'DIVIDA'),
+  cat('situacao-fiscal', 'SITUACAO FISCAL', 'SPEDs', 'SITUACAO'),
+  cat('dctf', 'DCTF', 'E-Cac', 'DCTF'),
+  cat('dctf-web', 'DCTF WEB', 'E-Cac', 'DCTFWEB'),
+  cat('perdcomp-web', 'PER/DCOMP WEB', 'E-Cac', 'PERDCOMP'),
+  cat('dirf', 'DIRF', 'E-Cac', 'DIRF'),
+  cat('darf', 'DARF', 'E-Cac', 'DARF'),
+  cat('eprocesso', 'EPROCESSO', 'E-Cac', 'EPROCESSO'),
+  cat('detalhe-perdcomp', 'DETALHE PERDCOMP', 'E-Cac', 'DETPERDCOMP'),
+  cat('e-social', 'E-SOCIAL', 'Notas Fiscais', 'ESOCIAL'),
+  cat('nfe-nfse', 'NF-e/NFS-e', 'Notas Fiscais', 'NFE'),
+]
+const GRUPOS_ARQ: Array<CatArq['grupo']> = ['SPEDs', 'E-Cac', 'Notas Fiscais']
+
+type CatRel = { id: string; rotulo: string; grupo: 'Relatórios gerais' | 'Relatórios LaraTAX'; n?: string; itens: Array<{ cod: string; desc: string }> }
+const RELS: CatRel[] = [
+  { id: 'rel-efdc', rotulo: 'EFD CONTRIBUIÇÕES', grupo: 'Relatórios gerais', n: '56 relatórios', itens: [
+    { cod: 'EFD-C 0110-0111', desc: 'Regimes de apuração - Tabela de receita mensal para fins de rateio de créditos' },
+    { cod: 'EFD-C 0140-0150', desc: 'Cadastro de estabelecimento - Cadastro de participante' },
+    { cod: 'EFD-C 0140-0200', desc: 'Cadastro de estabelecimento - Cadastro de itens (Produtos e Serviços)' },
+    { cod: 'EFD-C 0140', desc: 'Cadastro de estabelecimento' },
+    { cod: 'EFD-C 1500', desc: 'Controle de créditos fiscais - COFINS' },
+    { cod: 'EFD-C A100-A170', desc: 'Nota fiscal de serviço - Itens do documento' },
+    { cod: 'EFD-C C100-C120', desc: 'Nota fiscal - Operações de importação' },
+    { cod: 'EFD-C C100-C170', desc: 'Nota fiscal - Itens do documento' },
+    { cod: 'EFD-C C100-C190-C191-C195', desc: 'Consolidação de notas fiscais modelo 55 - Operações com direito a crédito de PIS-COFINS' },
+  ] },
+  { id: 'rel-efdf', rotulo: 'EFD-FISCAL', grupo: 'Relatórios gerais', itens: [
+    { cod: 'EFD-F C100-C170', desc: 'Nota fiscal - Itens do documento' },
+    { cod: 'EFD-F E100-E110', desc: 'Apuração do ICMS - Valores consolidados' },
+    { cod: 'EFD-F H005-H010', desc: 'Inventário - Itens do estoque' },
+  ] },
+  { id: 'rel-ecd', rotulo: 'ECD', grupo: 'Relatórios gerais', itens: [
+    { cod: 'ECD I050', desc: 'Plano de contas' },
+    { cod: 'ECD I155', desc: 'Saldos periódicos por conta contábil' },
+    { cod: 'ECD J100', desc: 'Balanço patrimonial' },
+  ] },
+  { id: 'rel-ecf', rotulo: 'ECF', grupo: 'Relatórios gerais', itens: [
+    { cod: 'ECF N500', desc: 'Apuração do IRPJ - Base de cálculo' },
+    { cod: 'ECF Y540', desc: 'Discriminação da receita por CNAE' },
+  ] },
+  { id: 'rel-esocial', rotulo: 'E-SOCIAL', grupo: 'Relatórios gerais', itens: [
+    { cod: 'S-1200', desc: 'Remuneração de trabalhadores - Eventos periódicos' },
+    { cod: 'S-5011', desc: 'Informações das contribuições sociais consolidadas' },
+  ] },
+  { id: 'rel-ecac', rotulo: 'E-Cac', grupo: 'Relatórios gerais', itens: [
+    { cod: 'DCTF Débitos', desc: 'Débitos declarados por período de apuração' },
+    { cod: 'PER/DCOMP Créditos', desc: 'Créditos transmitidos e situação atual' },
+  ] },
+  { id: 'rel-xml', rotulo: 'XML', grupo: 'Relatórios gerais', itens: [
+    { cod: 'XML NF-e Entradas', desc: 'Notas de entrada por fornecedor e CFOP' },
+    { cod: 'XML NF-e Saídas', desc: 'Notas de saída por cliente e CFOP' },
+  ] },
+  { id: 'rel-dashboard', rotulo: 'Dashboard', grupo: 'Relatórios gerais', itens: [
+    { cod: 'Dashboard Executivo', desc: 'Visão consolidada do diagnóstico do projeto' },
+  ] },
+  { id: 'rel-cruzamento', rotulo: 'Cruzamento', grupo: 'Relatórios LaraTAX', itens: [
+    { cod: 'Cruzamento EFD x DCTF', desc: 'Divergências entre débitos escriturados e declarados' },
+    { cod: 'Cruzamento XML x EFD', desc: 'Notas fiscais ausentes da escrituração' },
+  ] },
+]
+const GRUPOS_REL: Array<CatRel['grupo']> = ['Relatórios gerais', 'Relatórios LaraTAX']
+
+const RETIFICACOES: Array<[string, string]> = [
+  ['#177278', 'remuneracao'], ['#177250', 'lotacao_processo'], ['#177196', 'lotacao_processo'],
+  ['#177168', 'lotacao_processo'], ['#176507', 'lotacao_processo'], ['#176505', 'remuneracao'],
+  ['#176503', 'remuneracao'], ['#176475', 'remuneracao'], ['#176473', 'lotacao_processo'],
+  ['#176471', 'lotacao_processo'],
+]
+
+const abaProjeto = css({
+  padding: '10px 2px', border: 'none', background: 'none', font: 'inherit', fontSize: '13.5px', fontWeight: 600,
+  cursor: 'pointer', color: A.slate, borderBottom: '2px solid transparent', marginBottom: '-1px',
+  '&[data-on="true"]': { color: A.cyan, borderBottomColor: A.cyan },
+})
+const catBtn = css({
+  display: 'block', width: '100%', textAlign: 'left', padding: '6px 12px', border: 'none', background: 'none',
+  font: 'inherit', fontSize: '13px', color: A.slate, cursor: 'pointer', borderRadius: '6px',
+  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+  '&:hover': { background: A.bg },
+  '&[data-on="true"]': { background: A.cyanSoft, color: A.teal },
+})
+const btnBaixar = css({
+  display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '5px 10px', borderRadius: '6px',
+  border: `1px solid ${A.line}`, background: A.card, fontSize: '12px', color: A.slate, whiteSpace: 'nowrap', flexShrink: 0,
+})
+const rotuloCampo = css({ display: 'block', fontSize: '12.5px', color: A.muted, marginBottom: '2px' })
+
+function Caixa(on: boolean) {
+  return (
+    <span
+      mix={css({
+        width: '16px', height: '16px', borderRadius: '4px', flexShrink: 0, display: 'grid', placeItems: 'center',
+        fontSize: '11px', lineHeight: 1, color: '#ffffff',
+        border: `1px solid ${on ? A.cyan : A.lineForte}`, background: on ? A.cyan : A.card,
+      })}
+    >
+      {on ? '✓' : ''}
+    </span>
+  )
+}
+
+function Campo(rotulo: string, valor: string) {
+  return (
+    <span>
+      <span mix={rotuloCampo}>{rotulo}</span>
+      <span mix={css({ fontSize: '14px', color: A.text })}>{valor}</span>
+    </span>
+  )
+}
+
+function PainelDetalhes() {
+  return (
+    <div data-sub-screen="detalhes" data-on="true">
+      <div mix={css({ display: 'flex', flexDirection: 'column', gap: '14px' })}>
+        <div mix={[painel, css({ padding: '18px 24px', display: 'flex', flexDirection: 'column', gap: '14px', background: A.card })]}>
+          <strong mix={css({ fontSize: '14px' })}>Dados do projeto</strong>
+          <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: '24px', alignItems: 'center' })}>
+            {Campo('Solicitado em', '07/01/2026 - 07:25')}
+            {Campo('Período', 'De 01/2021 à 12/2025')}
+            <span>
+              <span mix={rotuloCampo}>Solicitante</span>
+              <span mix={css({ display: 'flex', alignItems: 'center', gap: '8px' })}>
+                {Avatar('Tecnico 1', 28)}
+                <span mix={css({ lineHeight: 1.25 })}>
+                  <strong mix={css({ display: 'block', fontSize: '14px' })}>Tecnico 1</strong>
+                  <span mix={css({ fontSize: '12.5px', color: A.muted })}>tecnicoum@laratax.com.br</span>
+                </span>
+              </span>
+            </span>
+            <button type="button" data-app-nav="" data-target="reforma" mix={btnPrimario}>
+              Acessar Diagnóstico
+            </button>
+          </div>
+        </div>
+        <div mix={[painel, css({ padding: '18px 24px', display: 'flex', flexDirection: 'column', gap: '16px', background: A.card })]}>
+          <div mix={css({ display: 'flex', alignItems: 'center' })}>
+            <strong mix={css({ fontSize: '14px' })}>Dados do cliente</strong>
+            <span mix={css({ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '16px' })}>
+              <span mix={css({ fontSize: '13px', fontWeight: 600, color: A.cyan })}>Ver cliente</span>
+              <span mix={css({ color: A.muted })}>−</span>
+            </span>
+          </div>
+          <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px 24px' })}>
+            {Campo('Parceiro indicador', 'LARAFY')}
+            {Campo('CNPJ', '12.345.678/0001-90')}
+            {Campo('Inscrição Estadual', '1234567890')}
+            <span mix={css({ gridColumn: '1 / -1' })}>
+              <span mix={[rotuloCampo, css({ display: 'flex', alignItems: 'center', gap: '8px' })]}>
+                Razão Social <span mix={tag(A.greenBg, A.green)}>Ativa na RFB</span>
+              </span>
+              <span mix={css({ fontSize: '14px', textTransform: 'uppercase' })}>Innovative Solutions Tecnologia LTDA</span>
+            </span>
+            {Campo('UF', 'PR')}
+            {Campo('Município', 'CURITIBA')}
+            {Campo('Número de filiais', '3')}
+            <span mix={css({ gridColumn: '1 / -1' })}>
+              <span mix={rotuloCampo}>Regime fiscal</span>
+              {['2018', '2019', '2020', '2021', '2022'].map((ano) => (
+                <span mix={css({ display: 'block', fontSize: '13.5px', color: A.slate, padding: '1px 0' })}>{ano} - Real/Estimativa</span>
+              ))}
+            </span>
+            <span mix={css({ gridColumn: '1 / -1' })}>
+              <span mix={rotuloCampo}>CNAE principal</span>
+              <span mix={css({ fontSize: '13.5px', color: A.slate })}>4663-0/00 - Comércio atacadista de Máquinas e equipamentos para uso industrial; partes e peças</span>
+            </span>
+            <span mix={css({ gridColumn: '1 / -1' })}>
+              <span mix={rotuloCampo}>CNAE secundário</span>
+              {[
+                '2599-3/02 - Serviço de corte e dobra de metais',
+                '2599-3/99 - Fabricação de outros produtos de metal não especificados anteriormente',
+                '4672-9/00 - Comércio atacadista de ferragens e ferramentas',
+                '4679-6/99 - Comércio atacadista de materiais de construção em geral',
+                '4744-0/01 - Comércio varejista de ferragens e ferramentas',
+                '4744-0/99 - Comércio varejista de materiais de construção em geral',
+              ].map((cnae) => (
+                <span mix={css({ display: 'block', fontSize: '13.5px', color: A.slate, padding: '1px 0' })}>{cnae}</span>
+              ))}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// barra "Todos + Procurar + Baixar seleção" compartilhada por Arquivos/Relatórios
+function BarraSelecao() {
+  return (
+    <div mix={css({ display: 'flex', alignItems: 'center', gap: '16px' })}>
+      <span mix={css({ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13.5px', color: A.slate })}>{Caixa(false)} Todos</span>
+      <div mix={[inputFake, css({ width: '240px', margin: '0 auto' })]}>{Icone(ICONE.busca, 14)} Procurar...</div>
+      <span mix={[btnPrimario, css({ marginLeft: 'auto' })]}>Baixar seleção {Icone(ICONE.chevronBaixo, 14)}</span>
+    </div>
+  )
+}
+
+function LateralCategorias(grupos: string[], itens: Array<{ id: string; rotulo: string; grupo: string }>, ativa: string) {
+  return (
+    <div mix={[painel, css({ padding: '12px', background: A.card })]}>
+      {grupos.map((grupo, gi) => (
+        <div mix={css({ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: gi === 0 ? 0 : '12px', paddingTop: gi === 0 ? 0 : '12px', borderTop: gi === 0 ? 'none' : `1px solid ${A.line}` })}>
+          <strong mix={css({ fontSize: '13px', padding: '2px 12px 6px' })}>{grupo}</strong>
+          {itens.filter((c) => c.grupo === grupo).map((c) => (
+            <button type="button" data-sub-nav="" data-sub-target={c.id} data-on={c.id === ativa ? 'true' : 'false'} mix={catBtn}>
+              {c.rotulo}
+            </button>
+          ))}
+        </div>
+      ))}
+      <span mix={[btnContorno, css({ marginTop: '14px', width: '100%', justifyContent: 'center', color: A.cyan, gap: '8px' })]}>
+        {Icone(ICONE.download, 16)} Baixar tudo
+      </span>
+    </div>
+  )
+}
+
+function PainelArquivos() {
+  return (
+    <div data-sub-screen="arquivos" data-on="false" data-sub-scope="">
+      <div mix={css({ display: 'grid', gridTemplateColumns: '215px 1fr', gap: '16px', alignItems: 'start' })}>
+        {LateralCategorias(GRUPOS_ARQ, CATS_ARQ, 'efd-contribuicoes')}
+        <div mix={css({ display: 'flex', flexDirection: 'column', gap: '14px', minWidth: 0 })}>
+          {BarraSelecao()}
+          {CATS_ARQ.map((c, ci) => (
+            <div data-sub-screen={c.id} data-on={ci === 0 ? 'true' : 'false'}>
+              <strong mix={css({ display: 'block', fontSize: '15px', fontWeight: 700 })}>{c.rotulo}</strong>
+              <span mix={css({ display: 'block', fontSize: '12px', color: A.muted, margin: '2px 0 10px' })}>{c.n ?? `${MESES_ARQ.length} arquivos`}</span>
+              <div mix={[painel, css({ background: A.card })]}>
+                <div mix={css({ display: 'flex', alignItems: 'center', gap: '16px', padding: '10px 16px', borderBottom: `1px solid ${A.line}`, fontSize: '13px', fontWeight: 700 })}>
+                  {Caixa(false)}
+                  <span mix={css({ width: '110px', flexShrink: 0 })}>Período</span>
+                  <span>Arquivo</span>
+                </div>
+                {MESES_ARQ.map((m, i) => (
+                  <div mix={css({ display: 'flex', alignItems: 'center', gap: '16px', padding: '8px 16px', borderBottom: `1px solid ${A.cinza}`, background: ci === 0 && i === 0 ? A.cinza : 'transparent' })}>
+                    {Caixa(ci === 0 && i === 0)}
+                    <span mix={css({ width: '110px', fontSize: '13px', flexShrink: 0 })}>{m.rot}</span>
+                    <span mix={[num, css({ flex: 1, minWidth: 0, fontSize: '12.5px', color: A.slate, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' })]}>{c.arquivo(m, i)}</span>
+                    {c.rec ? <span mix={btnBaixar}>{Icone(ICONE.download, 12)} Baixar .rec</span> : null}
+                    <span mix={btnBaixar}>{Icone(ICONE.download, 12)} Baixar .txt</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PainelRelatorios() {
+  return (
+    <div data-sub-screen="relatorios" data-on="false" data-sub-scope="">
+      <div mix={css({ display: 'grid', gridTemplateColumns: '215px 1fr', gap: '16px', alignItems: 'start' })}>
+        {LateralCategorias(GRUPOS_REL, RELS, 'rel-efdc')}
+        <div mix={css({ display: 'flex', flexDirection: 'column', gap: '14px', minWidth: 0 })}>
+          {BarraSelecao()}
+          {RELS.map((c, ci) => (
+            <div data-sub-screen={c.id} data-on={ci === 0 ? 'true' : 'false'}>
+              <strong mix={css({ display: 'block', fontSize: '15px', fontWeight: 700 })}>{c.rotulo}</strong>
+              <span mix={css({ display: 'block', fontSize: '12px', color: A.muted, margin: '2px 0 10px' })}>{c.n ?? `${c.itens.length} relatórios`}</span>
+              <div mix={css({ display: 'flex', flexDirection: 'column', gap: '10px' })}>
+                {c.itens.map((r) => (
+                  <div mix={[painel, css({ display: 'flex', alignItems: 'center', gap: '14px', padding: '12px 16px', background: A.card })]}>
+                    {Caixa(false)}
+                    <span mix={css({ color: A.slate })}>{Icone(ICONE.receiptLong, 16)}</span>
+                    <span mix={css({ flex: 1, minWidth: 0, lineHeight: 1.3 })}>
+                      <strong mix={css({ display: 'block', fontSize: '14px' })}>{r.cod}</strong>
+                      <span mix={css({ fontSize: '12.5px', color: A.muted })}>{r.desc}</span>
+                    </span>
+                    <span mix={css({ display: 'grid', placeItems: 'center', width: '30px', height: '30px', borderRadius: '50%', border: `1px solid ${A.line}`, color: A.slate, flexShrink: 0 })}>{Icone(ICONE.download, 14)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PainelUpload() {
+  return (
+    <div data-sub-screen="upload" data-on="false">
+      <div mix={css({ display: 'flex', flexDirection: 'column', gap: '16px' })}>
+        <div mix={[painel, css({ display: 'flex', alignItems: 'center', gap: '14px', padding: '12px 16px', background: A.card })]}>
+          <span mix={css({ display: 'grid', placeItems: 'center', width: '36px', height: '36px', borderRadius: '8px', background: A.cinza, color: A.slate, flexShrink: 0 })}>{Icone(ICONE.ajuda, 20)}</span>
+          <span mix={css({ flex: 1, minWidth: 0, lineHeight: 1.35 })}>
+            <span mix={css({ display: 'block', fontSize: '13px', color: A.muted })}>Iniciar processamento das NF-e?</span>
+            <strong mix={css({ fontSize: '13.5px' })}>Tem certeza de que deseja iniciar este projeto com os arquivos enviados? Não será possível enviar mais arquivos após iniciar.</strong>
+          </span>
+          <span mix={[btnPrimario, css({ opacity: 0.55 })]}>Confirmar NF-e</span>
+        </div>
+        <strong mix={css({ fontSize: '16px' })}>Upload de arquivos</strong>
+        <div mix={css({ borderBottom: `1px solid ${A.line}` })}>
+          <span mix={css({ display: 'inline-block', padding: '8px 2px', fontSize: '13.5px', fontWeight: 600, color: A.cyan, borderBottom: `2px solid ${A.cyan}`, marginBottom: '-1px' })}>NF-e/NFS-e (ZIP)</span>
+        </div>
+        <div mix={css({ border: `1px dashed ${A.lineForte}`, borderRadius: '8px', minHeight: '130px', display: 'grid', placeItems: 'center', background: A.card })}>
+          <span mix={css({ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', fontSize: '13.5px', color: A.muted, padding: '20px' })}>
+            {Icone(ICONE.baixando, 20)}
+            <span>Arraste e solte aqui ou <span mix={css({ color: A.cyan, fontWeight: 600 })}>escolha os arquivos</span></span>
+          </span>
+        </div>
+        <div mix={css({ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: A.muted })}>
+          <span>Arquivos suportados: zip</span>
+          <span>Limite de 1.000.000 de linhas por arquivo.</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PainelRetificacoes() {
+  const cab = css({ fontSize: '13px', fontWeight: 700, color: A.text })
+  return (
+    <div data-sub-screen="retificacoes" data-on="false">
+      <div mix={css({ display: 'flex', flexDirection: 'column', gap: '14px' })}>
+        <div mix={css({ display: 'flex', alignItems: 'center' })}>
+          <div mix={[inputFake, css({ width: '220px' })]}>{Icone(ICONE.busca, 14)} Procurar...</div>
+          <span mix={[btnPrimario, css({ marginLeft: 'auto' })]}>Nova retificação</span>
+        </div>
+        <strong mix={css({ fontSize: '14px' })}>Retificações realizadas</strong>
+        <div mix={[painel, css({ background: A.card })]}>
+          <div mix={css({ display: 'flex', gap: '16px', padding: '10px 16px', borderBottom: `1px solid ${A.line}` })}>
+            <span mix={[cab, css({ flex: 1.2 })]}>ID / Tipo</span>
+            <span mix={[cab, css({ width: '120px' })]}>Solicitado em</span>
+            <span mix={[cab, css({ flex: 1.4 })]}>Solicitante</span>
+            <span mix={[cab, css({ width: '130px' })]}>Situação</span>
+            <span mix={css({ width: '30px' })} />
+          </div>
+          {RETIFICACOES.map(([id, tipo]) => (
+            <div mix={css({ display: 'flex', alignItems: 'center', gap: '16px', padding: '7px 16px', borderBottom: `1px solid ${A.cinza}`, fontSize: '13px' })}>
+              <span mix={css({ flex: 1.2, lineHeight: 1.3 })}>
+                <strong mix={[num, css({ display: 'block' })]}>{id}</strong>
+                <span mix={css({ fontSize: '12px', color: A.muted })}>{tipo}</span>
+              </span>
+              <span mix={[num, css({ width: '120px', lineHeight: 1.3 })]}>07/01/2026<br />07:25h</span>
+              <span mix={css({ flex: 1.4, display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 })}>
+                {Avatar('Tecnico 1', 24)}
+                <span mix={css({ lineHeight: 1.3, minWidth: 0 })}>
+                  <strong mix={css({ display: 'block', fontSize: '13px' })}>Tecnico 1</strong>
+                  <span mix={css({ fontSize: '12px', color: A.muted })}>tecnicoum@laratax.com.br</span>
+                </span>
+              </span>
+              <span mix={css({ width: '130px', flexShrink: 0 })}><span mix={tag(A.cyanSoft, A.teal)}>Aguardando</span></span>
+              <span mix={css({ display: 'grid', placeItems: 'center', width: '30px', height: '30px', borderRadius: '50%', border: `1px solid ${A.line}`, color: A.muted, flexShrink: 0 })}>{Icone(ICONE.maisVert, 14)}</span>
+            </div>
+          ))}
+          <div mix={css({ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '14px', padding: '10px 16px', fontSize: '13px', color: A.slate })}>
+            Tamanho da Página:
+            <span mix={[inputFake, css({ width: '56px', height: '28px' })]}>10 {Icone(ICONE.chevronBaixo, 14)}</span>
+            <span mix={num}>1 até 10 de 10</span>
+            <span mix={num}>Página 1 de 1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const ABAS_PROJETO = [
+  { id: 'detalhes', rotulo: 'Detalhes' },
+  { id: 'arquivos', rotulo: 'Arquivos' },
+  { id: 'relatorios', rotulo: 'Relatórios' },
+  { id: 'upload', rotulo: 'Upload de arquivos' },
+  { id: 'retificacoes', rotulo: 'Retificações' },
+]
+
+function TelaProjeto() {
+  return (
+    <div data-app-screen="projetos-detalhe" data-on="false" mix={[telaRaiz, css({ position: 'relative', overflow: 'hidden' })]}>
+      {SidebarPrincipal('projetos')}
+      {/* fundo escurecido sobre a tela de trás; clicar nele também fecha */}
+      <div data-app-nav="" data-target="projetos" mix={css({ position: 'absolute', inset: 0, background: 'rgba(2, 17, 24, 0.5)', cursor: 'pointer' })} />
+      <div mix={css({ position: 'absolute', top: 0, right: 0, bottom: 0, left: '240px', overflowY: 'auto', background: A.card, boxShadow: '-18px 0 44px rgba(2, 17, 24, 0.35)' })}>
+        <div data-sub-scope="" mix={css({ minHeight: '100%', display: 'flex', flexDirection: 'column' })}>
+          <div mix={css({ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 20px 0' })}>
+            <span mix={css({ display: 'grid', placeItems: 'center', width: '36px', height: '36px', borderRadius: '8px', background: A.cyanSoft, color: A.cyan, flexShrink: 0 })}>{Icone(ICONE.baixando, 20)}</span>
+            <span mix={css({ flex: 1, minWidth: 0, lineHeight: 1.3 })}>
+              <strong mix={css({ display: 'block', fontSize: '14px' })}>Baixa Automática Completa</strong>
+              <span mix={css({ fontSize: '13px', color: A.slate, textTransform: 'uppercase' })}>Innovative Solutions Tecnologia LTDA</span>
+            </span>
+            <button type="button" data-app-nav="" data-target="projetos" aria-label="Fechar" mix={css({ border: 'none', background: 'none', cursor: 'pointer', color: A.muted, padding: '8px' })}>
+              {Icone(ICONE.fechar, 14)}
+            </button>
+          </div>
+          <div mix={css({ display: 'flex', gap: '20px', padding: '6px 20px 0', borderBottom: `1px solid ${A.line}` })}>
+            {ABAS_PROJETO.map((a, i) => (
+              <button type="button" data-sub-nav="" data-sub-target={a.id} data-on={i === 0 ? 'true' : 'false'} mix={abaProjeto}>
+                {a.rotulo}
+              </button>
+            ))}
+          </div>
+          <div mix={css({ padding: '16px 20px 20px', flex: 1, background: A.bg })}>
+            {PainelDetalhes()}
+            {PainelArquivos()}
+            {PainelRelatorios()}
+            {PainelUpload()}
+            {PainelRetificacoes()}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// --- Clientes --------------------------------------------------------------
+
+const CLIENTES_EMPRESAS = [
+  { empresa: 'EMPRESA EXEMPLO 1', cnpj: '01.234.567/0001-01', grupo: 'GRUPO EXEMPLO 1', parceiro: 'LARAFY' },
+  { empresa: 'EMPRESA EXEMPLO 2', cnpj: '02.345.678/0001-02', grupo: 'None', parceiro: 'Parceiro 1' },
+  { empresa: 'EMPRESA EXEMPLO 3', cnpj: '03.456.789/0001-03', grupo: 'GRUPO EXEMPLO 2', parceiro: 'Parceiro 2' },
+  { empresa: 'EMPRESA EXEMPLO 4', cnpj: '04.567.890/0001-04', grupo: 'GRUPO EXEMPLO 2', parceiro: 'LARAFY' },
+  { empresa: 'EMPRESA EXEMPLO 5', cnpj: '05.678.901/0001-05', grupo: 'GRUPO EXEMPLO 3', parceiro: 'Parceiro 3' },
+  { empresa: 'EMPRESA EXEMPLO 6', cnpj: '06.789.012/0001-06', grupo: 'GRUPO EXEMPLO 3', parceiro: 'Parceiro 1' },
+  { empresa: 'EMPRESA EXEMPLO 7', cnpj: '07.890.123/0001-07', grupo: 'None', parceiro: 'None' },
+  { empresa: 'EMPRESA EXEMPLO 8', cnpj: '08.901.234/0001-08', grupo: '-', parceiro: 'LARAFY' },
+  { empresa: 'EMPRESA EXEMPLO 9', cnpj: '09.012.345/0001-09', grupo: 'GRUPO EXEMPLO 4', parceiro: 'Parceiro 2' },
+  { empresa: 'EMPRESA EXEMPLO 10', cnpj: '10.123.456/0001-10', grupo: 'GRUPO EXEMPLO 4', parceiro: 'Parceiro 3' },
+]
+
+// tabela + cabeçalho compartilhados: a tela cheia e o fundo do detalhe
+function ConteudoClientes() {
+  const th = css({ padding: '12px 16px', fontSize: '14px', fontWeight: 700, color: A.text, textAlign: 'left', whiteSpace: 'nowrap', borderBottom: `1px solid ${A.line}` })
+  const td = css({ padding: '12px 16px', fontSize: '14px', color: A.slate, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '340px', borderBottom: `1px solid ${A.cinza}` })
+  return (
+    <>
+      {SidebarPrincipal('clientes')}
+      <div mix={colConteudo}>
+        <div mix={[painel, painelConteudo]}>
+          <div mix={degradeTopo} />
+          <div mix={css({ display: 'flex', alignItems: 'flex-start', gap: '16px' })}>
+            <div mix={css({ flex: 1 })}>
+              <h3 mix={h1}>Empresas</h3>
+              <p mix={sub}>Gerencie todas as empresas cadastradas.</p>
+            </div>
+            <span mix={btnPrimario}>{Icone(ICONE.add, 12)} Nova empresa</span>
+          </div>
+          <div mix={[inputFake, css({ width: '320px' })]}>{Icone(ICONE.busca, 14)} Buscar por nome ou CNPJ...</div>
+          <div mix={painel}>
+            <table mix={css({ borderCollapse: 'collapse', width: '100%' })}>
+              <thead>
+                <tr>
+                  {['Empresa', 'CNPJ', 'Grupo', 'Situação', 'Parceiro'].map((c) => (
+                    <th mix={th}>{c}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {CLIENTES_EMPRESAS.map((c) => (
+                  <tr data-app-nav="" data-target="clientes-detalhe" mix={css({ cursor: 'pointer', '&:hover td': { background: A.bg } })}>
+                    <td mix={[td, css({ color: A.text })]}>{c.empresa}</td>
+                    <td mix={[td, num]}>{c.cnpj}</td>
+                    <td mix={td}>{c.grupo}</td>
+                    <td mix={[td, css({ fontWeight: 700, color: A.text })]}>Ativa na RFB</td>
+                    <td mix={td}>{c.parceiro}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {/* paginador decorativo, como no histórico do PER/DCOMP */}
+            <div mix={css({ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '24px', padding: '12px 16px', fontSize: '13px', color: A.slate })}>
+              <span>Tamanho da Página: <strong>10</strong> {Icone(ICONE.tagSetaBaixo, 8)}</span>
+              <span mix={num}>1 até 10 de 708</span>
+              <span>Página <strong mix={num}>1</strong> de <strong mix={num}>71</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function TelaClientes() {
+  return (
+    <div data-app-screen="clientes" data-on="false" mix={telaRaiz}>
+      {ConteudoClientes()}
+    </div>
+  )
+}
+
+function TelaCliente() {
+  return (
+    <div data-app-screen="clientes-detalhe" data-on="false" mix={[telaRaiz, css({ position: 'relative', overflow: 'hidden' })]}>
+      {ConteudoClientes()}
+      {/* fundo escurecido; clicar nele fecha */}
+      <div data-app-nav="" data-target="clientes" mix={css({ position: 'absolute', inset: 0, background: 'rgba(2, 17, 24, 0.5)', cursor: 'pointer' })} />
+      <div mix={css({ position: 'absolute', top: 0, right: 0, bottom: 0, left: '690px', overflowY: 'auto', background: A.card, boxShadow: '-18px 0 44px rgba(2, 17, 24, 0.35)' })}>
+        <div mix={css({ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '16px 20px 0' })}>
+          <span mix={css({ display: 'grid', placeItems: 'center', width: '36px', height: '36px', borderRadius: '8px', background: A.cyanSoft, color: A.cyan, flexShrink: 0 })}>{Icone(ICONE.monitorHeart, 20)}</span>
+          <span mix={css({ flex: 1, minWidth: 0, lineHeight: 1.35 })}>
+            <strong mix={css({ display: 'block', fontSize: '15px' })}>EMPRESA EXEMPLO 1</strong>
+            <span mix={[num, css({ fontSize: '14px', color: A.teal })]}>01.234.567/0001-01</span>
+          </span>
+          <button type="button" data-app-nav="" data-target="clientes" aria-label="Fechar" mix={css({ border: 'none', background: 'none', cursor: 'pointer', color: A.muted, padding: '8px' })}>
+            {Icone(ICONE.fechar, 14)}
+          </button>
+        </div>
+        <div mix={css({ padding: '8px 24px 24px', display: 'flex', flexDirection: 'column', gap: '16px' })}>
+          <h3 mix={h1}>Dados da empresa</h3>
+          <div mix={[painel, css({ padding: '18px 24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px', background: A.card })]}>
+            {Campo('Grupo empresarial', 'GRUPO EXEMPLO 1')}
+            {Campo('Parceiro indicador', '-')}
+            {Campo('CNPJ', '01.234.567/0001-01')}
+            <span>
+              <span mix={[rotuloCampo, css({ display: 'flex', alignItems: 'center', gap: '8px' })]}>
+                Razão Social <span mix={tag(A.greenBg, A.green)}>Ativa</span>
+              </span>
+              <span mix={css({ fontSize: '14px', textTransform: 'uppercase' })}>EMPRESA EXEMPLO 1</span>
+            </span>
+            <div mix={css({ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' })}>
+              {Campo('Inscrição Estadual', '1234567890')}
+              {Campo('UF', 'SP')}
+              {Campo('Município', 'SÃO PAULO')}
+              {Campo('Número de filiais', '6 unidades')}
+            </div>
+            <span mix={css({ gridColumn: '1 / -1' })}>
+              <span mix={rotuloCampo}>Regime fiscal</span>
+              <span mix={css({ display: 'block', background: A.cinza, borderRadius: '8px', padding: '10px 14px' })}>
+                {['2021', '2022', '2023', '2024'].map((ano) => (
+                  <span mix={css({ display: 'block', fontSize: '13.5px', color: A.text, padding: '2px 0' })}>{ano} - Real/Estimativa</span>
+                ))}
+              </span>
+            </span>
+            <span mix={css({ gridColumn: '1 / -1' })}>
+              <span mix={rotuloCampo}>CNAE principal</span>
+              <span mix={css({ fontSize: '13.5px', color: A.text })}>4663-0/00 - Comércio atacadista de Máquinas e equipamentos para uso industrial; partes e peças</span>
+            </span>
+            <span mix={css({ gridColumn: '1 / -1' })}>
+              <span mix={rotuloCampo}>CNAE secundário</span>
+              <span mix={css({ display: 'block', background: A.cinza, borderRadius: '8px', padding: '10px 14px' })}>
+                {[
+                  '2599-3/02 - Serviço de corte e dobra de metais',
+                  '2599-3/99 - Fabricação de outros produtos de metal não especificados anteriormente',
+                  '4672-9/00 - Comércio atacadista de ferragens e ferramentas',
+                  '4679-6/99 - Comércio atacadista de materiais de construção em geral',
+                  '4744-0/01 - Comércio varejista de ferragens e ferramentas',
+                ].map((cnae) => (
+                  <span mix={css({ display: 'block', fontSize: '13.5px', color: A.text, padding: '2px 0' })}>{cnae}</span>
+                ))}
+              </span>
+            </span>
+          </div>
+          <div mix={[painel, css({ padding: '18px 24px', display: 'flex', flexDirection: 'column', gap: '16px', background: A.card })]}>
+            <strong mix={tituloPainel}>Endereço</strong>
+            <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr', gap: '16px 24px' })}>
+              {Campo('CEP', '01310-000')}
+              {Campo('Logradouro', 'AVENIDA EXEMPLO - 415')}
+              {Campo('UF', 'SP')}
+              {Campo('Número', '-')}
+              {Campo('Complemento', '-')}
+              {Campo('Bairro', '-')}
+              {Campo('Município', 'SÃO PAULO')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+// --- Configurações ---------------------------------------------------------
+
+const ABAS_CONFIG = [
+  { id: 'dados', rotulo: 'Dados da empresa' },
+  { id: 'usuarios', rotulo: 'Usuários' },
+  { id: 'permissoes', rotulo: 'Permissões' },
+  { id: 'certificados', rotulo: 'Certificados digitais' },
+  { id: 'sync', rotulo: 'Sincronizações' },
+]
+
+const USUARIOS_CONFIG = [
+  { nome: 'Tecnico 1', email: 'tecnico1@laratax.com.br', perfil: 'Master', ativo: true },
+  { nome: 'Tecnico 2', email: 'tecnico2@laratax.com.br', perfil: 'Master', ativo: true },
+  { nome: 'Tecnico 3', email: 'tecnico3@laratax.com.br', perfil: 'Master', ativo: true },
+  { nome: 'Tecnico 4', email: 'tecnico4@laratax.com.br', perfil: 'Master', ativo: false },
+  { nome: 'Tecnico 5', email: 'tecnico5@laratax.com.br', perfil: 'Operador', ativo: false },
+  { nome: 'Tecnico 6', email: 'tecnico6@laratax.com.br', perfil: 'Master', ativo: true },
+  { nome: 'Tecnico 7', email: 'tecnico7@laratax.com.br', perfil: 'Administrador', ativo: true },
+  { nome: 'Tecnico 8', email: 'tecnico8@laratax.com.br', perfil: 'Administrador', ativo: true },
+  { nome: 'Tecnico 9', email: 'tecnico9@laratax.com.br', perfil: 'Operador', ativo: false },
+  { nome: 'Tecnico 10', email: 'tecnico10@laratax.com.br', perfil: 'Administrador', ativo: false },
+]
+
+const CERTIFICADOS = [
+  { nome: 'CERTIFICADO EXEMPLO 1 LTDA', validade: '13/03/2026' },
+  { nome: 'CERTIFICADO EXEMPLO 2 LTDA', validade: '17/07/2026' },
+  { nome: 'CERTIFICADO EXEMPLO 3', validade: '19/03/2026' },
+  { nome: 'CERTIFICADO EXEMPLO 4 LTDA', validade: '03/09/2025' },
+  { nome: 'CERTIFICADO EXEMPLO 5 LTDA', validade: '02/06/2026' },
+  { nome: 'CERTIFICADO EXEMPLO 6 LTDA', validade: '21/10/2025' },
+  { nome: 'CERTIFICADO EXEMPLO 7 LTDA', validade: '04/03/2026' },
+  { nome: 'CERTIFICADO EXEMPLO 8 LTDA', validade: '14/08/2026' },
+  { nome: 'CERTIFICADO EXEMPLO 9 LTDA', validade: '21/01/2026' },
+  { nome: 'CERTIFICADO EXEMPLO 10 LTDA', validade: '13/03/2026' },
+]
+
+const SYNCS = [
+  { nome: 'e-CAC', desc: 'Caixa postal, situação fiscal e procurações', ultima: '24/08/2026 - 06:12', ativa: true },
+  { nome: 'SPED', desc: 'EFD Contribuições e EFD ICMS/IPI', ultima: '24/08/2026 - 05:40', ativa: true },
+  { nome: 'e-Social', desc: 'Eventos e obrigações trabalhistas', ultima: '23/08/2026 - 22:10', ativa: false },
+  { nome: 'Receita Federal', desc: 'PER/DCOMP, processos e caixa postal', ultima: '24/08/2026 - 04:05', ativa: true },
+]
+
+// paginador decorativo compartilhado pelas tabelas de Configurações
+function PagerConfig(faixa: string, pagina: string) {
+  return (
+    <div mix={css({ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '24px', padding: '12px 16px', fontSize: '13px', color: A.slate })}>
+      <span>Tamanho da Página: <strong>10</strong> {Icone(ICONE.tagSetaBaixo, 8)}</span>
+      <span mix={num}>{faixa}</span>
+      <span>Página {pagina}</span>
+    </div>
+  )
+}
+
+function TelaConfig() {
+  const th = css({ padding: '12px 16px', fontSize: '14px', fontWeight: 700, color: A.text, textAlign: 'left', whiteSpace: 'nowrap', borderBottom: `1px solid ${A.line}` })
+  const td = css({ padding: '12px 16px', fontSize: '14px', color: A.slate, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '360px', borderBottom: `1px solid ${A.cinza}` })
+  const rotulo = css({ display: 'block', fontSize: '14px', fontWeight: 500, color: A.text, marginBottom: '6px' })
+  const campo = css({ display: 'flex', alignItems: 'center', gap: '8px', height: '40px', padding: '0 14px', borderRadius: '8px', border: `1px solid ${A.lineForte}`, background: A.card, fontSize: '14px', color: A.text })
+  const campoTravado = css({ background: A.cinza, borderColor: 'transparent', color: A.slate })
+  const maisVert = (
+    <span mix={css({ display: 'grid', placeItems: 'center', width: '32px', height: '32px', borderRadius: '999px', border: `1px solid ${A.line}`, color: A.muted })}>
+      {Icone(ICONE.maisVert, 14)}
+    </span>
+  )
+  const cab = (id: string, titulo: string, descricao: string, botao?: string) => (
+    <div data-sub-screen={id} data-on={id === 'dados' ? 'true' : 'false'}>
+      <div mix={css({ display: 'flex', alignItems: 'flex-start', gap: '16px' })}>
+        <div mix={css({ flex: 1 })}>
+          <h3 mix={h1}>{titulo}</h3>
+          <p mix={sub}>{descricao}</p>
+        </div>
+        {botao ? <span mix={btnPrimario}>{Icone(ICONE.add, 12)} {botao}</span> : null}
+      </div>
+    </div>
+  )
+  const tagPerfil = (perfil: string) =>
+    perfil === 'Master' ? tag(A.cyanSoft, A.teal) : tag(A.cinza, A.slate)
+  return (
+    <div data-app-screen="config" data-on="false" mix={telaRaiz}>
+      {SidebarPrincipal('config')}
+      <div mix={colConteudo}>
+        <div mix={[painel, painelConteudo]}>
+          <div mix={degradeTopo} />
+          <div data-sub-scope="" mix={css({ display: 'flex', flexDirection: 'column', gap: '20px' })}>
+            {/* cabeçalhos por aba: mesmo id do conteúdo, alternam juntos */}
+            {cab('dados', 'Dados da empresa', 'Configure os dados fiscais e informações da sua empresa')}
+            {cab('usuarios', 'Meus usuários', 'Gerencie os usuários com acesso ao sistema', 'Convidar usuário')}
+            {cab('permissoes', 'Perfis de permissionamento', 'Configure e gerencie permissões de acesso ao sistema', 'Criar novo perfil')}
+            {cab('certificados', 'Certificados digitais', 'Gerencie os certificados para assinatura de documentos e emissão de notas fiscais', 'Importar certificado')}
+            {cab('sync', 'Sincronizações', 'Acompanhe as integrações e sincronizações automáticas de dados')}
+
+            <div mix={css({ display: 'flex', gap: '24px', borderBottom: `1px solid ${A.line}` })}>
+              {ABAS_CONFIG.map((a, i) => (
+                <button type="button" data-sub-nav="" data-sub-target={a.id} data-on={i === 0 ? 'true' : 'false'} mix={abaProjeto}>
+                  {a.rotulo}
+                </button>
+              ))}
+            </div>
+
+            {/* aba: dados da empresa */}
+            <div data-sub-screen="dados" data-on="true">
+              <div mix={css({ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '1240px' })}>
+                <div>
+                  <strong mix={css({ fontSize: '16px' })}>Dados da empresa</strong>
+                  <p mix={sub}>Configure os dados fiscais e informações da sua empresa</p>
+                </div>
+                <div mix={css({ width: '420px' })}>
+                  <span mix={rotulo}>CNPJ</span>
+                  <span mix={[campo, campoTravado, num]}>12.345.678/0001-90</span>
+                </div>
+                <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' })}>
+                  <div>
+                    <span mix={rotulo}>Nome da empresa</span>
+                    <span mix={[campo, campoTravado]}>LARAFY CONSULTORIA LTDA</span>
+                    <p mix={[sub, css({ fontSize: '13px', marginTop: '6px' })]}>Este nome ficará visível em relatórios e exportações.</p>
+                  </div>
+                  <div>
+                    <span mix={rotulo}>Razão social</span>
+                    <span mix={[campo, campoTravado]}>LARAFY CONSULTORIA LTDA</span>
+                  </div>
+                </div>
+                <div mix={css({ display: 'grid', gridTemplateColumns: '260px 440px', gap: '24px' })}>
+                  <div>
+                    <span mix={rotulo}>Telefone</span>
+                    <span mix={[campo, num]}>(11) 99999-9999</span>
+                  </div>
+                  <div>
+                    <span mix={rotulo}>Endereço de e-mail</span>
+                    <span mix={campo}>tecnicoum@laratax.com.br</span>
+                  </div>
+                </div>
+                <div mix={css({ marginTop: '12px' })}>
+                  <strong mix={css({ fontSize: '16px' })}>Endereço da empresa</strong>
+                  <p mix={sub}>O endereço da empresa será utilizado para fins de contato e emissão de notas fiscais</p>
+                </div>
+                <div mix={css({ width: '420px' })}>
+                  <span mix={rotulo}>CEP</span>
+                  <span mix={campo}>
+                    <span mix={[num, css({ flex: 1 })]}>80000-000</span>
+                    <span mix={css({ color: A.cyan, fontWeight: 500, cursor: 'pointer' })}>Buscar</span>
+                  </span>
+                </div>
+                <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '24px' })}>
+                  <div>
+                    <span mix={rotulo}>Endereço</span>
+                    <span mix={campo}>RUA EXEMPLO - 123</span>
+                  </div>
+                  <div>
+                    <span mix={rotulo}>Número</span>
+                    <span mix={campo} />
+                  </div>
+                </div>
+                <div mix={css({ width: '55%' })}>
+                  <span mix={rotulo}>Complemento</span>
+                  <span mix={campo} />
+                </div>
+                <div mix={css({ display: 'grid', gridTemplateColumns: '220px 1fr 1fr', gap: '24px' })}>
+                  <div>
+                    <span mix={rotulo}>UF</span>
+                    <span mix={campo}>
+                      <span mix={css({ flex: 1 })}>PR</span>
+                      {Icone(ICONE.chevronBaixo, 12)}
+                    </span>
+                  </div>
+                  <div>
+                    <span mix={rotulo}>Município</span>
+                    <span mix={campo}>SAO JOSE DOS PINHAIS</span>
+                  </div>
+                  <div>
+                    <span mix={rotulo}>Bairro</span>
+                    <span mix={campo} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* aba: usuários */}
+            <div data-sub-screen="usuarios" data-on="false">
+              <div mix={css({ display: 'flex', flexDirection: 'column', gap: '16px' })}>
+                <div mix={[inputFake, css({ width: '300px' })]}>{Icone(ICONE.busca, 14)} Buscar por nome ou e-mail...</div>
+                <div mix={painel}>
+                  <table mix={css({ borderCollapse: 'collapse', width: '100%' })}>
+                    <thead>
+                      <tr>
+                        {['Nome', 'E-mail', 'Perfil', 'Situação', ''].map((c) => (
+                          <th mix={th}>{c}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {USUARIOS_CONFIG.map((u) => (
+                        <tr>
+                          <td mix={[td, css({ color: A.text })]}>{u.nome}</td>
+                          <td mix={td}>{u.email}</td>
+                          <td mix={td}><span mix={tagPerfil(u.perfil)}>{u.perfil}</span></td>
+                          <td mix={td}>
+                            <span mix={u.ativo ? tag(A.greenBg, A.green) : tag(A.cinza, A.slate)}>{u.ativo ? 'Ativo' : 'Inativo'}</span>
+                          </td>
+                          <td mix={[td, css({ width: '48px' })]}>{maisVert}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {PagerConfig('1 até 10 de 58', '1 de 6')}
+                </div>
+              </div>
+            </div>
+
+            {/* aba: permissões */}
+            <div data-sub-screen="permissoes" data-on="false">
+              <div mix={css({ display: 'flex', flexDirection: 'column', gap: '16px' })}>
+                <div mix={[inputFake, css({ width: '300px' })]}>{Icone(ICONE.busca, 14)} Buscar permissão...</div>
+                <div mix={painel}>
+                  <table mix={css({ borderCollapse: 'collapse', width: '100%' })}>
+                    <thead>
+                      <tr>
+                        <th mix={[th, css({ width: '48px' })]}>{Caixa(false)}</th>
+                        {['Permissão', 'Módulos', 'Usuários', ''].map((c) => (
+                          <th mix={th}>{c}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { nome: 'junior', descricao: 'permissões', modulos: ['Clientes', 'Projetos'], usuarios: '1 usuário' },
+                        { nome: 'Super Admin', descricao: 'Acesso total', modulos: ['Faturamento', 'Clientes', '+2'], usuarios: '18 usuários' },
+                      ].map((p) => (
+                        <tr>
+                          <td mix={td}>{Caixa(false)}</td>
+                          <td mix={td}>
+                            <strong mix={css({ display: 'block', fontSize: '14px', color: A.text })}>{p.nome}</strong>
+                            <span mix={css({ fontSize: '13px' })}>{p.descricao}</span>
+                          </td>
+                          <td mix={td}>
+                            <span mix={css({ display: 'inline-flex', gap: '6px' })}>
+                              {p.modulos.map((m) => (
+                                <span mix={tag(A.cinza, A.slate)}>{m}</span>
+                              ))}
+                            </span>
+                          </td>
+                          <td mix={td}>{p.usuarios}</td>
+                          <td mix={[td, css({ width: '48px' })]}>{maisVert}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {PagerConfig('1 até 2 de 2', '1 de 1')}
+                </div>
+              </div>
+            </div>
+
+            {/* aba: certificados digitais (dados placeholder) */}
+            <div data-sub-screen="certificados" data-on="false">
+              <div mix={painel}>
+                <table mix={css({ borderCollapse: 'collapse', width: '100%' })}>
+                  <thead>
+                    <tr>
+                      {['Nome', 'Data de validade', 'Situação', ''].map((c) => (
+                        <th mix={th}>{c}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {CERTIFICADOS.map((c) => (
+                      <tr>
+                        <td mix={[td, css({ color: A.text })]}>{c.nome}</td>
+                        <td mix={td}>
+                          <strong mix={[num, css({ display: 'block', color: A.text, fontWeight: 600 })]}>{c.validade}</strong>
+                          <span mix={css({ fontSize: '13px' })}>Expirado</span>
+                        </td>
+                        <td mix={td}><span mix={tag(A.redBg, A.red)}>Vencido</span></td>
+                        <td mix={[td, css({ width: '120px' })]}>
+                          {/* ponytail: ícone de lixeira não está no set — × cobre a demo */}
+                          <span mix={css({ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(185, 28, 28, 0.35)', color: A.red, fontSize: '13px', fontWeight: 500, cursor: 'pointer' })}>
+                            {Icone(ICONE.fechar, 10)} Excluir
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {PagerConfig('1 até 10 de 32', '1 de 4')}
+              </div>
+            </div>
+
+            {/* aba: sincronizações */}
+            <div data-sub-screen="sync" data-on="false">
+              <div mix={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
+                {SYNCS.map((s) => (
+                  <div mix={[painel, css({ display: 'flex', alignItems: 'center', gap: '20px', padding: '16px 20px' })]}>
+                    <span mix={css({ display: 'grid', placeItems: 'center', width: '40px', height: '40px', borderRadius: '8px', background: A.cyanSoft, color: A.cyan, flexShrink: 0 })}>
+                      {Icone(ICONE.sync, 18)}
+                    </span>
+                    <span mix={css({ flex: 1, minWidth: 0 })}>
+                      <strong mix={css({ display: 'block', fontSize: '14px' })}>{s.nome}</strong>
+                      <span mix={css({ fontSize: '13px', color: A.muted })}>{s.desc}</span>
+                    </span>
+                    <span mix={css({ fontSize: '13px', color: A.muted, whiteSpace: 'nowrap' })}>
+                      Última sincronização: <span mix={num}>{s.ultima}</span>
+                    </span>
+                    <span mix={s.ativa ? tag(A.cyanSoft, A.teal) : tag(A.cinza, A.slate)}>{s.ativa ? 'Ativa' : 'Pausada'}</span>
+                    <span mix={css({ width: '40px', height: '22px', borderRadius: '999px', flexShrink: 0, background: s.ativa ? A.cyan : A.lineForte, position: 'relative', '&::after': { content: '""', position: 'absolute', top: '3px', right: s.ativa ? '3px' : '21px', width: '16px', height: '16px', borderRadius: '50%', background: A.card } })} />
+                    <span mix={btnContorno}>{Icone(ICONE.sync, 14)} Sincronizar agora</span>
+                  </div>
+                ))}
+                <p mix={[sub, css({ fontSize: '13px' })]}>As sincronizações automáticas rodam a cada 6 horas. Dados fictícios para demonstração.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+// --- Faturamento -----------------------------------------------------------
+
+const PAGAMENTOS = [
+  { id: 'pay_r5oei31l8s8yt7o2', motivo: 'Compra de 842 xmls ...', desc: 'PIX', valor: 'R$ 126,30', pago: false },
+  { id: 'pay_mpeeaqdx0ei8tiyv', motivo: 'Compra de 1291 xml...', desc: 'PIX', valor: 'R$ 167,83', pago: false },
+  { id: 'pay_3l1xzkbgy6lqgibz', motivo: '', desc: '', valor: 'R$ 599,90', pago: false },
+  { id: 'pay_t3y2xnl35s4j15vn', motivo: '', desc: '', valor: 'R$ 599,90', pago: false },
+  { id: 'pay_m99l8jc2k72cvr...', motivo: '', desc: '', valor: 'R$ 599,90', pago: false },
+  { id: 'pay_5444r87b0n2rjjii', motivo: '', desc: '', valor: 'R$ 599,90', pago: true },
+  { id: 'pay_yyy3cdp3tfy36tzw', motivo: '', desc: '', valor: 'R$ 150,00', pago: true },
+  { id: 'pay_4g63nl6uuvms9...', motivo: '', desc: '', valor: 'R$ 150,00', pago: true },
+  { id: 'pay_6ezrmgi9tiwah5...', motivo: '', desc: '', valor: 'R$ 599,90', pago: true },
+  { id: 'pay_xy5r3p6r46zzgjar', motivo: '', desc: '', valor: 'R$ 599,90', pago: true },
+]
+
+function TelaFaturamento() {
+  const th = css({ padding: '12px 16px', fontSize: '14px', fontWeight: 700, color: A.text, textAlign: 'left', whiteSpace: 'nowrap', borderBottom: `1px solid ${A.line}` })
+  const td = css({ padding: '12px 16px', fontSize: '14px', color: A.slate, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '260px', borderBottom: `1px solid ${A.cinza}` })
+  const saldo = (icon: IconDef, rotuloSaldo: string, valor: string) => (
+    <span mix={css({ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 })}>
+      <span mix={css({ display: 'grid', placeItems: 'center', width: '48px', height: '48px', borderRadius: '10px', background: A.cinza, color: A.text, flexShrink: 0 })}>
+        {Icone(icon, 22)}
+      </span>
+      <span mix={css({ lineHeight: 1.3 })}>
+        <span mix={css({ display: 'block', fontSize: '14px', color: A.slate })}>{rotuloSaldo}</span>
+        <strong mix={[num, css({ fontSize: '24px', fontWeight: 700 })]}>{valor}</strong>
+      </span>
+    </span>
+  )
+  return (
+    <div data-app-screen="faturamento" data-on="false" mix={telaRaiz}>
+      {SidebarPrincipal('faturamento')}
+      <div mix={colConteudo}>
+        <div mix={[painel, painelConteudo]}>
+          <div mix={degradeTopo} />
+          <div mix={css({ display: 'flex', alignItems: 'flex-start', gap: '16px', paddingBottom: '20px', borderBottom: `1px solid ${A.line}` })}>
+            <div mix={css({ flex: 1 })}>
+              <h3 mix={h1}>Faturamento</h3>
+              <p mix={sub}>Gerencie seus planos, pagamentos e notas fiscais.</p>
+            </div>
+            <span mix={btnContorno}>Histórico de consumo</span>
+          </div>
+
+          <strong mix={css({ fontSize: '16px' })}>Saldos disponíveis</strong>
+          <div mix={[painel, css({ display: 'flex', alignItems: 'center', gap: '24px', padding: '20px 24px' })]}>
+            {saldo(ICONE.token, 'Tokens de diagnóstico', '41.061')}
+            {saldo(ICONE.download, 'Tokens de baixa de XML', '1.000.000.100')}
+            <button type="button" data-modal-abre="recarga" mix={btnPrimario}>
+              Recarregar
+            </button>
+          </div>
+
+          <strong mix={css({ fontSize: '16px' })}>Pagamentos e notas fiscais</strong>
+          <div mix={painel}>
+            <table mix={css({ borderCollapse: 'collapse', width: '100%' })}>
+              <thead>
+                <tr>
+                  {['Data', 'ID do pagamento', 'Motivo', 'Descrição', 'Vencimento'].map((c) => (
+                    <th mix={th}>{c}</th>
+                  ))}
+                  <th mix={[th, css({ textAlign: 'right' })]}>Valor</th>
+                  <th mix={th}>Situação</th>
+                  <th mix={th} />
+                </tr>
+              </thead>
+              <tbody>
+                {PAGAMENTOS.map((p) => (
+                  <tr>
+                    <td mix={td}>-</td>
+                    <td mix={[td, num, css({ color: A.text })]}>{p.id}</td>
+                    <td mix={td}>{p.motivo}</td>
+                    <td mix={td}>{p.desc}</td>
+                    <td mix={td}>-</td>
+                    <td mix={[td, num, css({ textAlign: 'right', color: A.text })]}>{p.valor}</td>
+                    <td mix={td}>
+                      <span mix={p.pago ? tag(A.greenBg, A.green) : tag(A.cyanSoft, A.teal)}>{p.pago ? 'Pago' : 'Pendente'}</span>
+                    </td>
+                    <td mix={[td, css({ width: '48px' })]}>
+                      <span mix={css({ display: 'grid', placeItems: 'center', width: '32px', height: '32px', borderRadius: '999px', border: `1px solid ${A.line}`, color: A.muted })}>
+                        {Icone(ICONE.maisVert, 14)}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {PagerConfig('1 até 10 de 24', '1 de 3')}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// popup "Recarga de tokens": global à janela, abre por [data-modal-abre]; tudo estático
+function ModalRecarga() {
+  const titulo = css({ fontSize: '16px', fontWeight: 700, color: A.text })
+  // rádio pintado por CSS a partir do data-on do botão-cartão pai
+  const radio = (
+    <span data-radio="" mix={css({ width: '20px', height: '20px', borderRadius: '50%', flexShrink: 0, border: `2px solid ${A.lineForte}`, display: 'grid', placeItems: 'center' })}>
+      <span data-ponto="" mix={css({ width: '10px', height: '10px', borderRadius: '50%', background: A.cyan, opacity: 0 })} />
+    </span>
+  )
+  const cartao = css({
+    display: 'flex', alignItems: 'center', gap: '16px', padding: '18px 20px', borderRadius: '10px',
+    border: `1px solid ${A.line}`, background: 'none', font: 'inherit', color: A.text, cursor: 'pointer', textAlign: 'left',
+    '&[data-on="true"]': { borderColor: A.cyan },
+  })
+  const faixa = (preco: string, quando: string, atual: boolean) => (
+    <span mix={css({ position: 'relative', display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center', padding: '20px 10px', borderRadius: '10px', border: `1px solid ${atual ? A.cyan : A.line}` })}>
+      {atual ? (
+        <span mix={css({ position: 'absolute', top: '-11px', padding: '3px 12px', borderRadius: '999px', background: A.cyanSoft, color: A.teal, fontSize: '12px', fontWeight: 700 })}>Atual</span>
+      ) : null}
+      <strong mix={[num, css({ fontSize: '17px', color: atual ? A.text : A.muted })]}>{preco}</strong>
+      <span mix={[num, css({ fontSize: '13px', color: A.muted })]}>{quando}</span>
+    </span>
+  )
+  return (
+    <div data-app-modal="recarga" data-on="false">
+      <div mix={css({ position: 'absolute', inset: 0, zIndex: 10, display: 'grid', placeItems: 'center', padding: '24px' })}>
+        {/* véu: clicar fora fecha */}
+        <span data-modal-fecha="" mix={css({ position: 'absolute', inset: 0, background: 'rgba(2, 17, 24, 0.5)', cursor: 'pointer' })} />
+        <div data-sub-scope="" mix={css({ position: 'relative', width: '780px', maxWidth: '100%', maxHeight: '100%', overflowY: 'auto', background: A.card, borderRadius: '16px', boxShadow: '0 24px 60px rgba(2, 17, 24, 0.4)', padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: '18px' })}>
+          <div mix={css({ display: 'flex', alignItems: 'center', gap: '12px' })}>
+            <strong mix={css({ flex: 1, fontSize: '19px', fontWeight: 700 })}>Recarga de tokens</strong>
+            <button type="button" data-modal-fecha="" aria-label="Fechar" mix={css({ border: 'none', background: 'none', cursor: 'pointer', color: A.muted, padding: '8px' })}>
+              {Icone(ICONE.fechar, 14)}
+            </button>
+          </div>
+          <p mix={[sub, css({ margin: 0 })]}>Receba descontos progressivos</p>
+          <p data-sub-screen="baixa" data-on="false" mix={css({ margin: 0, fontSize: '15px', color: A.red })}>
+            Preços não configurados para este tipo de token. Entre em contato com o suporte.
+          </p>
+
+          <strong mix={titulo}>Tipo de Token</strong>
+          <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' })}>
+            <button type="button" data-sub-nav="" data-sub-target="diag" data-on="true" mix={cartao}>
+              <span mix={css({ flex: 1 })}>
+                <strong mix={css({ display: 'block', fontSize: '16px', marginBottom: '6px' })}>Token de diagnóstico</strong>
+                <span mix={css({ fontSize: '14px', color: A.slate })}>Uso para projetos de diagnóstico tributário.</span>
+              </span>
+              {radio}
+            </button>
+            <button type="button" data-sub-nav="" data-sub-target="baixa" data-on="false" mix={cartao}>
+              <span mix={css({ flex: 1 })}>
+                <strong mix={css({ display: 'block', fontSize: '16px', marginBottom: '6px' })}>Tokens de baixas</strong>
+                <span mix={css({ fontSize: '14px', color: A.slate })}>Uso para projetos de baixas de obrigações acessórias.</span>
+              </span>
+              {radio}
+            </button>
+          </div>
+
+          <strong mix={titulo}>Forma de pagamento</strong>
+          {/* escopo aninhado: a forma de pagamento alterna sem mexer no tipo de token */}
+          <div data-sub-scope="" mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' })}>
+            <button type="button" data-sub-nav="" data-sub-target="pix" data-on="true" mix={cartao}>
+              {/* ponytail: logo do PIX aproximado com ícone do set */}
+              <span mix={css({ display: 'grid', placeItems: 'center', width: '52px', height: '52px', borderRadius: '12px', background: A.cyan, color: '#ffffff', flexShrink: 0 })}>
+                {Icone(ICONE.token, 24)}
+              </span>
+              <strong mix={css({ flex: 1, fontSize: '16px' })}>Pagamento por PIX</strong>
+              {radio}
+            </button>
+            <button type="button" data-sub-nav="" data-sub-target="boleto" data-on="false" mix={cartao}>
+              <span mix={css({ display: 'grid', placeItems: 'center', width: '52px', height: '52px', borderRadius: '12px', background: A.cinza, flexShrink: 0 })}>
+                <span mix={css({ width: '26px', height: '18px', background: `repeating-linear-gradient(90deg, ${A.cyan} 0 2px, transparent 2px 5px)` })} />
+              </span>
+              <strong mix={css({ flex: 1, fontSize: '16px' })}>Boleto bancário</strong>
+              {radio}
+            </button>
+          </div>
+
+          <div mix={css({ display: 'flex', alignItems: 'baseline' })}>
+            <strong mix={titulo}>Quantidade</strong>
+            <span data-sub-screen="diag" data-on="true" mix={[num, css({ marginLeft: 'auto', fontSize: '14px', color: A.slate })]}>2761 para o limite</span>
+            <span data-sub-screen="baixa" data-on="false" mix={[num, css({ marginLeft: 'auto', fontSize: '14px', color: A.slate })]}>2760 para o limite</span>
+          </div>
+          <div mix={css({ display: 'flex', alignItems: 'center', gap: '24px' })}>
+            <span mix={css({ flex: 1, height: '4px', borderRadius: '999px', background: A.line, position: 'relative' })}>
+              <span mix={css({ position: 'absolute', left: 0, top: 0, bottom: 0, width: '8%', borderRadius: '999px', background: A.cyan })} />
+              <span mix={css({ position: 'absolute', left: '8%', top: '50%', transform: 'translate(-50%, -50%)', width: '20px', height: '20px', borderRadius: '50%', background: A.card, border: `1px solid ${A.lineForte}`, boxShadow: '0 1px 4px rgba(2, 17, 24, 0.25)' })} />
+            </span>
+            <span mix={css({ display: 'flex', alignItems: 'stretch', borderRadius: '8px', border: `1px solid ${A.lineForte}`, overflow: 'hidden' })}>
+              <span mix={[num, css({ padding: '10px 16px', fontSize: '15px' })]}>240</span>
+              <span mix={css({ padding: '10px 14px', fontSize: '14px', color: A.muted, borderLeft: `1px solid ${A.lineForte}` })}>und</span>
+            </span>
+          </div>
+
+          <strong mix={titulo}>Progressão de descontos</strong>
+          <div data-sub-screen="diag" data-on="true">
+            <div mix={css({ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' })}>
+              {faixa('R$ 30,00', 'Até 180', false)}
+              {faixa('R$ 27,00', '181 a 300', true)}
+              {faixa('R$ 25,00', '301 a 600', false)}
+              {faixa('R$ 16,67', '601 a 3000', false)}
+            </div>
+          </div>
+
+          <div data-sub-screen="diag" data-on="true">
+            <div mix={[painel, css({ padding: '18px 24px', display: 'flex', flexDirection: 'column', gap: '14px' })]}>
+              <div mix={css({ display: 'flex', alignItems: 'baseline' })}>
+                <span mix={css({ fontSize: '15px' })}>Desconto aplicado</span>
+                <strong mix={[num, css({ marginLeft: 'auto', color: A.cyan, fontSize: '17px' })]}>- R$ 720,00</strong>
+              </div>
+              <div mix={css({ height: '1px', background: A.line })} />
+              <div mix={css({ display: 'flex', alignItems: 'center', gap: '16px' })}>
+                <span mix={css({ flex: 1 })}>
+                  <strong mix={css({ display: 'block', fontSize: '15px' })}>Total da recarga</strong>
+                  <span mix={css({ fontSize: '14px', color: A.slate })}>
+                    Faltam <strong>61</strong> tokens para pagar <span mix={[num, css({ color: A.cyan, fontWeight: 700 })]}>R$ 25,00</span>
+                  </span>
+                </span>
+                <strong mix={[num, css({ fontSize: '27px', fontWeight: 700 })]}>R$ 6.480,00</strong>
+              </div>
+            </div>
+          </div>
+          <div data-sub-screen="baixa" data-on="false">
+            <div mix={[painel, css({ padding: '18px 24px', display: 'flex', flexDirection: 'column', gap: '14px' })]}>
+              <div mix={css({ display: 'flex', alignItems: 'baseline' })}>
+                <span mix={css({ fontSize: '15px' })}>Desconto aplicado</span>
+                <strong mix={[num, css({ marginLeft: 'auto', color: A.cyan, fontSize: '17px' })]}>- R$ 0,00</strong>
+              </div>
+              <div mix={css({ height: '1px', background: A.line })} />
+              <div mix={css({ display: 'flex', alignItems: 'center', gap: '16px' })}>
+                <span mix={css({ flex: 1 })}>
+                  <strong mix={css({ display: 'block', fontSize: '15px' })}>Total da recarga</strong>
+                  <span mix={css({ fontSize: '14px', color: A.slate })}>Você está no último tier de desconto.</span>
+                </span>
+                <strong mix={[num, css({ fontSize: '27px', fontWeight: 700 })]}>R$ 0,00</strong>
+              </div>
+            </div>
+          </div>
+
+          <div mix={css({ display: 'flex', justifyContent: 'flex-end', gap: '12px' })}>
+            <button type="button" data-modal-fecha="" mix={css({ padding: '10px 18px', borderRadius: '8px', border: 'none', background: A.cinza, color: A.text, font: 'inherit', fontSize: '14px', fontWeight: 500, cursor: 'pointer' })}>
+              Cancelar
+            </button>
+            <span data-sub-screen="diag" data-on="true">
+              <button type="button" data-modal-fecha="" mix={btnPrimario}>
+                Recarregar agora
+              </button>
+            </span>
+            <span data-sub-screen="baixa" data-on="false">
+              {/* sem preço configurado: botão desabilitado, não fecha */}
+              <span mix={[btnPrimario, css({ opacity: 0.55, cursor: 'not-allowed' })]}>Recarregar agora</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>

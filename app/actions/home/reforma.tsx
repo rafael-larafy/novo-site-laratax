@@ -9,7 +9,7 @@ import {
   eyebrow,
   heading2,
   lead,
-  section,
+  stage,
   surfaceContrast,
 } from '../../ui/tokens.ts'
 
@@ -41,15 +41,14 @@ const RIGHT_FLOWS = [
 
 export function Reforma() {
   return () => (
-    <section
-      id="reforma"
+    <section id="reforma" mix={css({padding:'12px 0', scrollMarginTop:'84px'})}>
+      <div
       mix={[
-        section,
         surfaceContrast,
+        stage,
         css({
           backgroundImage:
             'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(7,224,255,0.07), transparent 70%), radial-gradient(ellipse 60% 50% at 75% 40%, rgba(0, 194, 239,0.08), transparent)',
-          borderTop: '1px solid rgba(7,224,255,0.18)',
         }),
       ]}
     >
@@ -135,6 +134,7 @@ export function Reforma() {
         </div>
         <FlowPanel />
       </div>
+    </div>
     </section>
   )
 }
