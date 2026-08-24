@@ -213,9 +213,6 @@ if (stepsWrap && trilho) {
 }
 
 // --- réplica da plataforma (seção 02) -----------------------------------
-// Troca de telas do app-demo: [data-app-nav data-target] ativa o
-// [data-app-screen] correspondente e sincroniza o estado de todos os
-// controles que apontam para a mesma tela (pills, sidebar, botões).
 const appDemo = document.querySelector<HTMLElement>('[data-app-demo]')
 if (appDemo) {
   const telas = Array.from(appDemo.querySelectorAll<HTMLElement>('[data-app-screen]'))
@@ -225,7 +222,8 @@ if (appDemo) {
       tela.dataset.on = tela.dataset.appScreen === id ? 'true' : 'false'
     })
     controles.forEach((c) => {
-      c.dataset.on = c.dataset.target === id ? 'true' : 'false'
+      // prefixo cobre sub-telas (perdcomp-clientes acende o item "perdcomp")
+      c.dataset.on = c.dataset.target === id || id.startsWith(c.dataset.target + '-') ? 'true' : 'false'
     })
   }
   controles.forEach((c) => {
@@ -237,9 +235,7 @@ if (appDemo) {
 }
 
 // --- hero carrossel (/v2) -----------------------------------------------
-// Port do hero React/framer-motion: autoplay com barra de progresso em rAF,
-// crossfade de fundo e card-destaque via data-on (transições no CSS do
-// componente). Sem JS o primeiro slide fica estático — nada quebra.
+
 const heroSlides = document.querySelector<HTMLElement>('[data-hero-slides]')
 if (heroSlides) {
   const HERO_DURATION = 7000

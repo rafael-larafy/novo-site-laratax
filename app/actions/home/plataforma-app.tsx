@@ -1,14 +1,9 @@
 import { css } from 'remix/ui'
 
 import { FONT_MONO } from '../../ui/tokens.ts'
+import button from 'remix/ui/button';
+import { buttonStyle } from 'remix/ui/menu';
 
-// Réplica navegável da plataforma (app.laratax.com.br) com dados fictícios,
-// replicando 1:1 os frames do Figma "Motions": Home (78:18822), Projects - All
-// (78:10268), Create Project (78:9274) e Analytics - Reforma - Dashboard Geral
-// (78:14474). Paleta, ícones (SVGs exportados do arquivo) e medidas vêm do
-// design system oficial. Estudo do produto em docs/estudo-plataforma.md.
-// Navegação: [data-app-nav data-target] troca [data-app-screen] via landing.ts;
-// sem JS a Visão geral fica estática.
 
 // Paleta oficial do design system (variáveis do arquivo Figma)
 const A = {
@@ -169,7 +164,7 @@ const PROJETOS: Projeto[] = [
 const NAV_PRINCIPAL: Array<{ label: string; target?: string; icon: IconDef }> = [
   { label: 'Início', target: 'inicio', icon: ICONE.home },
   { label: 'Projetos', target: 'projetos', icon: ICONE.layers },
-  { label: 'Controle PERD/COMP', icon: ICONE.receiptLong },
+  { label: 'Controle PER/DCOMP', target: 'perdcomp', icon: ICONE.receiptLong },
   { label: 'Clientes', icon: ICONE.usuarios },
   { label: 'Configurações', icon: ICONE.config },
   { label: 'Faturamento', icon: ICONE.dinheiro },
@@ -620,7 +615,7 @@ function CardTokens() {
   )
 }
 
-function SidebarPrincipal(ativo: 'inicio' | 'projetos') {
+function SidebarPrincipal(ativo: 'inicio' | 'projetos'| 'perdcomp') {
   return (
     <aside
       mix={css({
@@ -748,7 +743,7 @@ function LinhaProjeto(p: Projeto) {
           </>
         ) : null}
       </div>
-      <div mix={css({ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '4px', width: '210px', minWidth: '144px', height: '64px', flexShrink: 0 })}>
+      <div mix={css({ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '4px', width: '210px', minWidth: '144px', height: '64px',flex:'0 1 210px'})}>
         <span mix={css({ fontSize: '14px', lineHeight: 1 })}>{p.tipo}</span>
         <span mix={css({ display: 'flex', flexWrap: 'wrap', gap: '4px' })}>
           {p.chips.map((c) => (
@@ -1521,6 +1516,396 @@ export function PlataformaApp() {
           {TelaProjetos()}
           {TelaNovoProjeto()}
           {TelaReforma()}
+          {TelaPerdcompDash()}
+          {TelaPerdcompClientes()}
+          {TelaPerdcompCliente()}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+//PER/DCOMP - dados
+
+const MESES = ['09/25', '10/25', '11/25', '12/25', '01/26', '02/26', '03/26', '04/26', '05/26', '06/26', '07/26', '08/26']
+
+const KPIS_PERDCOMP = [
+  {icone:ICONE.dinheiro,rotulo: 'Crédito original',valor:'R$ 28.262.210,02'},  
+  {icone:ICONE.sync,rotulo:'Crédito atualizado',valor:'R$ 29.110.077,37'},
+  {icone:ICONE.receiptLong,rotulo:'Saldo compensado',valor:'R$ 30.781.997,51'},
+  {icone:ICONE.dinheiro,rotulo:'Saldo disponível',valor:'-R$ 2.519.787,49',destaque: true},  
+]
+
+const KPIS_CLIENTES = [
+{icone:ICONE.dinheiro,rotulo:'Crédito original',valor:'R$ 239.649,80',},
+{icone:ICONE.sync,rotulo:'Crédito atualizado',valor:'R$ 239.741,32',},
+{icone:ICONE.receiptLong,rotulo:'Saldo compensado',valor:'R$ 194.542,53',},
+{icone:ICONE.dinheiro,rotulo:'Saldo disponível',valor:'R$ 45.107,27',destaque: true},  
+]
+
+const G_CREDITO = {titulo:'Crédito atualizado',serie:[23.5, 25.6, 26.4, 26.9, 28.6, 28.9, 29, 29.1, 29.1, 29.1, 29.1, 29.1],rotulo:['R$ 23,5 mi', 'R$ 25,6 mi', 'R$ 26,4 mi', 'R$ 26,9 mi', 'R$ 28,6 mi', 'R$ 28,9 mi', 'R$ 29 mi', 'R$ 29,1 mi', 'R$ 29,1 mi', 'R$ 29,1 mi', 'R$ 29,1 mi', 'R$ 29,1 mi'],eixo:['R$ 29,1 mi', 'R$ 14,6 mi', 'R$ 0'] as [string,string,string]}
+const G_COMPENSADO = {titulo:'Saldo compensado',serie:[24.8, 25.9, 26.9, 28.2, 29.2, 29.6, 30.1, 31, 31.8, 31.8, 31.8, 31.8],rotulo:['R$ 24,8 mi', 'R$ 25,9 mi', 'R$ 26,9 mi', 'R$ 28,2 mi', 'R$ 29,2 mi', 'R$ 29,6 mi', 'R$ 30,1 mi', 'R$ 31 mi', 'R$ 31,8 mi', 'R$ 31,8 mi', 'R$ 31,8 mi', 'R$ 31,8 mi'],eixo:['R$ 31,8 mi', 'R$ 15,9 mi', 'R$ 0'] as [string,string,string]}
+const G_DISPONIVEL = {titulo:'Saldo disponível',serie:[-1.3, -0.32, -0.5, -1.3, -0.55, -0.7, -1.2, -1.9, -2.7, -2.7, -2.7, -2.5],rotulo:['R$ -1,3 mi', 'R$ -316,2 mil', 'R$ -501,7 mil', 'R$ -1,3 mi', 'R$ -550,6 mil', 'R$ -697 mil', 'R$ -1,2 mi', 'R$ -1,9 mi', 'R$ -2,7 mi', 'R$ -2,7 mi', 'R$ -2,7 mi', 'R$ -2,5 mi'],eixo:['R$ 0', 'R$ -1,4 mi', 'R$ -2,7 mi'] as [string,string,string]}
+
+const QTD_EMPRESAS = {titulo:'Quantidade de empresas',serie:[0, 0, 0, 0, 0, 0, 0, 0, 12, 2, 0, 0],escala:12}
+const QTD_PERDCOMP = {titulo:'Quantidade de PER/DCOMP',serie:[3, 16, 15, 13, 16, 8, 5, 47, 80, 0, 0, 0],escala:80}
+
+const EMPRESAS_TOP = [
+  {nome:'EMPRESA EXEMPLO 1',credito:19.2,saldo:23.6,rc:'R$ 19.161.402',rs:'R$ 23.612.673'},
+  {nome:'EMPRESA EXEMPLO 2',credito:6.5,saldo:4.6,rc:'R$ 6.484.133',rs:'R$ 4.593.711'},
+  {nome:'EMPRESA EXEMPLO 3',credito:2.9,saldo:2.1,rc:'R$ 2.856.778',rs:'R$ 2.143.871'},
+  {nome:'EMPRESA EXEMPLO 4',credito:0.19,saldo:0.19,rc:'R$ 239.741',rs:'R$ 194.543'},
+  {nome:'EMPRESA EXEMPLO 5',credito:0.2,saldo:0.09,rc:'R$ 204.982',rs:'R$ 94.137'},
+]
+
+type ClientePerdcomp = {empresa:string;cnpj:string;hora:string;de:string;resp:string;email:string;}
+const CLIENTES_PERDCOMP: ClientePerdcomp [] = [
+  {empresa:'EMPRESA EXEMPLO 1',cnpj:'01.234.567/0001-01',hora:'11:05h',de:'06/2021',resp:'Tecnico 1',email:'tecnicoum@laratax.com.br'},
+  {empresa:'EMPRESA EXEMPLO 2',cnpj:'01.234.567/0001-02',hora:'11:05h',de:'06/2021',resp:'Tecnico 2',email:'tecnicodois@laratax.com.br'},
+  {empresa:'EMPRESA EXEMPLO 3',cnpj:'01.234.567/0001-03',hora:'11:06h',de:'06/2021',resp:'Tecnico 4',email:'tecnicoquatro@laratax.com.br'},
+  {empresa:'EMPRESA EXEMPLO 4',cnpj:'01.234.567/0001-04',hora:'10:31h',de:'06/2021',resp:'Tecnico 2',email:'tecnicodois@laratax.com.br'},
+  {empresa:'EMPRESA EXEMPLO 5',cnpj:'01.234.567/0001-05',hora:'16:01h',de:'06/2021',resp:'Tecnico 3',email:'tecnicotres@laratax.com.br'},
+]
+
+type Registro = {doc:string; situacao:'Em análise' | 'Retificado' | 'Cancelado'; apuracao:string; data:string; credito:string; usado:string; saldo:string }
+const HISTORICO: Registro [] = [
+  {doc:'09171.6583',situacao:'Em análise',apuracao:'20/05/2026',data:'19/05/2026',credito:'R$ 16.033,05',usado:'R$ 8.827,33',saldo:'R$ 5.453,92',},
+  {doc:'10427.5956',situacao:'Em análise',apuracao:'19/05/2026',data:'18/05/2026',credito:'R$ 7.205,72',usado:'R$ 708,53',saldo:'R$ 11.598,94',},
+  {doc:'32349.5984',situacao:'Retificado',apuracao:'20/05/2026',data:'19/05/2026',credito:'R$ 10.147,46',usado:'R$ 10.147,46',saldo:'R$ 7.105,35',},
+  {doc:'01992.0021',situacao:'Em análise',apuracao:'22/05/2026',data:'21/05/2026',credito:'R$ 10.647,59',usado:'R$ 581,88',saldo:'R$ 14.171,76',},
+  {doc:'27525.2403',situacao:'Em análise',apuracao:'25/03/2026',data:'24/03/2026',credito:'R$ 19.601,80',usado:'R$ 8.954,21',saldo:'R$ 7.933,53',},
+  {doc:'31176.3380',situacao:'Cancelado',apuracao:'16/04/2026',data:'12/04/2026',credito:'R$ 10.832,06',usado:'R$ 3.285,00',saldo:'R$ 23.453,28',},
+  {doc:'08013.7602',situacao:'Em análise',apuracao:'13/06/2026',data:'10/06/2026',credito:'R$ 17.753,13',usado:'R$ 6.439,07',saldo:'R$ 21.135,99',},
+  {doc:'08650.0787',situacao:'Retificado',apuracao:'20/03/2026',data:'18/03/2026',credito:'R$ 23.507,83',usado:'R$ 7.236,12',saldo:'-',},
+  {doc:'08751.0168',situacao:'Retificado',apuracao:'07/05/2026',data:'06/05/2026',credito:'R$ 54.026,14',usado:'R$ 26.956,53',saldo:'R$ 33.154,26',},
+]
+
+//PER/DCOMP:peças
+
+const azulBg = '#eff6ff'
+const azul = '#1d4ed8' 
+
+const tituloGrafico = css ({padding:'16px 20px', borderBottom:`1px solid ${A.line}`,fontSize:'15px', fontWeight:'700',color: A.text})
+
+function CabecalhoPerdcomp (ativa: 'dash' | 'clientes') {
+  const aba = (rotulo:string,target:string,on:boolean) =>
+  (
+    <button type='button'
+    data-app-nav=""
+    data-target={target}
+    mix={css({ padding:'10px 4px',border:'none',background:'none',font:'inherit',fontSize:'14px',fontWeight:600,cursor:'pointer',
+      color:on ? A.cyan : A.slate, borderBottom:`2px solid ${on ? A.cyan : 'transparent'}`,marginBottom:'-1px',
+    })}
+>
+  {rotulo}
+    </button>
+  )
+  return(
+    <div mix={css({display:'flex',flexDirection:'column',gap:'16px'})}>
+      <div>
+        <h3 mix={h1}>Controle PER/DCOMP</h3>
+        <p mix={css({margin:'4px 0 0', fontSize:'14px',color:A.muted})}>Gerencie e acompanhe suas PER/DCOMP.</p>
+      </div>
+      <div mix={css({display:'flex',gap:'24px', borderBottom:`1px solid ${A.line}`})}>
+        {aba('Dashboard consolidado', 'perdcomp', ativa === 'dash')}
+        {aba('Consultar cliente', 'perdcomp-clientes', ativa === 'clientes')}
+      </div>
+    </div>
+  )
+}
+
+function KpiPerdcomp(k: (typeof KPIS_PERDCOMP)[number]) {
+  return (
+    <div mix={[painel, css({ position: 'relative', overflow: 'hidden', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' })]}>
+      {QuadriculadoCard()}
+      <span mix={css({ position: 'relative', color: A.cyan })}>{Icone(k.icone, 24)}</span>
+      <span mix={css({ position: 'relative' })}>
+        <span mix={css({ display: 'block', fontSize: '14px', color: A.slate })}>{k.rotulo}</span>
+        <strong mix={[num, css({ fontSize: '20px', fontWeight: 700, color: k.destaque ? A.cyan : A.text })]}>{k.valor}</strong>
+      </span>
+    </div>
+  )
+}
+
+// linha com área: um componente, três usos (crédito, compensado, disponível)
+function GraficoLinha(g: typeof G_CREDITO) {
+  const max = Math.max(...g.serie)
+  const min = Math.min(...g.serie)
+  const px = (i: number) => 60 + (i * 480) / (g.serie.length - 1)
+  const py = (v: number) => 28 + ((max - v) * 128) / (max - min || 1)
+  const pts = g.serie.map((v, i) => `${px(i)},${py(v)}`).join(' ')
+  return (
+    <div mix={painel}>
+      <div mix={tituloGrafico}>{g.titulo}</div>
+      <svg viewBox="0 0 560 200" role="img" aria-label={g.titulo} mix={css({ width: '100%', height: 'auto', display: 'block', padding: '8px 8px 4px' })}>
+        <defs>
+          <linearGradient id="perdcomp-area" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="rgba(7, 224, 255, 0.25)" />
+            <stop offset="1" stop-color="rgba(7, 224, 255, 0)" />
+          </linearGradient>
+        </defs>
+        {[28, 92, 156].map((y, i) => (
+          <g>
+            <line x1="60" y1={y} x2="540" y2={y} stroke={A.line} stroke-dasharray="3 4" />
+            <text x="52" y={y + 3} text-anchor="end" font-size="10" fill={A.muted}>{g.eixo[i]}</text>
+          </g>
+        ))}
+        <polygon points={`${pts} ${px(g.serie.length - 1)},156 60,156`} fill="url(#perdcomp-area)" />
+        <polyline points={pts} fill="none" stroke={A.cyan} stroke-width="2" />
+        {g.serie.map((v, i) => (
+          <g>
+            <circle cx={px(i)} cy={py(v)} r="3.5" fill={A.card} stroke={A.cyan} stroke-width="1.5" />
+            {i % 2 === 0 ? (
+              <text x={px(i)} y={py(v) - 9} text-anchor="middle" font-size="9" fill={A.slate}>{g.rotulo[i]}</text>
+            ) : null}
+          </g>
+        ))}
+        {MESES.map((m, i) => (i % 2 === 0 ? <text x={px(i)} y="182" text-anchor="middle" font-size="10" fill={A.muted}>{m}</text> : null))}
+      </svg>
+    </div>
+  )
+}
+
+// colunas verticais: divs com altura em %
+function GraficoColunas(g: typeof QTD_EMPRESAS) {
+  return (
+    <div mix={painel}>
+      <div mix={tituloGrafico}>{g.titulo}</div>
+      <div mix={css({ display: 'flex', alignItems: 'flex-end', gap: '10px', height: '170px', padding: '28px 20px 0' })}>
+        {g.serie.map((v) => (
+          <div mix={css({ flex: 1, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' })}>
+            <strong mix={[num, css({ fontSize: '12px', color: A.navy })]}>{v}</strong>
+            <div
+              style={{ height: `${(v / g.escala) * 100}%` }}
+              mix={css({ width: '100%', maxWidth: '32px', minHeight: '2px', borderRadius: '4px 4px 0 0', background: A.navy })}
+            />
+          </div>
+        ))}
+      </div>
+      <div mix={css({ display: 'flex', gap: '10px', padding: '8px 20px 20px' })}>
+        {MESES.map((m) => (
+          <span mix={[num, css({ flex: 1, textAlign: 'center', fontSize: '10px', color: A.muted, transform: 'rotate(-35deg)' })]}>{m}</span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// barras horizontais agrupadas: divs com largura em %
+function GraficoEmpresas() {
+  const max = 24
+  const barra = (frac: number, cor: string, rotulo: string) => (
+    <span mix={css({ display: 'flex', alignItems: 'center', gap: '8px' })}>
+      <span style={{ width: `${(frac / max) * 100}%` }} mix={css({ height: '10px', minWidth: '2px', borderRadius: '0 4px 4px 0', background: cor })} />
+      <span mix={[num, css({ fontSize: '11px', color: A.slate, whiteSpace: 'nowrap' })]}>{rotulo}</span>
+    </span>
+  )
+  return (
+    <div mix={painel}>
+      <div mix={tituloGrafico}>5 principais empresas</div>
+      <div mix={css({ display: 'flex', flexDirection: 'column', gap: '16px', padding: '20px' })}>
+        {EMPRESAS_TOP.map((e) => (
+          <div mix={css({ display: 'grid', gridTemplateColumns: '180px 1fr', gap: '12px', alignItems: 'center' })}>
+            <span mix={css({ fontSize: '11px', color: A.slate, textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' })}>{e.nome}</span>
+            <span mix={css({ display: 'flex', flexDirection: 'column', gap: '4px' })}>
+              {barra(e.credito, 'rgba(0, 196, 229, 0.55)', e.rc)}
+              {barra(e.saldo, A.navy, e.rs)}
+            </span>
+          </div>
+        ))}
+        <div mix={css({ display: 'flex', justifyContent: 'center', gap: '20px', fontSize: '12px', color: A.slate })}>
+          <span mix={css({ display: 'flex', alignItems: 'center', gap: '6px' })}>
+            <span mix={css({ width: '12px', height: '12px', borderRadius: '3px', background: 'rgba(0, 196, 229, 0.55)' })} /> Crédito atualizado
+          </span>
+          <span mix={css({ display: 'flex', alignItems: 'center', gap: '6px' })}>
+            <span mix={css({ width: '12px', height: '12px', borderRadius: '3px', background: A.navy })} /> Saldo compensado
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function LinhaCliente(c: ClientePerdcomp) {
+  return (
+    <button
+      type="button"
+      data-app-nav=""
+      data-target="perdcomp-cliente"
+      mix={[painel, css({
+        position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', width: '100%',
+        padding: '16px 16px 16px 56px', font: 'inherit', textAlign: 'left', color: A.text, cursor: 'pointer',
+        '&:hover': { borderColor: A.cyan },
+      })]}
+    >
+      <span mix={css({ position: 'absolute', top: 0, bottom: 0, left: 0, width: '56px', borderRadius: '5px 0 0 5px', background: `linear-gradient(90deg, ${A.cyanSoft}, rgba(255, 255, 255, 0))`, display: 'grid', placeItems: 'center', color: A.cyan })}>
+        {Icone(ICONE.monitorHeart, 20)}
+      </span>
+      <span mix={css({ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignSelf: 'stretch', flexShrink: 0 })}>
+        <span mix={css({ fontSize: '14px', fontWeight: 500, lineHeight: 1 })}>Solicitado</span>
+        <span mix={[num, css({ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', lineHeight: 1, whiteSpace: 'nowrap' })]}>
+          20/05/2026
+          <span mix={css({ display: 'inline-flex', alignItems: 'center', gap: '2px', color: A.muted })}>{Icone(ICONE.relogio, 12)}{c.hora}</span>
+        </span>
+      </span>
+      <span mix={css({ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '4px', lineHeight: 1 })}>
+        <span mix={css({ fontSize: '14px', fontWeight: 500, textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' })}>{c.empresa}</span>
+        <span mix={[num, css({ fontSize: '14px', color: A.muted, whiteSpace: 'nowrap' })]}>{c.cnpj}</span>
+      </span>
+      <span mix={css({ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignSelf: 'stretch', width: '85px', flexShrink: 0, lineHeight: 1 })}>
+        <span mix={css({ fontSize: '14px', fontWeight: 500 })}>Período</span>
+        <span mix={[num, css({ fontSize: '14px' })]}>De {c.de}<br />Até 05/2026</span>
+      </span>
+      <span mix={css({ width: '160px', flexShrink: 0, fontSize: '14px' })}>Controle PER/DCOMP</span>
+      <span mix={css({ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2px' })}>
+        <strong mix={css({ fontSize: '14px', fontWeight: 700 })}>{c.resp}</strong>
+        <span mix={css({ fontSize: '13px', color: A.muted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' })}>{c.email}</span>
+      </span>
+      <span mix={[tag(A.cyanSoft, A.teal), css({ flexShrink: 0 })]}>Sincronização ativa</span>
+    </button>
+  )
+}
+
+// --- PER/DCOMP: telas ------------------------------------------------------
+
+function TelaPerdcompDash() {
+  return (
+    <div data-app-screen="perdcomp" data-on="false" mix={telaRaiz}>
+      {SidebarPrincipal('perdcomp')}
+      <div mix={colConteudo}>
+        <div mix={[painel, painelConteudo]}>
+          <div mix={degradeTopo} />
+          {CabecalhoPerdcomp('dash')}
+          <div mix={css({ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' })}>
+            {KPIS_PERDCOMP.map((k) => KpiPerdcomp(k))}
+          </div>
+          <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' })}>
+            {GraficoEmpresas()}
+            {GraficoColunas(QTD_EMPRESAS)}
+            {GraficoLinha(G_CREDITO)}
+            {GraficoLinha(G_COMPENSADO)}
+            {GraficoLinha(G_DISPONIVEL)}
+            {GraficoColunas(QTD_PERDCOMP)}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TelaPerdcompClientes() {
+  return (
+    <div data-app-screen="perdcomp-clientes" data-on="false" mix={telaRaiz}>
+      {SidebarPrincipal('perdcomp')}
+      <div mix={colConteudo}>
+        <div mix={[painel, painelConteudo]}>
+          <div mix={degradeTopo} />
+          {CabecalhoPerdcomp('clientes')}
+          <div mix={[inputFake, css({ width: '256px' })]}>
+            {Icone(ICONE.busca, 14)} Buscar cliente por razão
+          </div>
+          <div mix={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
+            {CLIENTES_PERDCOMP.map((c) => LinhaCliente(c))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TelaPerdcompCliente() {
+  const th = css({ padding: '12px 16px', fontSize: '14px', fontWeight: 700, color: A.text, textAlign: 'left', whiteSpace: 'nowrap', borderBottom: `1px solid ${A.line}` })
+  const td = css({ padding: '12px 16px', fontSize: '14px', color: A.slate, whiteSpace: 'nowrap', borderBottom: `1px solid ${A.cinza}` })
+  const badgeSituacao = (s: Registro['situacao']) => (s === 'Cancelado' ? tag(A.redBg, A.red) : tag(azulBg, azul))
+  return (
+    <div data-app-screen="perdcomp-cliente" data-on="false" mix={telaRaiz}>
+      {SidebarPrincipal('perdcomp')}
+      <div mix={colConteudo}>
+        <div mix={[painel, painelConteudo]}>
+          <div mix={degradeTopo} />
+          {CabecalhoPerdcomp('clientes')}
+
+          {/* barra do cliente selecionado */}
+          <div mix={[painel, css({ display: 'flex', alignItems: 'center', gap: '24px', padding: '12px 20px', borderColor: A.cyan })]}>
+            <span mix={css({ color: A.cyan })}>{Icone(ICONE.usuarios, 24)}</span>
+            <span mix={css({ flex: 1, minWidth: 0 })}>
+              <strong mix={css({ display: 'block', fontSize: '15px', fontWeight: 700 })}>EMPRESA EXEMPLO 1</strong>
+              <span mix={[num, css({ fontSize: '13px', color: A.muted })]}>01.234.567/0001-01</span>
+            </span>
+            <span mix={css({ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', fontWeight: 500 })}>
+              Sincronização ativa
+              <span mix={css({ width: '40px', height: '22px', borderRadius: '999px', background: A.cyan, position: 'relative', '&::after': { content: '""', position: 'absolute', top: '3px', right: '3px', width: '16px', height: '16px', borderRadius: '50%', background: A.card } })} />
+            </span>
+            <span mix={css({ lineHeight: 1.2 })}>
+              <span mix={css({ display: 'block', fontSize: '12px', color: A.muted })}>Total de PER/DCOMP</span>
+              <strong mix={num}>64</strong>
+            </span>
+            <button type="button" data-app-nav="" data-target="perdcomp-clientes" mix={btnContorno}>
+              {Icone(ICONE.sync, 14)} Trocar cliente
+            </button>
+          </div>
+
+          {/* ações */}
+          <div mix={css({ display: 'flex', justifyContent: 'flex-end', gap: '8px' })}>
+            <span mix={[painel, css({ display: 'grid', placeItems: 'center', width: '36px', height: '36px', color: A.slate })]}>{Icone(ICONE.download, 16)}</span>
+            <span mix={[btnPrimario, css({ display: 'inline-flex', alignItems: 'center', gap: '6px' })]}>{Icone(ICONE.filtro, 14)} Filtrar registros</span>
+          </div>
+
+          <div mix={css({ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' })}>
+            {KPIS_CLIENTES.map((k) => KpiPerdcomp(k))}
+          </div>
+
+          {/* histórico */}
+          <div mix={painel}>
+            <div mix={css({ display: 'flex', alignItems: 'baseline', gap: '16px', padding: '16px 20px' })}>
+              <strong mix={css({ fontSize: '15px', fontWeight: 700 })}>Histórico de PER/DCOMP</strong>
+              <span mix={css({ fontSize: '13px', color: A.muted })}>Última atualização: — · Próxima atualização: —</span>
+              <span mix={css({ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600 })}>
+                Agrupar <span mix={css({ width: '18px', height: '18px', borderRadius: '4px', border: `1px solid ${A.lineForte}` })} />
+              </span>
+            </div>
+            <div mix={css({ overflowX: 'auto' })}>
+              <table mix={css({ borderCollapse: 'collapse', width: '100%', minWidth: '1560px' })}>
+                <thead>
+                  <tr>
+                    {['Nº documento', 'Situação receita', 'Tipo', 'CNPJ', 'Razão social', 'Tipo de crédito', 'Apuração do crédito', 'Data transmissão', 'Crédito atualizado', 'Crédito utilizado', 'Saldo disponível'].map((c) => (
+                      <th mix={th}>{c}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {HISTORICO.map((r) => (
+                    <tr>
+                      <td mix={td}>
+                        <span mix={css({ display: 'inline-flex', alignItems: 'center', gap: '6px', color: A.laranja })}>
+                          {Icone(ICONE.alertaLaranja, 14)}
+                          <strong mix={[num, css({ color: A.text })]}>{r.doc}</strong>
+                        </span>
+                      </td>
+                      <td mix={td}><span mix={badgeSituacao(r.situacao)}>{r.situacao}</span></td>
+                      <td mix={td}><span mix={tag(A.orangeBg, A.orange)}>Vinculado</span></td>
+                      <td mix={[td, num]}>01.234.567/...</td>
+                      <td mix={td}>EMPRESA EXEMPLO 1...</td>
+                      <td mix={td}>Saldo Negativo de CSLL</td>
+                      <td mix={[td, num]}>{r.apuracao}</td>
+                      <td mix={[td, num]}>{r.data}</td>
+                      <td mix={[td, num, css({ textAlign: 'right' })]}>{r.credito}</td>
+                      <td mix={[td, num, css({ textAlign: 'right' })]}>{r.usado}</td>
+                      <td mix={[td, num, css({ textAlign: 'right', fontWeight: 700, color: A.green })]}>{r.saldo}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div mix={css({ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '16px', padding: '12px 16px', fontSize: '14px', color: A.slate })}>
+              Tamanho da Página:
+              <span mix={[inputFake, css({ width: '64px', height: '32px' })]}>10 {Icone(ICONE.chevronBaixo, 14)}</span>
+              <span mix={num}>1 até 10 de 64</span>
+              {['|<', '<'].map((s) => <span mix={[painel, css({ display: 'grid', placeItems: 'center', width: '32px', height: '32px', color: A.faint })]}>{s}</span>)}
+              <span mix={num}>Página 1 de 7</span>
+              {['>', '>|'].map((s) => <span mix={[painel, css({ display: 'grid', placeItems: 'center', width: '32px', height: '32px', color: A.slate })]}>{s}</span>)}
+            </div>
+          </div>
         </div>
       </div>
     </div>
