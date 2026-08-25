@@ -1,4 +1,3 @@
-// Animações da landing: tudo aqui é enhancement — a página funciona sem JS.
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
@@ -32,7 +31,7 @@ if (toggle) {
     try {
       localStorage.setItem(THEME_KEY, next)
     } catch {
-      // modo privado / storage bloqueado: o tema vale só nesta página
+
     }
     describe()
   })
@@ -47,7 +46,7 @@ const EASE = { card: 'power2.out', section: 'power3.out' }
 
 const mm = gsap.matchMedia()
 mm.add('(prefers-reduced-motion: no-preference)', () => {
-  // Scramble no eyebrow do hero, estilo williamsgptech.
+
   document.querySelectorAll<HTMLElement>('[data-scramble]').forEach((el) => {
     gsap.to(el, {
       duration: 1.4,
@@ -60,7 +59,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     })
   })
 
-  // Fade + rise ao entrar no viewport.
+
   ScrollTrigger.batch('[data-reveal]', {
     start: 'top 85%',
     once: true,
@@ -75,7 +74,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       }),
   })
 
-  // Reveals laterais para seções 2-colunas: cada coluna entra do seu lado.
+
   for (const [attr, x] of [
     ['[data-reveal-left]', -DIST.lateral],
     ['[data-reveal-right]', DIST.lateral],
@@ -121,8 +120,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     })
   })
 
-  // Linha de progresso da timeline: desenha com o scroll (scaleY, sem pin).
-  // A linha do "Como funciona" fica de fora — o bloco data-steps-pin cuida dela.
+
   document.querySelectorAll<HTMLElement>('[data-progress-line]').forEach((line) => {
     if (line.closest('[data-steps-pin]')) return
     gsap.fromTo(
@@ -142,7 +140,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     )
   })
 
-  // Brilho diagonal único que varre a faixa de números junto com a contagem.
+
   document.querySelectorAll<HTMLElement>('[data-shimmer]').forEach((el) => {
     gsap.fromTo(
       el,
@@ -156,7 +154,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     )
   })
 
-  // Contadores: <span data-count="74" data-count-decimals="0" data-count-suffix="+">
+
   document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
     const target = parseFloat(el.dataset.count || '0')
     const decimals = parseInt(el.dataset.countDecimals || '0', 10)
@@ -212,7 +210,7 @@ if (stepsWrap && trilho) {
   })
 }
 
-// --- réplica da plataforma (seção 02) -----------------------------------
+//  réplica do LaraTAX 
 const appDemo = document.querySelector<HTMLElement>('[data-app-demo]')
 if (appDemo) {
   const telas = Array.from(appDemo.querySelectorAll<HTMLElement>('[data-app-screen]'))
@@ -222,7 +220,7 @@ if (appDemo) {
       tela.dataset.on = tela.dataset.appScreen === id ? 'true' : 'false'
     })
     controles.forEach((c) => {
-      // prefixo cobre sub-telas (perdcomp-clientes acende o item "perdcomp")
+
       c.dataset.on = c.dataset.target === id || id.startsWith(c.dataset.target + '-') ? 'true' : 'false'
     })
   }
@@ -230,8 +228,6 @@ if (appDemo) {
     c.addEventListener('click', () => {
       const alvo = c.dataset.target
       if (alvo) mostrar(alvo)
-      // atalho opcional: além de trocar a tela, abre uma aba interna dela
-      // (ex.: card "Usuários" do início → Configurações já na aba Usuários)
       const aba = c.dataset.abaAlvo
       if (alvo && aba) {
         appDemo
@@ -241,8 +237,6 @@ if (appDemo) {
     })
   })
 
-  // Modais globais da janela: [data-modal-abre="id"] liga o [data-app-modal="id"]
-  // por cima da tela atual (sem navegar); [data-modal-fecha] desliga todos.
   const modais = Array.from(appDemo.querySelectorAll<HTMLElement>('[data-app-modal]'))
   appDemo.querySelectorAll<HTMLElement>('[data-modal-abre]').forEach((b) => {
     b.addEventListener('click', () => {
@@ -259,10 +253,60 @@ if (appDemo) {
     })
   })
 
-  // Expandir: fullscreen nativo no demo inteiro (o botão continua visível e
-  // vira "Sair"; Esc também sai). O zoom encaixa a altura de 1038 na tela e a
-  // LARGURA da janela cresce para preencher o monitor — os layouts internos
-  // são fluidos, então as telas adaptam como app responsivo (sem tarja lateral).
+  // Tooltip dos gráficos: [data-ponto-grafico] preenche e posiciona o
+  // [data-tip-flutuante] (coordenadas divididas pelo zoom da janela).
+  const tip = appDemo.querySelector<HTMLElement>('[data-tip-flutuante]')
+  const corpoTip = appDemo.querySelector<HTMLElement>('[data-app-body]')
+  if (tip && corpoTip) {
+    const montar = (el: HTMLElement) => {
+      tip.textContent = ''
+      const titulo = el.dataset.tipTitulo
+      if (titulo) {
+        const cab = document.createElement('div')
+        cab.style.cssText = 'display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:4px'
+        const cor = el.dataset.tipCor
+        if (cor) {
+          const quadrado = document.createElement('span')
+          quadrado.style.cssText = `width:12px;height:12px;border-radius:3px;flex-shrink:0;background:${cor}`
+          cab.appendChild(quadrado)
+        }
+        cab.appendChild(document.createTextNode(titulo))
+        tip.appendChild(cab)
+      }
+      for (const linha of (el.dataset.tipLinhas || '').split(';;')) {
+        if (!linha) continue
+        const [rotulo, valor] = linha.split('|')
+        const row = document.createElement('div')
+        row.style.cssText = 'display:flex;gap:20px;justify-content:space-between'
+        const a = document.createElement('span')
+        a.textContent = rotulo
+        const b = document.createElement('strong')
+        b.textContent = valor
+        row.appendChild(a)
+        row.appendChild(b)
+        tip.appendChild(row)
+      }
+    }
+    const posicionar = (e: MouseEvent) => {
+      const zoom = parseFloat(String(getComputedStyle(corpoTip).zoom)) || 1
+      const r = corpoTip.getBoundingClientRect()
+      tip.style.left = `${(e.clientX - r.left) / zoom + 16}px`
+      tip.style.top = `${(e.clientY - r.top) / zoom - 12}px`
+    }
+    appDemo.querySelectorAll<HTMLElement>('[data-ponto-grafico]').forEach((el) => {
+      el.addEventListener('mouseenter', (e) => {
+        montar(el)
+        tip.style.display = 'block'
+        posicionar(e)
+      })
+      el.addEventListener('mousemove', posicionar)
+      el.addEventListener('mouseleave', () => {
+        tip.style.display = 'none'
+      })
+    })
+  }
+
+
   const expandir = appDemo.querySelector<HTMLElement>('[data-app-expandir]')
   const corpoApp = appDemo.querySelector<HTMLElement>('[data-app-body]')
   const rotuloExpandir = appDemo.querySelector<HTMLElement>('[data-app-expandir-rotulo]')
@@ -277,7 +321,7 @@ if (appDemo) {
       if (cheio) {
         const zoom = (window.innerHeight - 96) / 1038
         corpoApp.style.setProperty('zoom', String(zoom))
-        // largura pós-zoom = tela inteira (menos o padding do fullscreen)
+
         corpoApp.style.width = Math.max(1845, Math.floor((window.innerWidth - 48) / zoom)) + 'px'
       } else {
         corpoApp.style.setProperty('zoom', '')
@@ -287,9 +331,6 @@ if (appDemo) {
     })
   }
 
-  // Abas internas de uma tela (detalhe de projeto): [data-sub-nav] ativa o
-  // [data-sub-screen] do MESMO [data-sub-scope]; escopos aninham (abas do topo
-  // > categorias laterais) sem vazar um no outro.
   appDemo.querySelectorAll<HTMLElement>('[data-sub-scope]').forEach((scope) => {
     const donos = (el: HTMLElement) => el.parentElement?.closest('[data-sub-scope]') === scope
     const botoes = Array.from(scope.querySelectorAll<HTMLElement>('[data-sub-nav]')).filter(donos)
@@ -307,7 +348,7 @@ if (appDemo) {
   })
 }
 
-// --- hero carrossel (/v2) -----------------------------------------------
+//  hero carrossel 
 
 const heroSlides = document.querySelector<HTMLElement>('[data-hero-slides]')
 if (heroSlides) {
@@ -338,7 +379,7 @@ if (heroSlides) {
     bars.forEach((bar, i) => {
       if (i !== heroActive) bar.style.transform = 'scaleX(0)'
     })
-    // vídeo (quando houver): só o slide ativo decodifica
+
     bgs.forEach((bg, i) => {
       const video = bg.querySelector('video')
       if (!video) return
@@ -360,7 +401,7 @@ if (heroSlides) {
 
   tabs.forEach((tab, i) => tab.addEventListener('click', () => goToSlide(i)))
 
-  // estado inicial: pausa os vídeos dos slides inativos (só o 1º tem autoplay)
+
   applySlide()
 
   if (heroReduce) {
@@ -376,7 +417,7 @@ if (heroSlides) {
   } else {
     const tick = (ts: number) => {
       if (heroLast === null) heroLast = ts
-      // clamp: aba em background congela o rAF; sem isso o retorno pula slides
+
       heroElapsed += Math.min(ts - heroLast, 100)
       heroLast = ts
       const p = Math.min(heroElapsed / HERO_DURATION, 1)
@@ -388,7 +429,7 @@ if (heroSlides) {
     requestAnimationFrame(tick)
   }
 
-  // dica de swipe some no primeiro toque na timeline
+
   const hint = heroSlides.querySelector<HTMLElement>('[data-hero-hint]')
   heroNav?.addEventListener(
     'touchstart',
@@ -399,9 +440,7 @@ if (heroSlides) {
   )
 }
 
-// --- floating dock ------------------------------------------------------
-// Magnificação por proximidade (desktop) + seção ativa. Funciona sem JS;
-// isto só aprimora.
+//  floating dock 
 const dockDesktop = document.querySelector<HTMLElement>('[data-dock-desktop]')
 const dockItems = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-dock-item]'))
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
