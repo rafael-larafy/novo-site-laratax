@@ -1111,9 +1111,18 @@ function SidebarRail() {
         '@media (max-width: 1023px)': { display: 'none' },
       })}
     >
-      <p mix={css({ margin: '0 0 4px', fontSize: '22px', fontWeight: 800, color: A.navy })}>
-        <span mix={css({ color: A.cyanVivo })}>X</span>
-      </p>
+      {/* X vetorial da marca (mesmos paths do dock flutuante) */}
+      <svg
+        width={26}
+        height={26}
+        viewBox="-200 -215 1784 1845"
+        fill="currentColor"
+        aria-hidden="true"
+        mix={css({ margin: '0 0 4px', color: A.cyanVivo, flexShrink: 0 })}
+      >
+        <path d="M1320.09 12.1855C1348.43 12.1855 1350.01 45.7341 1335.84 63.4898L937.784 571.053L790.881 379.042L1050.88 39.8044C1063.47 22.0535 1076.07 12.1855 1101.26 12.1855H1320.09Z" />
+        <path d="M321.92 12.1855C347.108 12.1866 359.706 22.0497 372.3 39.8044L1357.87 1341.88C1372.04 1359.64 1370.48 1393.18 1342.15 1393.19H1113.86C1088.67 1393.19 1076.07 1383.32 1061.9 1365.57L687.177 868.399L310.902 1365.57C296.734 1383.32 285.706 1393.18 260.522 1393.19H40.0961C11.7566 1393.19 11.7539 1359.64 25.9236 1341.88L539.191 673.1L76.304 63.4898C62.1342 45.7341 63.7143 12.1855 92.0537 12.1855H321.92Z" />
+      </svg>
       <span mix={[quadrado, css({ width: '32px', height: '32px', border: `1px solid ${A.lineForte}`, color: A.faint })]}>
         {Icone(ICONE.busca, 14)}
       </span>
