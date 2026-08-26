@@ -234,7 +234,35 @@ if (appDemo) {
           .querySelector<HTMLElement>(`[data-app-screen="${alvo}"] [data-sub-nav][data-sub-target="${aba}"]`)
           ?.click()
       }
+      // copia os dados da linha clicada para TODAS as telas (última empresa
+      // clicada vence): texto em [data-campo], tooltip em [data-campo-tip],
+      // dimensão de barra em [data-campo-estilo] (valor "prop:valor")
+      const detalhe = c.dataset.detalhe
+      if (detalhe) {
+        Object.entries(JSON.parse(detalhe) as Record<string, string>).forEach(([campo, valor]) => {
+          appDemo.querySelectorAll<HTMLElement>(`[data-campo="${campo}"]`).forEach((el) => {
+            el.textContent = valor
+          })
+          appDemo.querySelectorAll<HTMLElement>(`[data-campo-tip="${campo}"]`).forEach((el) => {
+            el.dataset.tipLinhas = valor
+          })
+          appDemo.querySelectorAll<HTMLElement>(`[data-campo-estilo="${campo}"]`).forEach((el) => {
+            const [prop, v] = valor.split(':')
+            el.style.setProperty(prop, v)
+          })
+        })
+      }
     })
+  })
+
+  // ordem aleatória a cada carga da página: embaralha os filhos de [data-embaralha]
+  appDemo.querySelectorAll<HTMLElement>('[data-embaralha]').forEach((caixa) => {
+    const filhos = Array.from(caixa.children)
+    for (let i = filhos.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[filhos[i], filhos[j]] = [filhos[j], filhos[i]]
+    }
+    filhos.forEach((f) => caixa.append(f))
   })
 
   const modais = Array.from(appDemo.querySelectorAll<HTMLElement>('[data-app-modal]'))
