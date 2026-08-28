@@ -7,19 +7,15 @@ const NAV = [
   {
     title: 'Produto',
     links: [
-      ['Plataforma', '#plataforma'],
-      ['Reforma Tributária', '#reforma'],
-      ['Processo', '#processo'],
-      ['Resultados', '#resultados'],
+      ['Plataforma', '/#plataforma'],
+      ['Recursos', '/recursos'],
+      ['Reforma Tributária', '/#reforma'],
+      ['Resultados', '/#resultados'],
     ],
   },
   {
     title: 'Empresa',
-    links: [
-      ['Sobre nós', 'https://laratax.com.br/institucional/laratax'],
-      ['Carreiras', 'https://laratax.com.br'],
-      ['Contato', 'mailto:contato@laratax.com.br'],
-    ],
+    links: [['Sobre nós', '/sobre']],
   },
   {
     title: 'Acesso',

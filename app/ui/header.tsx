@@ -34,9 +34,31 @@ export function Header() {
           }),
         ]}
       >
-        <a href="#inicio" mix={css({ textDecoration: 'none', display: 'inline-flex' })}>
-          <Logo height="clamp(15px, 4.4vw, 26px)" />
-        </a>
+        <div mix={css({ display: 'flex', alignItems: 'center', gap: '28px', minWidth: 0 })}>
+          <a href="/" mix={css({ textDecoration: 'none', display: 'inline-flex' })}>
+            <Logo height="clamp(15px, 4.4vw, 26px)" />
+          </a>
+          <nav mix={css({ display: 'flex', alignItems: 'center', gap: '20px', '@media (max-width: 720px)': { display: 'none' } })}>
+            {[
+              ['Início', '/'],
+              ['Recursos', '/recursos'],
+              ['Sobre', '/sobre'],
+            ].map(([rotulo, destino]) => (
+              <a
+                href={destino}
+                mix={css({
+                  color: 'var(--text)',
+                  textDecoration: 'none',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  '&:hover': { color: 'var(--accent)' },
+                })}
+              >
+                {rotulo}
+              </a>
+            ))}
+          </nav>
+        </div>
         <div
           mix={css({
             display: 'flex',

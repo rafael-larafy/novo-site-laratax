@@ -18,7 +18,7 @@ const STATS: Array<{
     label: 'cenários tributários processados',
   },
   { value: '74', display: '74', label: 'painéis de análise' },
-  { value: '40', suffix: ' min', prefix: '< ', display: '40 min', label: 'diagnóstico completo' },
+  { value: '40', suffix: ' min', display: '40 min', label: 'diagnóstico completo' },
   { value: '5', suffix: ' anos', display: '5 anos', label: 'de dados fiscais analisados' },
 ]
 
@@ -39,6 +39,8 @@ const figure = css({
   color: 'var(--text)',
   whiteSpace: 'nowrap',
   fontVariantNumeric: 'tabular-nums',
+  // o espaço da mono é cheio demais: "40 min" e "2,1 bi" ficavam soltos
+  wordSpacing: '-0.3em',
 })
 
 // Faixa compacta (ponte de prova quantitativa), não seção cheia.
@@ -87,7 +89,7 @@ export function Stats() {
             <div mix={statItem}>
               <p mix={figure}>
                 {/* prefixo fixo fora do span para o contador não sobrescrevê-lo */}
-                {s.prefix ? <span mix={css({ color: 'var(--accent)' })}>{s.prefix}</span> : null}
+                {s.prefix ? <span mix={css({ color: 'var(--accent)', marginRight: '0.14em' })}>{s.prefix}</span> : null}
                 <span
                   data-count={s.value}
                   data-count-decimals={s.decimals}
