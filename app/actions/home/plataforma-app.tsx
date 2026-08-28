@@ -4615,7 +4615,6 @@ function geraProjetos(qtd: number, seed = 7): Projeto[] {
     { status: 'Falha no processamento', cor: 'vermelho' },
   ]
   return EMPRESAS.slice(0, qtd).map((e, i) => {
-    // idem geraEmpresas: um fluxo por projeto
     const r = rng(seed + i * 31)
     const t = TIPOS[Math.floor(r() * TIPOS.length)]
     const s = STATUS[Math.floor(r() * STATUS.length)]

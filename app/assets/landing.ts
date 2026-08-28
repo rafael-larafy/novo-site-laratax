@@ -3,7 +3,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 
 
-for (const a of document.querySelectorAll('a[href^="#"]')) {
+// navegação sempre nativa: o reconcile SPA do Remix apaga data-js/data-theme
+// do <html> (toggle some, tema reseta) e não re-executa este script na página
+// nova — com rmx-document cada página carrega inteira e o bootstrap roda.
+for (const a of document.querySelectorAll('a')) {
   a.setAttribute('rmx-document', '')
 }
 
@@ -376,7 +379,127 @@ if (appDemo) {
   })
 }
 
-//  hero carrossel 
+//  linha do tempo da página Sobre (jornada)
+// espinha central: fio e estrela seguem o centro da viewport; no desktop só o
+// card sob o centro fica aceso/aberto, no mobile abre ao cruzar 80% da altura.
+// Sem JS ou com reduced-motion os painéis ficam abertos (CSS não esconde nada).
+const jornada = document.querySelector<HTMLElement>('[data-jornada]')
+if (jornada) {
+  const fio = jornada.querySelector<HTMLElement>('[data-jornada-fio]')
+  const marca = jornada.querySelector<HTMLElement>('[data-jornada-marca]')
+  const slots = Array.from(jornada.querySelectorAll<HTMLElement>('[data-jornada-slot]'))
+  const caixas = slots.map((s) => s.querySelector<HTMLElement>('[data-jornada-caixa]'))
+  const paineis = slots.map((s) => s.querySelector<HTMLElement>('[data-jornada-painel]'))
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (fio) fio.style.height = '100%'
+  } else if (fio && marca) {
+    const APAGADA = 'rgba(7, 224, 255, 0.14)'
+    paineis.forEach((p) => p && gsap.set(p, { height: 0 }))
+    caixas.forEach((c) => {
+      const texto = c?.querySelector<HTMLElement>('[data-jornada-texto]')
+      if (texto) gsap.set(texto, { autoAlpha: 0, scale: 0.92 })
+    })
+    gsap.set(marca, { autoAlpha: 1 })
+
+    const abrir = (i: number, aberto: boolean) => {
+      const caixa = caixas[i]
+      if (!caixa) return
+      const painel = paineis[i]
+      const texto = caixa.querySelector<HTMLElement>('[data-jornada-texto]')
+      const conector = caixa.querySelector<HTMLElement>('[data-jornada-conector]')
+      gsap.to(caixa, {
+        borderColor: aberto ? 'rgba(7, 224, 255, 0.5)' : APAGADA,
+        boxShadow: aberto ? '0 0 30px rgba(7, 224, 255, 0.22)' : '0 0 0 rgba(7, 224, 255, 0)',
+        duration: 0.45,
+        overwrite: 'auto',
+      })
+      if (conector) {
+        gsap.to(conector, { scaleX: aberto ? 1 : 0, duration: 0.4, ease: 'power2.out', overwrite: 'auto' })
+      }
+      if (painel) {
+        gsap.to(painel, {
+          height: aberto ? painel.scrollHeight : 0,
+          duration: 0.55,
+          ease: 'power3.out',
+          overwrite: 'auto',
+        })
+      }
+      if (texto) {
+        gsap.to(texto, {
+          autoAlpha: aberto ? 1 : 0,
+          scale: aberto ? 1 : 0.92,
+          duration: 0.5,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        })
+      }
+    }
+
+    const poeMarca = gsap.quickSetter(marca, 'top', 'px') as (v: number) => void
+    const poeFio = gsap.quickSetter(fio, 'height', 'px') as (v: number) => void
+    const sincronizar = () => {
+      const centro = window.innerHeight / 2
+      const y = Math.max(0, Math.min(jornada.offsetHeight, centro - jornada.getBoundingClientRect().top))
+      poeMarca(y)
+      poeFio(y)
+      return centro
+    }
+
+    mm.add('(min-width: 1024px)', () => {
+      let atual = -1
+      const st = ScrollTrigger.create({
+        trigger: jornada,
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: () => {
+          const centro = sincronizar()
+          let ativo = -1
+          slots.forEach((slot, i) => {
+            const r = slot.getBoundingClientRect()
+            if (r.top <= centro && r.bottom > centro) ativo = i
+          })
+          if (ativo !== atual) {
+            if (atual >= 0) abrir(atual, false)
+            if (ativo >= 0) abrir(ativo, true)
+            atual = ativo
+          }
+        },
+      })
+      return () => {
+        st.kill()
+        caixas.forEach((_, i) => abrir(i, false))
+        atual = -1
+      }
+    })
+
+    mm.add('(max-width: 1023px)', () => {
+      const abertos = caixas.map(() => false)
+      const atualizar = () => {
+        sincronizar()
+        const linha = window.innerHeight * 0.8
+        caixas.forEach((caixa, i) => {
+          if (!caixa) return
+          const abre = caixa.getBoundingClientRect().top < linha
+          if (abre !== abertos[i]) {
+            abertos[i] = abre
+            abrir(i, abre)
+          }
+        })
+      }
+      const st = ScrollTrigger.create({ start: 0, end: 'max', onUpdate: atualizar })
+      atualizar()
+      return () => {
+        st.kill()
+        caixas.forEach((_, i) => abrir(i, false))
+      }
+    })
+
+    ScrollTrigger.refresh()
+  }
+}
+
+//  hero carrossel
 
 const heroSlides = document.querySelector<HTMLElement>('[data-hero-slides]')
 if (heroSlides) {
