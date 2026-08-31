@@ -56,7 +56,7 @@ export function Footer() {
         surfaceContrast,
         css({
           borderTop: '1px solid var(--line)',
-          padding: '64px 0 32px',
+          padding: '64px 0 128px',
         }),
       ]}
     >
@@ -71,7 +71,7 @@ export function Footer() {
             color: 'var(--muted)',
           })}
         >
-          Hiperautomação tributária
+          Central de comando do tributarista
         </p>
         <div
           mix={css({

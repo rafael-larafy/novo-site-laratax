@@ -2,7 +2,7 @@ import type { Handle, RemixNode } from 'remix/ui'
 import { css } from 'remix/ui'
 
 import { routes } from '../routes.ts'
-import { THEME_BOOTSTRAP, THEME_CSS } from './theme.ts'
+import { THEME_BOOTSTRAP, THEME_CSS, TRANSITION } from './theme.ts'
 import { FONT_SANS, surfaceBase } from './tokens.ts'
 
 export interface DocumentProps {
@@ -44,8 +44,9 @@ export function Document(handle: Handle<DocumentProps>) {
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Kode+Mono:wght@400;500;600;700&display=swap"
           />
           <title>{title}</title>
-          <style>{THEME_CSS}</style>
           <script>{THEME_BOOTSTRAP}</script>
+          <style>{THEME_CSS}</style>
+          <style>{TRANSITION}</style>
           {head}
         </head>
         <body
@@ -59,8 +60,6 @@ export function Document(handle: Handle<DocumentProps>) {
               WebkitFontSmoothing: 'antialiased',
               MozOsxFontSmoothing: 'grayscale',
               overflowX: 'hidden',
-              // espaço pro floating dock fixo no rodapé
-              paddingBottom: '96px',
               '& *, & *::before, & *::after': { boxSizing: 'border-box' },
             }),
           ]}
