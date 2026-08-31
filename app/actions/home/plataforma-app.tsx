@@ -2177,17 +2177,21 @@ const btnBaixar = css({
 })
 const rotuloCampo = css({ display: 'block', fontSize: '12.5px', color: A.muted, marginBottom: '2px' })
 
-function Caixa(on: boolean) {
+function Caixa(on:boolean) {
   return (
-    <span
-      mix={css({
-        width: '16px', height: '16px', borderRadius: '4px', flexShrink: 0, display: 'grid', placeItems: 'center',
-        fontSize: '11px', lineHeight: 1, color: '#ffffff',
-        border: `1px solid ${on ? A.cyan : A.lineForte}`, background: on ? A.cyan : A.card,
-      })}
-    >
-      {on ? '✓' : ''}
-    </span>
+    <input
+    type='checkbox'
+    checked={on||undefined}
+    mix={css({
+      appearance:'none',
+      width:'16px',height:'16px',borderRadius:'4px',flexShrink:0,
+      display:'grid',placeItems:'center',margin:0,cursor:'pointer',
+      fontSize:'11px', lineHeight:1,
+      border:`1px solid ${A.lineForte}`,background:A.card,
+      '&:checked':{border:`1px solid ${A.cyan}`,background:A.cyan},
+      '&checked::after': {content:'"✓"',color:'#ffffff'},
+    })}
+    />
   )
 }
 
