@@ -78,11 +78,12 @@ const ICONE = {
   tagSetaCima: { box: 10.5, w: 7, h: 7, d: ['M0 3.5L0.616875 4.11687L3.0625 1.67562V7H3.9375V1.67562L6.37875 4.12125L7 3.5L3.5 0L0 3.5Z'] },
   sync: { box: 14, w: 9.333, h: 12.833, d: ['M4.66667 1.75V0L2.33333 2.33333L4.66667 4.66667V2.91667C6.5975 2.91667 8.16667 4.48583 8.16667 6.41667C8.16667 7.00583 8.02083 7.56583 7.75833 8.05L8.61 8.90167C9.065 8.18417 9.33333 7.3325 9.33333 6.41667C9.33333 3.83833 7.245 1.75 4.66667 1.75ZM4.66667 9.91667C2.73583 9.91667 1.16667 8.3475 1.16667 6.41667C1.16667 5.8275 1.3125 5.2675 1.575 4.78333L0.723333 3.93167C0.268333 4.64917 0 5.50083 0 6.41667C0 8.995 2.08833 11.0833 4.66667 11.0833V12.8333L7 10.5L4.66667 8.16667V9.91667Z'] },
   fechar: { box: 14, w: 8.167, h: 8.167, d: ['M8.16667 0.8225L7.34417 0L4.08333 3.26083L0.8225 0L0 0.8225L3.26083 4.08333L0 7.34417L0.8225 8.16667L4.08333 4.90583L7.34417 8.16667L8.16667 7.34417L4.90583 4.08333L8.16667 0.8225Z'] },
-  // ponytail: lápis/histórico aproximados (Material Symbols em caixa 24)
   editar: { box: 24, w: 24, h: 24, d: ['M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z'] },
   historico: { box: 24, w: 24, h: 24, d: ['M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6a7 7 0 1 1 7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18Zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12Z'] },
   copiar: { box: 24, w: 24, h: 24, d: ['M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h11v14Z'] },
   lixeira: { box: 24, w: 24, h: 24, d: ['M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z'] },
+  play: { box: 24, w: 24, h:24, d: ['M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 14.5v-9l6 4.5-6 4.5Z'] },
+  caixaAberta: { box: 24, w: 24, h:24, d: ['M20 2H4c-1.1 0-2 .9-2 2v3.01c0 .72.43 1.34 1 1.69V20c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V8.7c.57-.35 1-.97 1-1.69V4c0-1.1-1-2-2-2Zm-5 12H9v-2h6v2Zm5-7H4V4h16v3Z'] },
 } as const satisfies Record<string, IconDef>
 
 function Icone(icon: IconDef, tam?: number) {
@@ -911,11 +912,24 @@ function TelaInicio() {
 }
 
 function TelaProjetos() {
+  // badges e listas derivados dos dados procedurais: contagem sempre bate
+  const ABAS: Array<{ rotulo: string; alvo: string; lista: Projeto[]; corBadge?: string }> = [
+    { rotulo: 'Todos os projetos', alvo: 'todos', lista: PROJETOS },
+    {
+      rotulo: 'Pendências',
+      alvo: 'pendencias',
+      lista: PROJETOS.filter((p) => p.cor === 'laranja' || p.cor === 'vermelho'),
+      corBadge: A.laranja,
+    },
+    { rotulo: 'Processando', alvo: 'processando', lista: PROJETOS.filter((p) => p.status === 'Processando...') },
+    { rotulo: 'Concluídos', alvo: 'concluidos', lista: PROJETOS.filter((p) => p.status === 'Concluído') },
+    { rotulo: 'Recorrentes', alvo: 'recorrentes', lista: PROJETOS.filter((p) => p.marca === 'baixa'), corBadge: A.cyan },
+  ]
   return (
     <div data-app-screen="projetos" data-on="false" mix={telaRaiz}>
       {SidebarPrincipal('projetos')}
       <div mix={colConteudo}>
-        <div mix={[painel, painelConteudo]}>
+        <div data-sub-scope="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px' })}>
             <div mix={css({ flex: 1, minWidth: 0 })}>
@@ -928,32 +942,30 @@ function TelaProjetos() {
             </button>
           </div>
 
-          <div mix={css({ position: 'relative', display: 'flex', borderBottom: `1px solid ${A.line}` })}>
-            {(
-              [
-                ['Todos os projetos', null, true],
-                ['Pendências', ['3', A.laranja], false],
-                ['Processando', null, false],
-                ['Concluídos', null, false],
-                ['Recorrentes', ['36', A.cyan], false],
-              ] as const
-            ).map(([rotulo, badge, ativo]) => (
-              <span
+          <div data-abas-projetos="" mix={css({ position: 'relative', display: 'flex', borderBottom: `1px solid ${A.line}` })}>
+            {ABAS.map((a, i) => (
+              <button
+                type="button"
+                data-sub-nav=""
+                data-sub-target={a.alvo}
+                data-on={i === 0 ? 'true' : 'false'}
                 mix={css({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
                   padding: '14px 15.75px 15px',
+                  border: 'none',
+                  background: 'transparent',
+                  fontFamily: 'inherit',
                   fontSize: '14px',
                   fontWeight: 700,
-                  color: ativo ? A.text : A.muted,
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                 })}
               >
-                {rotulo}
-                {badge ? <span mix={badgeCirc(badge[1])}>{badge[0]}</span> : null}
-              </span>
+                {a.rotulo}
+                {a.corBadge ? <span mix={badgeCirc(a.corBadge)}>{a.lista.length}</span> : null}
+              </button>
             ))}
           </div>
 
@@ -984,9 +996,19 @@ function TelaProjetos() {
             </div>
           </div>
 
-          <div data-embaralha="" mix={css({ position: 'relative', display: 'flex', flexDirection: 'column', gap: '12px' })}>
-            {PROJETOS.map((p) => LinhaProjeto(p))}
-          </div>
+          {ABAS.map((a, i) => (
+            <div data-sub-screen={a.alvo} data-on={i === 0 ? 'true' : 'false'} mix={css({ position: 'relative' })}>
+              {a.lista.length === 0 ? (
+                <p mix={css({ margin: 0, padding: '32px 0', textAlign: 'center', fontSize: '13.5px', color: A.muted })}>
+                  Nenhum projeto nesta categoria.
+                </p>
+              ) : (
+                <div data-embaralha="" mix={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
+                  {a.lista.map((p) => LinhaProjeto(p))}
+                </div>
+              )}
+            </div>
+          ))}
 
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' })}>
             {(['«', '‹', '1', '2', '3', '4', '5', '›', '»'] as const).map((rotulo) => (
@@ -1562,6 +1584,8 @@ export function PlataformaApp() {
         [data-ponto-grafico]:hover { filter: brightness(0.82); }
         label:has(input:checked) [data-wizard-icone] { background: #56c2e0; border-color: #56c2e0; color: #ffffff; }
         [data-sub-nav][data-on='true'] [data-caixa-icone] { background: #56c2e0; color: #ffffff; }
+        [data-abas-projetos] [data-sub-nav] { color: #62838e; }
+        [data-abas-projetos] [data-sub-nav][data-on='true'] { color: #314e58; }
         [data-rail] [data-rail-cheio] { display: none; }
         [data-rail]:hover [data-rail-cheio] { display: block; animation: rail-in 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
         [data-rail] ~ * { transition: filter 220ms ease; }
@@ -2380,16 +2404,16 @@ function PainelRelatorios() {
 
 function PainelUpload() {
   return (
-    <div data-sub-screen="upload" data-on="false">
-      <div mix={css({ display: 'flex', flexDirection: 'column', gap: '16px' })}>
-        <div mix={[painel, css({ display: 'flex', alignItems: 'center', gap: '14px', padding: '12px 16px', background: A.card })]}>
-          <span mix={css({ display: 'grid', placeItems: 'center', width: '36px', height: '36px', borderRadius: '8px', background: A.cinza, color: A.slate, flexShrink: 0 })}>{Icone(ICONE.ajuda, 20)}</span>
+        <div data-sub-screen="upload" data-on="false">
+              <div mix={[painel, css({ display: 'flex', alignItems: 'center', gap: '14px', padding: '12px 16px', background: A.card })]}>
+          <span mix={css({ display: 'grid', placeItems: 'center', width: '36px', height: '36px', borderRadius: '8px', background: A.cyanSoft, color: A.cyan, flexShrink: 0 })}>{Icone(ICONE.play, 20)}</span>
           <span mix={css({ flex: 1, minWidth: 0, lineHeight: 1.35 })}>
-            <span mix={css({ display: 'block', fontSize: '13px', color: A.muted })}>Iniciar processamento das NF-e?</span>
-            <strong mix={css({ fontSize: '13.5px' })}>Tem certeza de que deseja iniciar este projeto com os arquivos enviados? Não será possível enviar mais arquivos após iniciar.</strong>
+            <strong mix={css({ display: 'block', fontSize: '14px' })}>Iniciar processamento das NF-e?</strong>
+            <span mix={css({ fontSize: '13.5px', color: A.muted })}>Tem certeza de que deseja iniciar este projeto com os arquivos enviados? Não será possível enviar mais arquivos após iniciar.</span>
           </span>
           <span mix={[btnPrimario, css({ opacity: 0.55 })]}>Confirmar NF-e</span>
         </div>
+
         <strong mix={css({ fontSize: '16px' })}>Upload de arquivos</strong>
         <div mix={css({ borderBottom: `1px solid ${A.line}` })}>
           <span mix={css({ display: 'inline-block', padding: '8px 2px', fontSize: '13.5px', fontWeight: 600, color: A.cyan, borderBottom: `2px solid ${A.cyan}`, marginBottom: '-1px' })}>NF-e/NFS-e (ZIP)</span>
@@ -2404,6 +2428,14 @@ function PainelUpload() {
           <span>Arquivos suportados: zip</span>
           <span>Limite de 1.000.000 de linhas por arquivo.</span>
         </div>
+        <div mix={[painel, css({ minHeight: '320px', display: 'grid', placeItems: 'center', background: A.card })]}>
+  <span mix={css({ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', padding: '40px', textAlign: 'center' })}>
+    <span mix={css({ color: A.cyan })}>{Icone(ICONE.caixaAberta, 44)}</span>
+    <strong mix={css({ fontSize: '16px' })}>Nenhum arquivo enviado ainda</strong>
+    <span mix={css({ fontSize: '13.5px', color: A.muted, maxWidth: '340px', lineHeight: 1.5 })}>
+      Nenhum arquivo foi enviado ainda. Clique em escolha os arquivos ou arraste e solte acima.
+    </span>
+  </span>
       </div>
     </div>
   )

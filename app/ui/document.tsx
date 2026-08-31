@@ -12,9 +12,9 @@ export interface DocumentProps {
   description?: string
 }
 
-const DEFAULT_TITLE = 'LaraTAX — Inteligência Artificial Tributária'
+const DEFAULT_TITLE = 'LaraTAX — Hiperautomação Tributária'
 const DEFAULT_DESCRIPTION =
-  'Plataforma de IA tributária que analisa dados fiscais e entrega um diagnóstico de oportunidades dos últimos 5 anos em menos de 40 minutos.'
+  'Plataforma de hiperautomação tributária que analisa dados fiscais e entrega um diagnóstico de oportunidades dos últimos 5 anos em menos de 40 minutos.'
 
 export function Document(handle: Handle<DocumentProps>) {
   return () => {

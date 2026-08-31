@@ -32,7 +32,7 @@ const ARQUIVOS = ['TXT', 'REC', 'DEC', 'XML', 'CSV', 'PDF']
 
 const ESTRUTURACAO = [
   'Processamento de dados com validação integrada',
-  'Cruzamento de dados com inteligência artificial',
+  'Cruzamento automático de dados',
   'Cálculos de materialidade e oportunidades precisos',
 ]
 
@@ -129,7 +129,7 @@ export function RecursosPage() {
               <h2 data-reveal="" mix={heading2}>Download automático de obrigações fiscais</h2>
               <p mix={lead}>
                 Simplifique sua rotina fiscal com o download automático de documentos essenciais. Nossa solução garante
-                eficiência e reduz riscos operacionais de forma significativa com inteligência artificial e robôs de automação.
+                eficiência e reduz riscos operacionais de forma significativa com robôs de automação e um motor de regras fiscais.
               </p>
 
               <div
