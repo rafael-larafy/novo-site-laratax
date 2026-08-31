@@ -3,7 +3,7 @@ import { css } from 'remix/ui'
 import { COLORS, FONT_MONO, container, eyebrow, heading2, section } from '../../ui/tokens.ts'
 
 const HUMAN = 'Interação humana'
-const AI = 'IA & Automação'
+const AI = 'Robô fiscal & Automação'
 
 const STEPS = [
   { title: 'Procuração e certificados', desc: 'Autorização formal de acesso aos portais.', badge: HUMAN },

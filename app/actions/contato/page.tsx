@@ -100,13 +100,13 @@ export function ContatoPage() {
 
               {GrupoContato('Endereço')}
               {LinhaContato(ICONES.pino, [
-                'R. Paulino de Siqueira Cortês, 2841',
-                'São Pedro, São José dos Pinhais - PR',
-                'CEP: 83.005-030',
+                'Av. Rocha Pombo, 1977',
+                'São Cristóvão, São José dos Pinhais - PR',
+                'CEP: 83.005-280',
               ])}
 
               <a
-                href="https://www.google.com/maps/search/?api=1&query=R.+Paulino+de+Siqueira+Cort%C3%AAs%2C+2841+S%C3%A3o+Jos%C3%A9+dos+Pinhais"
+                href="https://www.google.com/maps/search/?api=1&query=Av.+Rocha+Pombo%2C+1977+S%C3%A3o+Jos%C3%A9+dos+Pinhais"
                 target="_blank"
                 rel="noreferrer"
                 mix={css({

@@ -19,7 +19,7 @@ import { FinalCta } from '../home/final-cta.tsx'
 const ESSENCIA = [
   {
     titulo: 'Compromisso com a inovação e a excelência tributária',
-    desc: 'Na LaraTAX, nossa missão é transformar a análise tributária por meio da inteligência artificial.',
+    desc: 'Na LaraTAX, nossa missão é transformar a análise tributária por meio da tecnologia.',
     icone: 'M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21Z',
   },
   {
@@ -73,7 +73,7 @@ export function CardsEssencia() {
 }
 
 const HISTORIA = [
-  'A LaraTAX foi fundada em 2019 com a missão de transformar a análise tributária por meio da inteligência artificial. Desde o início, nosso foco tem sido a inovação e a automação de processos complexos, permitindo que empresas e profissionais do setor tributário tenham acesso a soluções mais eficientes e precisas.',
+  'A LaraTAX foi fundada em 2019 com a missão de transformar a análise tributária por meio da tecnologia. Desde o início, nosso foco tem sido a inovação e a automação de processos complexos, permitindo que empresas e profissionais do setor tributário tenham acesso a soluções mais eficientes e precisas.',
   'Em 2020, desenvolvemos nosso primeiro algoritmo de análise fiscal, capaz de processar até 2,1 bilhões de cenários tributários. Essa tecnologia revolucionou a forma como os dados tributários são analisados, proporcionando insights valiosos em questão de minutos.',
   'Com a expansão nacional em 2021, conseguimos atrair investimentos significativos para aprimorar ainda mais nossas soluções. Essa fase foi crucial para consolidar nossa presença no mercado e para o desenvolvimento de novas funcionalidades que atendem às necessidades dos nossos clientes.',
   'No ano de 2022, lançamos uma solução integrada que permite análises completas em até 40 minutos, um marco que solidificou nossa posição como líderes em tecnologia tributária no Brasil.',
@@ -118,7 +118,7 @@ const LINHA_DO_TEMPO = [
   {
     ano: '2019',
     titulo: 'Fundação',
-    desc: 'A LaraTAX nasce com a missão de transformar a análise tributária por meio da inteligência artificial.',
+    desc: 'A LaraTAX nasce com a missão de transformar a análise tributária por meio da tecnologia.',
     icone: 'M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z',
   },
 ]
@@ -351,7 +351,7 @@ export function SobrePage() {
           >
             <div data-reveal-left="">
               <p mix={eyebrow}>02 / Nossa história</p>
-              <h2 mix={heading2}>Da fundação à liderança em IA tributária</h2>
+              <h2 mix={heading2}>Da fundação à liderança em tecnologia tributária</h2>
               {HISTORIA.map((p) => (
                 <p mix={css({ margin: '0 0 18px', fontSize: '15.5px', lineHeight: 1.7, color: 'var(--muted)' })}>{p}</p>
               ))}

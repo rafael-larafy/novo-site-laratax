@@ -100,7 +100,7 @@ export function Hero() {
       >
         <div>
           <p
-            data-scramble="LaraTAX — Inteligência Artificial Tributária"
+            data-scramble="LaraTAX — Hiperautomação Tributária"
             mix={css({
               margin: "0 0 24px",
               fontFamily: FONT_MONO,
@@ -111,7 +111,7 @@ export function Hero() {
               color: "var(--accent)",
             })}
           >
-            LaraTAX — Inteligência Artificial Tributária
+            LaraTAX — Hiperautomação Tributária
           </p>
           {/* eyebrow fica fora do reveal (já tem o scramble); h1 + sub + CTAs entram juntos da esquerda */}
           <div data-reveal-left="">

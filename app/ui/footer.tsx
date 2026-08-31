@@ -71,7 +71,7 @@ export function Footer() {
             color: 'var(--muted)',
           })}
         >
-          Inteligência artificial tributária
+          Hiperautomação tributária
         </p>
         <div
           mix={css({
@@ -135,7 +135,7 @@ export function Footer() {
               © 2026 LaraTAX. Todos os direitos reservados.
             </p>
             <p mix={css({ margin: 0, fontSize: '12px', color: 'var(--muted)' })}>
-              R. Paulino de Siqueira Cortês, 2841 — São José dos Pinhais/PR
+              Av. Rocha Pombo, 1977 — São José dos Pinhais/PR
             </p>
           </div>
           <div mix={css({ display: 'flex', gap: '24px' })}>

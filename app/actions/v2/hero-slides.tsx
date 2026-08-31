@@ -227,7 +227,7 @@ export function HeroSlides() {
       >
         <div mix={css({ maxWidth: '48rem' })}>
           <p
-            data-scramble="LaraTAX — Inteligência Artificial Tributária"
+            data-scramble="LaraTAX — Hiperautomação Tributária"
             mix={css({
               margin: '0 0 24px',
               fontFamily: FONT_MONO,
@@ -238,7 +238,7 @@ export function HeroSlides() {
               color: 'var(--accent)',
             })}
           >
-            LaraTAX — Inteligência Artificial Tributária
+            LaraTAX — Hiperautomação Tributária
           </p>
           <h1
             mix={css({
