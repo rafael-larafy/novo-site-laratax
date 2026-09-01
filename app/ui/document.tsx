@@ -12,9 +12,9 @@ export interface DocumentProps {
   description?: string
 }
 
-const DEFAULT_TITLE = 'LaraTAX — Hiperautomação Tributária'
+const DEFAULT_TITLE = 'LaraTAX — Central de comando do tributarista'
 const DEFAULT_DESCRIPTION =
-  'Plataforma de hiperautomação tributária que analisa dados fiscais e entrega um diagnóstico de oportunidades dos últimos 5 anos em menos de 40 minutos.'
+  'A central de comando do tributarista: a LaraTAX cruza os dados fiscais da sua empresa e entrega um diagnóstico de oportunidades dos últimos 5 anos em menos de 40 minutos.'
 
 export function Document(handle: Handle<DocumentProps>) {
   return () => {
@@ -24,7 +24,6 @@ export function Document(handle: Handle<DocumentProps>) {
       <html
         lang="pt-BR"
         mix={css({
-          // scroll-behavior só funciona no elemento raiz, não propaga do body
           '@media (prefers-reduced-motion: no-preference)': { scrollBehavior: 'smooth' },
         })}
       >

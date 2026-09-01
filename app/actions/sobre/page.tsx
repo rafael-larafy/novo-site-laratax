@@ -123,9 +123,6 @@ const LINHA_DO_TEMPO = [
   },
 ]
 
-// jornada da linha do tempo (adaptada da Metodologia do v3-site-larafy):
-// espinha central com fio/estrela guiados por scroll, cards alternados que
-// acendem ao passar pelo centro da viewport — lógica em landing.ts ([data-jornada])
 const jornadaCss = css({
   position: 'relative',
   paddingLeft: '28px',

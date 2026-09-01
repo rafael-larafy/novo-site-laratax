@@ -3,9 +3,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 
 
-// navegação sempre nativa: o reconcile SPA do Remix apaga data-js/data-theme
-// do <html> (toggle some, tema reseta) e não re-executa este script na página
-// nova — com rmx-document cada página carrega inteira e o bootstrap roda.
 for (const a of document.querySelectorAll('a')) {
   a.setAttribute('rmx-document', '')
 }

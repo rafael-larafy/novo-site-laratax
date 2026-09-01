@@ -1,8 +1,6 @@
 import { container, eyebrow, heading2, lead, section } from '../../ui/tokens.ts'
 import { PlataformaApp } from './plataforma-app.tsx'
 
-// A seção não descreve a plataforma: ela MOSTRA a plataforma — réplica
-// navegável com dados fictícios (ver docs/estudo-plataforma.md).
 export function Platform() {
   return () => (
     <section id="plataforma" mix={section}>

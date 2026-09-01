@@ -2,8 +2,7 @@ import { css } from 'remix/ui'
 
 import { COLORS, FONT_SANS } from './tokens.ts'
 
-// Navegação por seções no estilo dock do macOS.
-// SSR puro: hover/tooltip em CSS; proximidade e seção ativa em landing.ts.
+
 const DOCK_ITEMS = [
   {
     href: '#inicio',

@@ -68,7 +68,6 @@ export function Process() {
                 background: 'var(--surface-3)',
                 borderRadius: '12px',
                 padding: '20px 24px',
-                // Estados do scrub 1→7 (landing.ts): sem JS ninguém dim.
                 transition: 'opacity 350ms ease, box-shadow 350ms ease',
                 '&[data-on="false"]': { opacity: 0.35 },
                 '&[data-now="true"]': { boxShadow: 'inset 2px 0 0 var(--accent)' },
