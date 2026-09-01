@@ -1812,6 +1812,17 @@ function GraficoLinha(g: typeof G_CREDITO) {
         {g.serie.map((v, i) => (
           <g>
             <circle cx={px(i)} cy={py(v)} r="3.5" fill={A.card} stroke={A.cyan} stroke-width="1.5" />
+            {/* área de hover invisível: o ponto visível é pequeno demais pro mouse */}
+            <circle
+              cx={px(i)}
+              cy={py(v)}
+              r="12"
+              fill="transparent"
+              data-ponto-grafico=""
+              data-tip-titulo={g.titulo}
+              data-tip-cor={A.cyan}
+              data-tip-linhas={`${MESES[i]}|${g.rotulo[i]}`}
+            />
             {i % 2 === 0 ? (
               <text x={px(i)} y={py(v) - 9} text-anchor="middle" font-size="9" fill={A.slate}>{g.rotulo[i]}</text>
             ) : null}
@@ -1828,11 +1839,15 @@ function GraficoColunas(g: typeof QTD_EMPRESAS) {
     <div mix={painel}>
       <div mix={tituloGrafico}>{g.titulo}</div>
       <div mix={css({ display: 'flex', alignItems: 'flex-end', gap: '10px', height: '170px', padding: '28px 20px 0' })}>
-        {g.serie.map((v) => (
+        {g.serie.map((v, i) => (
           <div mix={css({ flex: 1, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' })}>
             <strong mix={[num, css({ fontSize: '12px', color: A.navy })]}>{v}</strong>
             <div
               style={{ height: `${(v / g.escala) * 100}%` }}
+              data-ponto-grafico=""
+              data-tip-titulo={g.titulo}
+              data-tip-cor={A.navy}
+              data-tip-linhas={`${MESES[i]}|${v}`}
               mix={css({ width: '100%', maxWidth: '32px', minHeight: '2px', borderRadius: '4px 4px 0 0', background: A.navy })}
             />
           </div>
@@ -1849,9 +1864,16 @@ function GraficoColunas(g: typeof QTD_EMPRESAS) {
 
 function GraficoEmpresas() {
   const max = 24
-  const barra = (frac: number, cor: string, rotulo: string) => (
+  const barra = (frac: number, cor: string, rotulo: string, empresa: string, serie: string) => (
     <span mix={css({ display: 'flex', alignItems: 'center', gap: '8px' })}>
-      <span style={{ width: `${(frac / max) * 100}%` }} mix={css({ height: '10px', minWidth: '2px', borderRadius: '0 4px 4px 0', background: cor })} />
+      <span
+        style={{ width: `${(frac / max) * 100}%` }}
+        data-ponto-grafico=""
+        data-tip-titulo={empresa}
+        data-tip-cor={cor}
+        data-tip-linhas={`${serie}|${rotulo}`}
+        mix={css({ height: '10px', minWidth: '2px', borderRadius: '0 4px 4px 0', background: cor })}
+      />
       <span mix={[num, css({ fontSize: '11px', color: A.slate, whiteSpace: 'nowrap' })]}>{rotulo}</span>
     </span>
   )
@@ -1863,8 +1885,8 @@ function GraficoEmpresas() {
           <div mix={css({ display: 'grid', gridTemplateColumns: '180px 1fr', gap: '12px', alignItems: 'center' })}>
             <span mix={css({ fontSize: '11px', color: A.slate, textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' })}>{e.nome}</span>
             <span mix={css({ display: 'flex', flexDirection: 'column', gap: '4px' })}>
-              {barra(e.credito, 'rgba(0, 196, 229, 0.55)', e.rc)}
-              {barra(e.saldo, A.navy, e.rs)}
+              {barra(e.credito, 'rgba(0, 196, 229, 0.55)', e.rc, e.nome, 'Crédito atualizado')}
+              {barra(e.saldo, A.navy, e.rs, e.nome, 'Saldo compensado')}
             </span>
           </div>
         ))}

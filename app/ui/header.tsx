@@ -4,7 +4,7 @@ import { Logo } from './logo.tsx'
 import { ThemeToggle } from './theme-toggle.tsx'
 import { btnPrimary, container } from './tokens.ts'
 
-// Seções ficam no FloatingDock (rodapé); o header guarda marca + CTA.
+
 export function Header() {
   return () => (
     <header

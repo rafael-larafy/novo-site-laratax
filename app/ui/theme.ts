@@ -1,13 +1,3 @@
-// Tema claro/escuro.
-//
-// O site tem duas superfícies com PAPÉIS: "base" (a página) e "contrast"
-// (os blocos de pontuação). O tema decide as cores de cada papel — no claro
-// a base é branca e a pontuação é navy escuro; no escuro a base é navy escuro
-// e a pontuação sobe um degrau (fica mais clara), preservando o mesmo ritmo.
-//
-// As variáveis --t-* abaixo são o nível do TEMA. Os mixins surfaceBase e
-// surfaceContrast (tokens.ts) mapeiam para as variáveis locais (--text,
-// --muted, --surface...) que os componentes consomem.
 
 const LIGHT = `
     --t-base-bg: #ffffff;
@@ -82,3 +72,16 @@ try {
   if (t === 'dark' || t === 'light') { document.documentElement.dataset.theme = t; }
 } catch (e) {}
 `
+export const TRANSITION = `
+@view-transition { navigation: auto; }
+
+::view-transition-old(root) { animation: 200ms ease both vt-sai; }
+::view-transition-new(root) { animation: 260ms 60ms ease both vt-entra; }
+@keyframes vt-sai { to { opacity: 0; transform: translateX(-28px); } }
+@keyframes vt-entra { from { opacity: 0; transform: translateX(28px); } }
+
+header { view-transition-name: cabecalho; }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+}`

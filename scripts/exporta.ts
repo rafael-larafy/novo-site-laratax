@@ -1,7 +1,4 @@
-// Export estático: crawleia o router em processo e grava dist/ pronto para
-// hospedagem estática (Vercel/CDN). O site não tem backend real — formulário é
-// decorativo e os dados são procedurais no render — então o server só existe
-// em dev.
+
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 

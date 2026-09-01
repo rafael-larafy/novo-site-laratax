@@ -62,7 +62,7 @@ export function Hero() {
             "radial-gradient(ellipse at 50% 30%, black, transparent 75%)",
         },
       })}
-    >
+    >                         
       <style>{`
         @keyframes beam-travel { to { stroke-dashoffset: -100; } }
         [data-beam] {
@@ -100,7 +100,7 @@ export function Hero() {
       >
         <div>
           <p
-            data-scramble="LaraTAX — Hiperautomação Tributária"
+            data-scramble="LaraTAX — A Central de comando do tributarista"
             mix={css({
               margin: "0 0 24px",
               fontFamily: FONT_MONO,
@@ -111,7 +111,7 @@ export function Hero() {
               color: "var(--accent)",
             })}
           >
-            LaraTAX — Hiperautomação Tributária
+            LaraTAX — A Central de comando do tributarista
           </p>
           {/* eyebrow fica fora do reveal (já tem o scramble); h1 + sub + CTAs entram juntos da esquerda */}
           <div data-reveal-left="">

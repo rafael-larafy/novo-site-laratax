@@ -2,7 +2,7 @@ import type { Handle, RemixNode } from 'remix/ui'
 import { css } from 'remix/ui'
 
 import { routes } from '../routes.ts'
-import { THEME_BOOTSTRAP, THEME_CSS } from './theme.ts'
+import { THEME_BOOTSTRAP, THEME_CSS, TRANSITION } from './theme.ts'
 import { FONT_SANS, surfaceBase } from './tokens.ts'
 
 export interface DocumentProps {
@@ -12,9 +12,9 @@ export interface DocumentProps {
   description?: string
 }
 
-const DEFAULT_TITLE = 'LaraTAX — Hiperautomação Tributária'
+const DEFAULT_TITLE = 'LaraTAX — A Central de comando do tributarista'
 const DEFAULT_DESCRIPTION =
-  'Plataforma de hiperautomação tributária que analisa dados fiscais e entrega um diagnóstico de oportunidades dos últimos 5 anos em menos de 40 minutos.'
+  'A central de comando do tributarista: a LaraTAX cruza os dados fiscais da sua empresa e entrega um diagnóstico de oportunidades dos últimos 5 anos em menos de 40 minutos.'
 
 export function Document(handle: Handle<DocumentProps>) {
   return () => {
@@ -24,7 +24,6 @@ export function Document(handle: Handle<DocumentProps>) {
       <html
         lang="pt-BR"
         mix={css({
-          // scroll-behavior só funciona no elemento raiz, não propaga do body
           '@media (prefers-reduced-motion: no-preference)': { scrollBehavior: 'smooth' },
         })}
       >
@@ -44,8 +43,9 @@ export function Document(handle: Handle<DocumentProps>) {
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Kode+Mono:wght@400;500;600;700&display=swap"
           />
           <title>{title}</title>
-          <style>{THEME_CSS}</style>
           <script>{THEME_BOOTSTRAP}</script>
+          <style>{THEME_CSS}</style>
+          <style>{TRANSITION}</style>
           {head}
         </head>
         <body
@@ -59,8 +59,6 @@ export function Document(handle: Handle<DocumentProps>) {
               WebkitFontSmoothing: 'antialiased',
               MozOsxFontSmoothing: 'grayscale',
               overflowX: 'hidden',
-              // espaço pro floating dock fixo no rodapé
-              paddingBottom: '96px',
               '& *, & *::before, & *::after': { boxSizing: 'border-box' },
             }),
           ]}

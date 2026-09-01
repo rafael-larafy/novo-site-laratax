@@ -123,9 +123,6 @@ const LINHA_DO_TEMPO = [
   },
 ]
 
-// jornada da linha do tempo (adaptada da Metodologia do v3-site-larafy):
-// espinha central com fio/estrela guiados por scroll, cards alternados que
-// acendem ao passar pelo centro da viewport — lógica em landing.ts ([data-jornada])
 const jornadaCss = css({
   position: 'relative',
   paddingLeft: '28px',
@@ -402,7 +399,7 @@ export function SobrePage() {
                     <circle cx="12" cy="12" r="7" fill="var(--accent-graphic)" />
                   </svg>
                 </div>
-                {LINHA_DO_TEMPO.map((etapa, i) => (
+                {LINHA_DO_TEMPO.toReversed().map((etapa, i) => (
                   <div data-jornada-slot="" mix={[slotJornada, i % 2 === 0 ? slotDireita : slotEsquerda]}>
                     <div data-jornada-caixa="" mix={caixaJornada}>
                       <span aria-hidden="true" mix={brilhoBaixo} />
