@@ -25,7 +25,7 @@ const TRADITIONAL: Row[] = [
 const LARATAX: Row[] = [
   { label: 'Oportunidades', value: 'R$ 14,84 mi', cyan: true },
   { label: 'Custo', value: 'R$ 11.056' },
-  { label: 'Prazo', value: '26 minutos', cyan: true },
+  { label: 'Prazo', value: '40 minutos', cyan: true },
   { label: 'Equipe', value: '44h' },
   { label: 'Perdidos por prescrição', value: 'R$ 0', cyan: true },
 ]
