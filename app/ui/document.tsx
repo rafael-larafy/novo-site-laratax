@@ -12,7 +12,7 @@ export interface DocumentProps {
   description?: string
 }
 
-const DEFAULT_TITLE = 'LaraTAX — Central de comando do tributarista'
+const DEFAULT_TITLE = 'LaraTAX — A Central de comando do tributarista'
 const DEFAULT_DESCRIPTION =
   'A central de comando do tributarista: a LaraTAX cruza os dados fiscais da sua empresa e entrega um diagnóstico de oportunidades dos últimos 5 anos em menos de 40 minutos.'
 
