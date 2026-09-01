@@ -70,7 +70,7 @@ export function CaseStudy() {
       <div mix={container}>
         <p mix={eyebrow}>06 / Caso real</p>
         <h2 data-reveal="" mix={heading2}>
-          De 30 dias para 26 minutos
+          De 30 dias para 40 minutos
         </h2>
         <p data-reveal="" mix={lead}>
           Indústria metalúrgica, faturamento de R$ 750 mi em 5 anos, matriz + 4 filiais, 21,6 GB de
