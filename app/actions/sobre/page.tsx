@@ -402,7 +402,7 @@ export function SobrePage() {
                     <circle cx="12" cy="12" r="7" fill="var(--accent-graphic)" />
                   </svg>
                 </div>
-                {LINHA_DO_TEMPO.map((etapa, i) => (
+                {LINHA_DO_TEMPO.toReversed().map((etapa, i) => (
                   <div data-jornada-slot="" mix={[slotJornada, i % 2 === 0 ? slotDireita : slotEsquerda]}>
                     <div data-jornada-caixa="" mix={caixaJornada}>
                       <span aria-hidden="true" mix={brilhoBaixo} />

@@ -62,7 +62,7 @@ export function Hero() {
             "radial-gradient(ellipse at 50% 30%, black, transparent 75%)",
         },
       })}
-    >
+    >                         
       <style>{`
         @keyframes beam-travel { to { stroke-dashoffset: -100; } }
         [data-beam] {
