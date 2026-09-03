@@ -105,7 +105,7 @@ const LINHA_DO_TEMPO = [
   {
     ano: '2022',
     titulo: 'Evolução',
-    desc: 'Lançamento da solução integrada que permite análises completas em até 40 minutos — o marco que solidificou nossa posição como líderes em tecnologia tributária no Brasil.',
+    desc: 'Lançamento da solução integrada que permite análises completas em até 40 minutos, o marco que solidificou nossa posição como líderes em tecnologia tributária no Brasil.',
     icone: 'M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z',
   },
   {
