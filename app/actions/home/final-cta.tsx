@@ -72,7 +72,7 @@ export function FinalCta() {
                 letterSpacing: '0.08em',
               })}
             >
-              A transição para o IVA Dual começa em 2026 — chegue preparado.
+              A transição para o IVA Dual começa em 2026. Chegue preparado.
             </p>
             <a
               href="mailto:comercial@laratax.com.br"

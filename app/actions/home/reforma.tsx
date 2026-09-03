@@ -81,7 +81,7 @@ export function Reforma() {
           </h2>
           <p mix={[lead, css({ marginBottom: '32px' })]}>
             IBS, CBS e Imposto Seletivo: veja o efeito da reforma nas suas compras, vendas e carga
-            tributária efetiva antes de 2026 — com dados reais do seu SPED e das suas notas fiscais.
+            tributária efetiva antes de 2026, com dados reais do seu SPED e das suas notas fiscais.
           </p>
           <ul
             role="list"

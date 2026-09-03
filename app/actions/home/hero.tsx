@@ -100,7 +100,7 @@ export function Hero() {
       >
         <div>
           <p
-            data-scramble="LaraTAX — A Central de comando do tributarista"
+            data-scramble="LaraTAX | A Central de comando do tributarista"
             mix={css({
               margin: "0 0 24px",
               fontFamily: FONT_MONO,
@@ -111,7 +111,7 @@ export function Hero() {
               color: "var(--accent)",
             })}
           >
-            LaraTAX — A Central de comando do tributarista
+            LaraTAX | A Central de comando do tributarista
           </p>
           {/* eyebrow fica fora do reveal (já tem o scramble); h1 + sub + CTAs entram juntos da esquerda */}
           <div data-reveal-left="">
@@ -139,7 +139,7 @@ export function Hero() {
               })}
             >
               A LaraTAX cruza milhões de dados fiscais e entrega um diagnóstico
-              de oportunidades dos últimos 5 anos em menos de 40 minutos — da
+              de oportunidades dos últimos 5 anos em menos de 40 minutos, da
               baixa automática à retificação.
             </p>
             <div mix={css({ display: "flex", gap: "16px", flexWrap: "wrap" })}>
@@ -175,7 +175,7 @@ export function Hero() {
               color: "var(--muted)",
             })}
           >
-            SPED · e-CAC · e-Social · NF-e — baixados e cruzados automaticamente
+            SPED · e-CAC · e-Social · NF-e: baixados e cruzados automaticamente
           </p>
         </div>
         <BeamDiagram />

@@ -4592,6 +4592,8 @@ function TelaDiagnosticoVisao() {
   )
 }
 
+
+// Sistema de SEED's =O
 function rng(seed:number) {
   return () => {
     seed |= 0;seed = (seed + 0x6d2b79f5) | 0
@@ -4769,3 +4771,5 @@ function geraProcessosMes(seed = 11): Array<[string, number]> {
     (mes) => [mes, 35 + Math.floor(r() * 21)],
   )
 }
+
+//Fim do sistema de SEED's =)

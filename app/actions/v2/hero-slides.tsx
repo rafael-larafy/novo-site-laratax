@@ -66,7 +66,7 @@ const AREAS: Area[] = [
   {
     category: 'Reforma IBS/CBS',
     title: 'Sua operação pronta para o IVA Dual',
-    fact: 'A transição começa em 2026 — chegue preparado.',
+    fact: 'A transição começa em 2026. Chegue preparado.',
     paths: ['M12 3v18', 'M5 8h14', 'M7 8v4a5 5 0 0 0 10 0V8'],
   },
 ]
@@ -227,7 +227,7 @@ export function HeroSlides() {
       >
         <div mix={css({ maxWidth: '48rem' })}>
           <p
-            data-scramble="LaraTAX — Hiperautomação Tributária"
+            data-scramble="LaraTAX | Hiperautomação Tributária"
             mix={css({
               margin: '0 0 24px',
               fontFamily: FONT_MONO,
@@ -238,7 +238,7 @@ export function HeroSlides() {
               color: 'var(--accent)',
             })}
           >
-            LaraTAX — Hiperautomação Tributária
+            LaraTAX | Hiperautomação Tributária
           </p>
           <h1
             mix={css({
@@ -263,7 +263,7 @@ export function HeroSlides() {
             })}
           >
             A LaraTAX cruza milhões de dados fiscais e entrega um diagnóstico de
-            oportunidades dos últimos 5 anos em menos de 40 minutos — da baixa
+            oportunidades dos últimos 5 anos em menos de 40 minutos, da baixa
             automática à retificação.
           </p>
           <div mix={css({ display: 'flex', gap: '16px', flexWrap: 'wrap' })}>
