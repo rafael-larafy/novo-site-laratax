@@ -58,7 +58,9 @@ export function Document(handle: Handle<DocumentProps>) {
               lineHeight: 1.6,
               WebkitFontSmoothing: 'antialiased',
               MozOsxFontSmoothing: 'grayscale',
-              overflowX: 'hidden',
+              // clip (não hidden): hidden faz o body virar scroll container e
+              // quebra position:sticky em todos os descendentes
+              overflowX: 'clip',
               '& *, & *::before, & *::after': { boxSizing: 'border-box' },
             }),
           ]}

@@ -1586,6 +1586,7 @@ export function PlataformaApp() {
         [data-sub-nav][data-on='true'] [data-caixa-icone] { background: #56c2e0; color: #ffffff; }
         [data-abas-projetos] [data-sub-nav] { color: #62838e; }
         [data-abas-projetos] [data-sub-nav][data-on='true'] { color: #314e58; }
+        [data-diag-borrado] { filter: blur(7px); pointer-events: none; user-select: none; }
         [data-rail] [data-rail-cheio] { display: none; }
         [data-rail]:hover [data-rail-cheio] { display: block; animation: rail-in 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
         [data-rail] ~ * { transition: filter 220ms ease; }
@@ -1673,6 +1674,9 @@ export function PlataformaApp() {
           {TelaDiagnosticoPrev()}
           {TelaDiagnosticoIrpj()}
           {TelaMinhasAnalises()}
+          {TelaDiagnosticoTeaser('diagnostico-reforma', 'Reforma Tributária')}
+          {TelaDiagnosticoTeaser('diagnostico-teses', 'Teses')}
+          {TelaDiagnosticoTeaser('diagnostico-apresentacoes', 'Apresentações')}
           {ModalRecarga()}
           {/* tooltip único dos gráficos; o landing.ts preenche e posiciona */}
           <div data-tip-flutuante="" mix={css({ position: 'absolute', zIndex: 30, display: 'none', pointerEvents: 'none', background: A.card, border: `1px solid ${A.line}`, borderRadius: '8px', boxShadow: '0 8px 24px rgba(2, 17, 24, 0.18)', padding: '10px 14px', minWidth: '150px', fontSize: '13px', lineHeight: 1.6 })} />
@@ -3654,17 +3658,16 @@ function TelaNovoDiagnostico() {
 }
 
 
-// --- Diagnóstico Tributário: tela de ICMS ----------------------------------
+// --- Diagnóstico Tributário: tela de ICMS --- //
 
-// ponytail: ícones aproximados do set (os glifos exatos do menu vivem no Figma)
 const MENU_DIAGNOSTICO: Array<{ label: string; icon: IconDef; target?: string }> = [
   { label: 'Visão Geral', icon: ICONE.menuDashboard, target: 'diagnostico-visao' },
   { label: 'ICMS', icon: ICONE.menuCompras, target: 'diagnostico-icms' },
   { label: 'IPI', icon: ICONE.menuMemoria, target: 'diagnostico-ipi' },
   { label: 'PIS/COFINS', icon: ICONE.pessoas, target: 'diagnostico-piscofins' },
   { label: 'Previdenciário', icon: ICONE.usuarios, target: 'diagnostico-previdenciario' },
-  { label: 'Reforma Tributária', icon: ICONE.menuTransicao },
-  { label: 'Teses', icon: ICONE.checklist },
+  { label: 'Reforma Tributária', icon: ICONE.menuTransicao, target: 'diagnostico-reforma' },
+  { label: 'Teses', icon: ICONE.checklist, target: 'diagnostico-teses' },
   { label: 'IRPJ/CSLL', icon: ICONE.menuMemoria, target: 'diagnostico-irpjcsll' },
 ]
 
@@ -3711,13 +3714,100 @@ function MenuDiagnostico(telaAtiva: string) {
             {Icone(ICONE.busca, 20)}
             Minhas análises
           </button>
-          <span mix={[itemMenu(false), css({ textTransform: 'none', fontSize: '12px', color: A.faint, cursor: 'default', '&:hover': { background: 'transparent' } })]}>
+          <button
+            type="button"
+            data-app-nav=""
+            data-target="diagnostico-apresentacoes"
+            data-on={telaAtiva === 'diagnostico-apresentacoes' ? 'true' : 'false'}
+            mix={[itemMenu(false), css({ textTransform: 'none', fontSize: '12px' })]}
+          >
             {Icone(ICONE.usuarios, 20)}
             Apresentações
-          </span>
+          </button>
         </div>
       </div>
     </aside>
+  )
+}
+
+// card flutuante "agende com um especialista", usado sobre conteúdo desfocado
+function ConviteDiag() {
+  return (
+    <div mix={css({ position: 'absolute', inset: 0, zIndex: 5, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '150px' })}>
+      <div mix={[painel, css({ maxWidth: '430px', textAlign: 'center', padding: '36px 32px', background: A.card, boxShadow: '0 24px 56px rgba(2, 17, 24, 0.22)' })]}>
+        <span mix={css({ display: 'grid', placeItems: 'center', width: '48px', height: '48px', margin: '0 auto 16px', borderRadius: '12px', background: A.cyanSoft, color: A.cyan })}>
+          {Icone(ICONE.play, 24)}
+        </span>
+        <strong mix={css({ display: 'block', fontSize: '18px', marginBottom: '8px' })}>Quer ver esta área em ação?</strong>
+        <p mix={css({ margin: '0 0 20px', fontSize: '14px', lineHeight: 1.6, color: A.muted })}>
+          Agende com um dos nossos especialistas e veja tudo o que a plataforma pode fazer por você.
+        </p>
+        <a href="#contato" mix={btnPrimario}>Agendar apresentação</a>
+      </div>
+    </div>
+  )
+}
+
+// áreas do menu sem demo: conteúdo fake desfocado + convite pra agendar
+function TelaDiagnosticoTeaser(id: string, rotulo: string) {
+  const kpisFake = ['R$ 1.186.514,96', 'R$ 362.562,01', 'R$ 128.502,87', 'R$ 51.211,37']
+  const barrasFake = [42, 68, 55, 80, 61, 74, 48, 88, 66, 58, 76, 52]
+  return (
+    <div data-app-screen={id} data-on="false" mix={telaRaiz}>
+      {SidebarRail()}
+      {MenuDiagnostico(id)}
+      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
+        <div mix={[painel, painelConteudo]}>
+          <div mix={degradeTopo} />
+          <div mix={css({ position: 'relative' })}>
+            <h3 mix={h1}>Diagnóstico de {rotulo}</h3>
+            <span mix={css({ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px', fontSize: '13.5px', color: A.muted })}>
+              {Icone(ICONE.home, 14)}
+              {Icone(ICONE.chevronDir, 9)}
+              {rotulo}
+            </span>
+          </div>
+
+          <div mix={css({ position: 'relative', minHeight: '540px' })}>
+            <div
+              aria-hidden="true"
+              mix={css({ display: 'flex', flexDirection: 'column', gap: '16px', filter: 'blur(7px)', opacity: 0.65, pointerEvents: 'none', userSelect: 'none' })}
+            >
+              <div mix={css({ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' })}>
+                {kpisFake.map((v, i) => (
+                  <div mix={[painel, css({ padding: '18px 20px', background: A.card })]}>
+                    <span mix={css({ display: 'block', fontSize: '12px', color: A.muted, marginBottom: '6px' })}>
+                      {['Possíveis Oportunidades', 'Créditos Apurados', 'Débitos do Período', 'Saldo a Recuperar'][i]}
+                    </span>
+                    <strong mix={[num, css({ fontSize: '18px' })]}>{v}</strong>
+                  </div>
+                ))}
+              </div>
+              <div mix={css({ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '16px' })}>
+                <div mix={[painel, css({ background: A.card })]}>
+                  <div mix={tituloGrafico}>Evolução mensal</div>
+                  <div mix={css({ display: 'flex', alignItems: 'flex-end', gap: '10px', height: '220px', padding: '24px 20px' })}>
+                    {barrasFake.map((h) => (
+                      <span style={{ height: `${h}%` }} mix={css({ flex: 1, borderRadius: '4px 4px 0 0', background: '#56c2e0' })} />
+                    ))}
+                  </div>
+                </div>
+                <div mix={[painel, css({ background: A.card })]}>
+                  <div mix={tituloGrafico}>Por estabelecimento</div>
+                  <div mix={css({ display: 'flex', flexDirection: 'column', gap: '14px', padding: '24px 20px' })}>
+                    {[86, 64, 47, 33, 21, 12].map((w) => (
+                      <span style={{ width: `${w}%` }} mix={css({ height: '12px', borderRadius: '0 4px 4px 0', background: A.navy })} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {ConviteDiag()}
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -3858,8 +3948,9 @@ function TelaDiagnosticoIcms() {
     <div data-app-screen="diagnostico-icms" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-icms')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
@@ -3917,8 +4008,9 @@ function TelaDiagnosticoIpi() {
     <div data-app-screen="diagnostico-ipi" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-ipi')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
@@ -4026,8 +4118,9 @@ function TelaDiagnosticoPisCofins() {
     <div data-app-screen="diagnostico-piscofins" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-piscofins')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
@@ -4149,8 +4242,9 @@ function TelaDiagnosticoPrev() {
     <div data-app-screen="diagnostico-previdenciario" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-previdenciario')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
@@ -4232,8 +4326,9 @@ function TelaDiagnosticoIrpj() {
     <div data-app-screen="diagnostico-irpjcsll" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-irpjcsll')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
@@ -4392,8 +4487,9 @@ function TelaMinhasAnalises() {
     <div data-app-screen="diagnostico-analises" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-analises')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
