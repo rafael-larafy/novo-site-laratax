@@ -25,11 +25,11 @@ const NEW_CENTER = ['CBS', 'IBS', 'Imposto Seletivo']
 
 const ROW_Y = [40, 140, 240]
 
-// PIS/COFINS → CBS, IPI → Imposto Seletivo.
+// PIS/COFINS → CBS. O IPI fica sem seta de propósito: o Imposto Seletivo é
+// tributo NOVO, não sucessor do IPI (que permanece com escopo reduzido).
 const LEFT_FLOWS = [
   'M130,62 C165,62 180,62 215,62',
   'M130,162 C170,162 175,70 215,70',
-  'M130,262 C165,262 180,262 215,262',
 ]
 
 // ICMS/ISS/ICMS-ST → IBS.
@@ -157,7 +157,7 @@ function FlowPanel() {
       <svg
         viewBox="0 0 560 300"
         role="img"
-        aria-label="Diagrama: PIS, COFINS e IPI convergem para CBS e Imposto Seletivo; ICMS, ISS e ICMS-ST convergem para IBS"
+        aria-label="Diagrama: PIS e COFINS convergem para CBS; ICMS, ISS e ICMS-ST convergem para IBS; o Imposto Seletivo é um tributo novo e o IPI permanece com escopo reduzido"
         mix={css({ width: '100%', minWidth: '480px', height: 'auto', display: 'block' })}
       >
         {/* cabeçalhos */}
@@ -222,6 +222,18 @@ function FlowPanel() {
             >
               {label}
             </text>
+            {label === 'IPI' ? (
+              <text
+                x="70"
+                y={ROW_Y[i]! + 57}
+                text-anchor="middle"
+                fill="var(--muted)"
+                font-family={FONT_MONO}
+                font-size="9"
+              >
+                segue, com escopo reduzido
+              </text>
+            ) : null}
           </g>
         ))}
         {/* tributos atuais — direita */}
