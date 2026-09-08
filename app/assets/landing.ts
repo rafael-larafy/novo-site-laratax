@@ -174,6 +174,44 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       },
     })
   })
+
+
+  // cards de KPI da previa no hero: sobem com fade e os valores contam do
+  // zero; a linha inteira repete a cada 30s
+  const heroKpis = gsap.utils.toArray<HTMLElement>('[data-hero-app] [data-kpi], [data-hero-solto] [data-kpi]')
+  if (heroKpis.length) {
+    const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+    const passo = 0.09
+    const linha = gsap.timeline({ delay: 0.35, repeat: -1, repeatDelay: 30 })
+    linha.from(heroKpis, {
+      y: 30,
+      opacity: 0,
+      duration: DUR.card,
+      stagger: passo,
+      ease: EASE.card,
+    }, 0)
+    heroKpis.forEach((card, i) => {
+      // ponytail: o primeiro <strong> do KpiDiag e sempre o valor principal
+      const el = card.querySelector<HTMLElement>('strong')
+      if (!el) return
+      const alvo = parseFloat((el.textContent || '').replace(/[^\d,]/g, '').replace(',', '.'))
+      if (!Number.isFinite(alvo) || alvo === 0) return
+      const estado = { valor: 0 }
+      linha.fromTo(
+        estado,
+        { valor: 0 },
+        {
+          valor: alvo,
+          duration: 1.6,
+          ease: 'power2.out',
+          onUpdate: () => {
+            el.textContent = moeda.format(estado.valor)
+          },
+        },
+        i * passo,
+      )
+    })
+  }
 })
 
 // scroll lateral dos passos 1→7 .
