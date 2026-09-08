@@ -157,7 +157,7 @@ export function HeroBento() {
             style={{ zoom: '0.6' }}
             mix={css({ width: '1440px', pointerEvents: 'none', userSelect: 'none' })}
           >
-            {TelaDiagnosticoVisao(false)}
+            {TelaDiagnosticoVisao()}
           </div>
           {/* o botão fica sobre o print, que é claro nos dois temas: cores do
               tema deixariam ele invisível no escuro (card-bg quase transparente) */}

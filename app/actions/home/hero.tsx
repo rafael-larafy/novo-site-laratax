@@ -166,7 +166,7 @@ function PreviewPlataforma() {
             style={{ zoom: "0.44" }}
             mix={css({ width: "1440px", pointerEvents: "none", userSelect: "none" })}
           >
-            {TelaDiagnosticoVisao(false)}
+            {TelaDiagnosticoVisao()}
           </div>
         </div>
         {CardSolto(
