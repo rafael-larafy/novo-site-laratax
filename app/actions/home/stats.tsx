@@ -18,7 +18,7 @@ const STATS: Array<{
     label: 'cenários tributários processados',
   },
   { value: '74', display: '74', label: 'painéis de análise' },
-  { value: '40', suffix: ' min', display: '40 min', label: 'diagnóstico completo' },
+  { value: '40', suffix: ' min', display: '40 min', label: 'em média para um diagnóstico completo' },
   { value: '5', suffix: ' anos', display: '5 anos', label: 'de dados fiscais analisados' },
 ]
 

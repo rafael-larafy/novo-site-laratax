@@ -36,6 +36,8 @@ export function Hero() {
     >                         
       {/* prévia do app no hero: força a tela (escondida por padrão no CSS da réplica) a aparecer */}
       <style>{`[data-hero-app] [data-app-screen] { display: flex; }
+        [data-hero-app] [data-diag-borrado] { filter: none; }
+        [data-hero-app] [data-convite] { display: none; }
         [data-hero-app] [data-kpi] { box-shadow: 0 14px 30px rgba(2, 17, 24, 0.13); }
         [data-hero-solto] [data-kpi] { border-radius: 12px; box-shadow: 0 30px 64px rgba(2, 17, 24, 0.3), 0 0 0 1px rgba(2, 17, 24, 0.06); }
         [data-hero-solto] [data-kpi] strong { font-size: 23px; }`}</style>

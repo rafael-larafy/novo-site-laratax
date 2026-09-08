@@ -3773,7 +3773,7 @@ function MenuDiagnostico(telaAtiva: string) {
 // card flutuante "agende com um especialista", usado sobre conteúdo desfocado
 function ConviteDiag() {
   return (
-    <div mix={css({ position: 'absolute', inset: 0, zIndex: 5, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '150px' })}>
+    <div data-convite="" mix={css({ position: 'absolute', inset: 0, zIndex: 5, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '150px' })}>
       <div mix={[painel, css({ maxWidth: '430px', textAlign: 'center', padding: '36px 32px', background: A.card, boxShadow: '0 24px 56px rgba(2, 17, 24, 0.22)' })]}>
         <span mix={css({ display: 'grid', placeItems: 'center', width: '48px', height: '48px', margin: '0 auto 16px', borderRadius: '12px', background: A.cyanSoft, color: A.cyan })}>
           {Icone(ICONE.play, 24)}
@@ -4712,8 +4712,9 @@ export function TelaDiagnosticoVisao() {
     <div data-app-screen="diagnostico-visao" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-visao')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
