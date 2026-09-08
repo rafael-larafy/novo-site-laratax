@@ -212,7 +212,7 @@ export function HeroCentro() {
           style={{ zoom: '0.8' }}
           mix={css({ width: '1440px', pointerEvents: 'none', userSelect: 'none' })}
         >
-          {TelaDiagnosticoVisao(false)}
+          {TelaDiagnosticoVisao()}
         </div>
       </div>
       </div>

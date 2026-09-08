@@ -569,12 +569,12 @@ function BuscaSidebar() {
   )
 }
 
-function BotaoCriar() {
+function BotaoCriar(inerte = false) {
   return (
     <button
       type="button"
-      data-app-nav=""
-      data-target="novo"
+      data-app-nav={inerte ? undefined : ''}
+      data-target={inerte ? undefined : 'novo'}
       mix={css({
         display: 'flex',
         alignItems: 'center',
@@ -638,7 +638,9 @@ function CardTokens() {
   )
 }
 
-function SidebarPrincipal(ativo: 'inicio' | 'projetos'| 'perdcomp' | 'clientes' | 'config' | 'faturamento') {
+// inerte: dentro do diagnóstico o menu aparece, mas não navega — o visitante
+// fica no projeto
+function SidebarPrincipal(ativo: 'inicio' | 'projetos'| 'perdcomp' | 'clientes' | 'config' | 'faturamento', inerte = false) {
   return (
     <aside
       mix={css({
@@ -659,7 +661,7 @@ function SidebarPrincipal(ativo: 'inicio' | 'projetos'| 'perdcomp' | 'clientes' 
         {BuscaSidebar()}
       </div>
       <div mix={css({ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', minHeight: 0 })}>
-        {BotaoCriar()}
+        {BotaoCriar(inerte)}
         <div mix={css({ display: 'flex', flexDirection: 'column', gap: '6px' })}>
           {NAV_PRINCIPAL.map((item) => {
             const estilo = css({
@@ -687,7 +689,7 @@ function SidebarPrincipal(ativo: 'inicio' | 'projetos'| 'perdcomp' | 'clientes' 
               '&[data-on="true"]': { background: A.bg, borderColor: A.line },
               '&:focus-visible': { outline: `2px solid ${A.cyan}`, outlineOffset: '2px' },
             })
-            return item.target ? (
+            return item.target && !inerte ? (
               <button
                 type="button"
                 data-app-nav=""
@@ -699,7 +701,7 @@ function SidebarPrincipal(ativo: 'inicio' | 'projetos'| 'perdcomp' | 'clientes' 
                 {item.label}
               </button>
             ) : (
-              <span mix={estilo}>
+              <span mix={[estilo, item.target === ativo && css({ background: A.bg, borderColor: A.line })]}>
                 {Icone(item.icon, 24)}
                 {item.label}
               </span>
@@ -839,7 +841,7 @@ function LinhaProjeto(p: Projeto) {
 
 function TelaInicio() {
   return (
-    <div data-app-screen="inicio" data-on="true" mix={telaRaiz}>
+    <div data-app-screen="inicio" data-on="false" mix={telaRaiz}>
       {SidebarPrincipal('inicio')}
       <div mix={colConteudo}>
         <div mix={[painel, painelConteudo]}>
@@ -1162,21 +1164,14 @@ function SidebarRail() {
       <span mix={[quadrado, css({ width: '32px', height: '32px', border: `1px solid ${A.lineForte}`, color: A.faint })]}>
         {Icone(ICONE.busca, 14)}
       </span>
-      <button
-        type="button"
-        data-app-nav=""
-        data-target="novo"
-        mix={[quadrado, css({ width: '32px', height: '32px', background: A.cyanVivo, color: '#ffffff', '&:hover': { background: A.cyanVivo, filter: 'brightness(1.05)' } })]}
-      >
+      <span mix={[quadrado, css({ width: '32px', height: '32px', background: A.cyanVivo, color: '#ffffff' })]}>
         {Icone(ICONE.add, 16)}
-      </button>
+      </span>
       <div mix={css({ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '8px' })}>
-        <button type="button" data-app-nav="" data-target="inicio" mix={quadrado}>
-          {Icone(ICONE.home, 24)}
-        </button>
-        <button type="button" data-app-nav="" data-target="projetos" data-on="true" mix={quadrado}>
+        <span mix={quadrado}>{Icone(ICONE.home, 24)}</span>
+        <span mix={[quadrado, css({ background: A.bg, borderColor: A.line })]}>
           {Icone(ICONE.layers, 24)}
-        </button>
+        </span>
         <span mix={quadrado}>{Icone(ICONE.receiptLong, 24)}</span>
         <span mix={quadrado}>{Icone(ICONE.usuarios, 24)}</span>
         <span mix={quadrado}>{Icone(ICONE.config, 24)}</span>
@@ -1201,7 +1196,7 @@ function SidebarRail() {
           boxShadow: '24px 0 48px rgba(2, 17, 24, 0.25)',
         })}
       >
-        {SidebarPrincipal('projetos')}
+        {SidebarPrincipal('projetos', true)}
       </div>
     </aside>
   )
@@ -4712,17 +4707,15 @@ const VISAO_REGIMES = [
   ['2024', 'Real/Trimestral'],
 ]
 
-// exportada: o hero da home renderiza uma prévia emoldurada desta tela, e a
-// prévia pede travada=false — o convite tem um <a> dentro, e um <a> aninhado
-// em outro <a> faz o parser fechar o link do hero e vazar o conteúdo pra fora
-export function TelaDiagnosticoVisao(travada = true) {
+// exportada: os heros renderizam uma prévia emoldurada desta tela. É a única
+// tela livre da demo, e a que a réplica abre por padrão.
+export function TelaDiagnosticoVisao() {
   return (
-    <div data-app-screen="diagnostico-visao" data-on="false" mix={telaRaiz}>
+    <div data-app-screen="diagnostico-visao" data-on="true" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-visao')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
-        {travada ? ConviteDiag() : null}
-        <div data-diag-borrado={travada ? '' : undefined} mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
+        <div mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
