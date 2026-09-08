@@ -2298,9 +2298,25 @@ function PainelDetalhes() {
                 </span>
               </span>
             </span>
-            <button type="button" data-app-nav="" data-target="diagnostico-visao" mix={btnPrimario}>
-              Acessar Diagnóstico
-            </button>
+            {/* par segmentado Antigo | Novo diagnóstico, com o selo Beta acima */}
+            <span mix={css({ position: 'relative', display: 'inline-flex', alignSelf: 'center' })}>
+              <span mix={css({ position: 'absolute', zIndex: 1, top: '-13px', right: '4px', padding: '2px 7px', borderRadius: '5px', background: A.ink, color: '#ffffff', fontSize: '10.5px', fontWeight: 600, lineHeight: 1.4 })}>
+                Beta
+              </span>
+              <span mix={css({ display: 'inline-flex', borderRadius: '8px', border: `1px solid ${A.lineForte}`, overflow: 'hidden' })}>
+                <span mix={css({ padding: '9px 16px', fontSize: '13.5px', fontWeight: 600, color: A.slate, background: A.card, cursor: 'pointer', '&:hover': { background: A.bg } })}>
+                  Antigo
+                </span>
+                <button
+                  type="button"
+                  data-app-nav=""
+                  data-target="diagnostico-visao"
+                  mix={css({ padding: '9px 16px', border: 'none', font: 'inherit', fontSize: '13.5px', fontWeight: 600, color: '#ffffff', background: A.cyan, cursor: 'pointer', '&:hover': { filter: 'brightness(1.05)' } })}
+                >
+                  Novo diagnóstico
+                </button>
+              </span>
+            </span>
           </div>
         </div>
         <div mix={[painel, css({ padding: '18px 24px', display: 'flex', flexDirection: 'column', gap: '16px', background: A.card })]}>
