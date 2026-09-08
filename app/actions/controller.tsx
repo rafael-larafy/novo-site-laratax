@@ -8,6 +8,8 @@ import { HomePage } from './home/page.tsx'
 import { RecursosPage } from './recursos/page.tsx'
 import { SobrePage } from './sobre/page.tsx'
 import { V2Page } from './v2/page.tsx'
+import { V3Page } from './v3/page.tsx'
+import { V4Page } from './v4/page.tsx'
 
 export default createController(routes, {
   actions: {
@@ -21,6 +23,12 @@ export default createController(routes, {
     },
     v2(context) {
       return context.render(<V2Page />)
+    },
+    v3(context) {
+      return context.render(<V3Page />)
+    },
+    v4(context) {
+      return context.render(<V4Page />)
     },
     recursos(context) {
       return context.render(<RecursosPage />)

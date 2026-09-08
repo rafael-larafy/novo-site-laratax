@@ -78,9 +78,13 @@ export function LogosMarquee() {
           mix={css({
             display: 'flex',
             width: 'max-content',
+            // cada cópia ocupa a viewport inteira: com cópias mais estreitas
+            // que a tela, o fim do ciclo (-50%) deixava um vão à direita
             '& > div': {
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'space-around',
+              minWidth: '100vw',
               gap: '72px',
               paddingRight: '72px',
             },
