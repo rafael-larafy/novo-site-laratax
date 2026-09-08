@@ -7,7 +7,7 @@ import { router } from '../app/router.ts'
 const DIST = path.resolve('dist')
 const ORIGEM = 'http://localhost'
 
-const PAGINAS = ['/', '/v2', '/recursos', '/sobre', '/carreiras', '/contato']
+const PAGINAS = ['/', '/v2', '/v3', '/v4', '/recursos', '/sobre', '/carreiras', '/contato']
 
 const buscar = (rota: string) => router.fetch(new Request(ORIGEM + rota))
 

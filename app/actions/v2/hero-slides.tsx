@@ -227,7 +227,7 @@ export function HeroSlides() {
       >
         <div mix={css({ maxWidth: '48rem' })}>
           <p
-            data-scramble="LaraTAX | Hiperautomação Tributária"
+            data-scramble="LaraTAX | A Central de comando do tributarista"
             mix={css({
               margin: '0 0 24px',
               fontFamily: FONT_MONO,
@@ -262,9 +262,7 @@ export function HeroSlides() {
               maxWidth: '32em',
             })}
           >
-            A LaraTAX cruza milhões de dados fiscais e entrega um diagnóstico de
-            oportunidades dos últimos 5 anos em menos de 40 minutos, da baixa
-            automática à retificação.
+Sua operação tributária. De ponta a ponta. Da baixa automática das obrigações à retificação e ao PER/DCOMP. Tudo centralizado, rastreável e pronto para escalar.
           </p>
           <div mix={css({ display: 'flex', gap: '16px', flexWrap: 'wrap' })}>
             <a href="#contato" mix={btnPrimary}>
@@ -518,9 +516,13 @@ export function HeroSlides() {
             mix={css({
               display: 'flex',
               width: 'max-content',
+              // cada cópia ocupa a viewport inteira: com cópias mais estreitas
+              // que a tela, o fim do ciclo (-50%) deixava um vão à direita
               '& > div': {
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'space-around',
+                minWidth: '100vw',
                 gap: '56px',
                 padding: '18px 56px 18px 0',
               },

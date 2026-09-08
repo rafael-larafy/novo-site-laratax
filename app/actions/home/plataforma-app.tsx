@@ -1977,8 +1977,9 @@ function TelaPerdcompDash() {
   return (
     <div data-app-screen="perdcomp" data-on="false" mix={telaRaiz}>
       {SidebarPrincipal('perdcomp')}
-      <div mix={colConteudo}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           {CabecalhoPerdcomp('dash')}
           <div mix={css({ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' })}>
@@ -2002,8 +2003,9 @@ function TelaPerdcompClientes() {
   return (
     <div data-app-screen="perdcomp-clientes" data-on="false" mix={telaRaiz}>
       {SidebarPrincipal('perdcomp')}
-      <div mix={colConteudo}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           {CabecalhoPerdcomp('clientes')}
           <div mix={[inputFake, css({ width: '256px' })]}>
@@ -2026,8 +2028,9 @@ function TelaPerdcompCliente() {
   return (
     <div data-app-screen="perdcomp-cliente" data-on="false" mix={telaRaiz}>
       {SidebarPrincipal('perdcomp')}
-      <div mix={colConteudo}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           {CabecalhoPerdcomp('clientes')}
 
@@ -2609,8 +2612,9 @@ function ConteudoClientes() {
   return (
     <>
       {SidebarPrincipal('clientes')}
-      <div mix={colConteudo}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ display: 'flex', alignItems: 'flex-start', gap: '16px' })}>
             <div mix={css({ flex: 1 })}>
@@ -2835,8 +2839,9 @@ function TelaConfig() {
   return (
     <div data-app-screen="config" data-on="false" mix={telaRaiz}>
       {SidebarPrincipal('config')}
-      <div mix={colConteudo}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div data-sub-scope="" mix={css({ display: 'flex', flexDirection: 'column', gap: '20px' })}>
             {/* cabeçalhos por aba: mesmo id do conteúdo, alternam juntos */}
@@ -3098,8 +3103,9 @@ function TelaFaturamento() {
   return (
     <div data-app-screen="faturamento" data-on="false" mix={telaRaiz}>
       {SidebarPrincipal('faturamento')}
-      <div mix={colConteudo}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ position: 'relative' })]}>
+        {ConviteDiag()}
+        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ display: 'flex', alignItems: 'flex-start', gap: '16px', paddingBottom: '20px', borderBottom: `1px solid ${A.line}` })}>
             <div mix={css({ flex: 1 })}>
@@ -3773,7 +3779,7 @@ function MenuDiagnostico(telaAtiva: string) {
 // card flutuante "agende com um especialista", usado sobre conteúdo desfocado
 function ConviteDiag() {
   return (
-    <div mix={css({ position: 'absolute', inset: 0, zIndex: 5, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '150px' })}>
+    <div data-convite="" mix={css({ position: 'absolute', inset: 0, zIndex: 5, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '150px' })}>
       <div mix={[painel, css({ maxWidth: '430px', textAlign: 'center', padding: '36px 32px', background: A.card, boxShadow: '0 24px 56px rgba(2, 17, 24, 0.22)' })]}>
         <span mix={css({ display: 'grid', placeItems: 'center', width: '48px', height: '48px', margin: '0 auto 16px', borderRadius: '12px', background: A.cyanSoft, color: A.cyan })}>
           {Icone(ICONE.play, 24)}
@@ -4706,14 +4712,17 @@ const VISAO_REGIMES = [
   ['2024', 'Real/Trimestral'],
 ]
 
-// exportada: o hero da home renderiza uma prévia emoldurada desta tela
-export function TelaDiagnosticoVisao() {
+// exportada: o hero da home renderiza uma prévia emoldurada desta tela, e a
+// prévia pede travada=false — o convite tem um <a> dentro, e um <a> aninhado
+// em outro <a> faz o parser fechar o link do hero e vazar o conteúdo pra fora
+export function TelaDiagnosticoVisao(travada = true) {
   return (
     <div data-app-screen="diagnostico-visao" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-visao')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
-        <div mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
+        {travada ? ConviteDiag() : null}
+        <div data-diag-borrado={travada ? '' : undefined} mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>

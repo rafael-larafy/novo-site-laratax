@@ -3,6 +3,10 @@ import { css } from "remix/ui";
 import { FONT_MONO, btnPrimary, container } from "../../ui/tokens.ts";
 import { DIAGS, KpiDiag, TelaDiagnosticoVisao } from "./plataforma-app.tsx";
 
+// visual dos cards soltos; a v3 monta a mesma composição no hero dela
+export const CSS_CARD_SOLTO = `[data-hero-solto] [data-kpi] { color: #314e58; border-radius: 12px; box-shadow: 0 30px 64px rgba(2, 17, 24, 0.3), 0 0 0 1px rgba(2, 17, 24, 0.06); }
+        [data-hero-solto] [data-kpi] strong { font-size: 23px; }`
+
 export function Hero() {
   return () => (
     <section
@@ -37,8 +41,7 @@ export function Hero() {
       {/* prévia do app no hero: força a tela (escondida por padrão no CSS da réplica) a aparecer */}
       <style>{`[data-hero-app] [data-app-screen] { display: flex; }
         [data-hero-app] [data-kpi] { box-shadow: 0 14px 30px rgba(2, 17, 24, 0.13); }
-        [data-hero-solto] [data-kpi] { border-radius: 12px; box-shadow: 0 30px 64px rgba(2, 17, 24, 0.3), 0 0 0 1px rgba(2, 17, 24, 0.06); }
-        [data-hero-solto] [data-kpi] strong { font-size: 23px; }`}</style>
+        ${CSS_CARD_SOLTO}`}</style>
       <div
         mix={[
           container,
@@ -163,7 +166,7 @@ function PreviewPlataforma() {
             style={{ zoom: "0.44" }}
             mix={css({ width: "1440px", pointerEvents: "none", userSelect: "none" })}
           >
-            {TelaDiagnosticoVisao()}
+            {TelaDiagnosticoVisao(false)}
           </div>
         </div>
         {CardSolto(
@@ -212,7 +215,7 @@ function PreviewPlataforma() {
 
 // Card de KPI solto: mesmo componente da réplica, em escala real, quebrando a
 // borda da moldura. Some em telas estreitas, onde não há folga lateral.
-function CardSolto(
+export function CardSolto(
   rotulo: string,
   valor: string,
   campo: string,

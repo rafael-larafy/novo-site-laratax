@@ -248,6 +248,12 @@ if (stepsWrap && trilho) {
   })
 }
 
+// seletor de versão no header: destaca a rota atual
+const aqui = location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '') || '/'
+for (const el of document.querySelectorAll<HTMLAnchorElement>('[data-versao]')) {
+  el.dataset.on = new URL(el.href).pathname.replace(/\/$/, '') === aqui || (aqui === '/' && el.getAttribute('href') === '/') ? 'true' : 'false'
+}
+
 //  réplica do LaraTAX 
 const appDemo = document.querySelector<HTMLElement>('[data-app-demo]')
 if (appDemo) {
