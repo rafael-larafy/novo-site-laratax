@@ -1689,13 +1689,13 @@ export function PlataformaApp() {
 
 //PER/DCOMP - dados
 
-const MESES = ['09/25', '10/25', '11/25', '12/25', '01/26', '02/26', '03/26', '04/26', '05/26', '06/26', '07/26', '08/26']
+const MESES = ['10/25', '11/25', '12/25', '01/26', '02/26', '03/26', '04/26', '05/26', '06/26', '07/26', '08/26', '09/26']
 
 const KPIS_PERDCOMP = [
-  {icone:ICONE.dinheiro,rotulo: 'Crédito original',valor:'R$ 28.262.210,02'},  
-  {icone:ICONE.sync,rotulo:'Crédito atualizado',valor:'R$ 29.110.077,37'},
-  {icone:ICONE.receiptLong,rotulo:'Saldo compensado',valor:'R$ 30.781.997,51'},
-  {icone:ICONE.dinheiro,rotulo:'Saldo disponível',valor:'-R$ 2.519.787,49',destaque: true},  
+  {icone:ICONE.dinheiro,rotulo: 'Crédito original',valor:'R$ 9.104.798,44'},  
+  {icone:ICONE.sync,rotulo:'Crédito atualizado',valor:'R$ 9.948.675,23'},
+  {icone:ICONE.receiptLong,rotulo:'Saldo compensado',valor:'R$ 7.169.324,86'},
+  {icone:ICONE.dinheiro,rotulo:'Saldo disponível',valor:'R$ 1.935.473,58',destaque: true},  
 ]
 
 const KPIS_CLIENTES = [
@@ -1705,19 +1705,19 @@ const KPIS_CLIENTES = [
 {icone:ICONE.dinheiro,rotulo:'Saldo disponível',valor:'R$ 45.107,27',destaque: true},  
 ]
 
-const G_CREDITO = {titulo:'Crédito atualizado',serie:[23.5, 25.6, 26.4, 26.9, 28.6, 28.9, 29, 29.1, 29.1, 29.1, 29.1, 29.1],rotulo:['R$ 23,5 mi', 'R$ 25,6 mi', 'R$ 26,4 mi', 'R$ 26,9 mi', 'R$ 28,6 mi', 'R$ 28,9 mi', 'R$ 29 mi', 'R$ 29,1 mi', 'R$ 29,1 mi', 'R$ 29,1 mi', 'R$ 29,1 mi', 'R$ 29,1 mi'],eixo:['R$ 29,1 mi', 'R$ 14,6 mi', 'R$ 0'] as [string,string,string]}
-const G_COMPENSADO = {titulo:'Saldo compensado',serie:[24.8, 25.9, 26.9, 28.2, 29.2, 29.6, 30.1, 31, 31.8, 31.8, 31.8, 31.8],rotulo:['R$ 24,8 mi', 'R$ 25,9 mi', 'R$ 26,9 mi', 'R$ 28,2 mi', 'R$ 29,2 mi', 'R$ 29,6 mi', 'R$ 30,1 mi', 'R$ 31 mi', 'R$ 31,8 mi', 'R$ 31,8 mi', 'R$ 31,8 mi', 'R$ 31,8 mi'],eixo:['R$ 31,8 mi', 'R$ 15,9 mi', 'R$ 0'] as [string,string,string]}
-const G_DISPONIVEL = {titulo:'Saldo disponível',serie:[-1.3, -0.32, -0.5, -1.3, -0.55, -0.7, -1.2, -1.9, -2.7, -2.7, -2.7, -2.5],rotulo:['R$ -1,3 mi', 'R$ -316,2 mil', 'R$ -501,7 mil', 'R$ -1,3 mi', 'R$ -550,6 mil', 'R$ -697 mil', 'R$ -1,2 mi', 'R$ -1,9 mi', 'R$ -2,7 mi', 'R$ -2,7 mi', 'R$ -2,7 mi', 'R$ -2,5 mi'],eixo:['R$ 0', 'R$ -1,4 mi', 'R$ -2,7 mi'] as [string,string,string]}
+const G_CREDITO = {titulo:'Crédito atualizado',serie:[7.6, 8.5, 9, 9.4, 9.8, 9.8, 9.9, 9.9, 9.9, 9.9, 9.9, 9.9],rotulo:['R$ 7,6 mi', 'R$ 8,5 mi', 'R$ 9 mi', 'R$ 9,4 mi', 'R$ 9,8 mi', 'R$ 9,8 mi', 'R$ 9,9 mi', 'R$ 9,9 mi', 'R$ 9,9 mi', 'R$ 9,9 mi', 'R$ 9,9 mi', 'R$ 9,9 mi'],eixo:['R$ 9,9 mi', 'R$ 5 mi', 'R$ 0'] as [string,string,string]}
+const G_COMPENSADO = {titulo:'Saldo compensado',serie:[5.5, 6.3, 6.9, 7.5, 7.6, 7.8, 7.9, 8, 8, 8, 8, 8],rotulo:['R$ 5,5 mi', 'R$ 6,3 mi', 'R$ 6,9 mi', 'R$ 7,5 mi', 'R$ 7,6 mi', 'R$ 7,8 mi', 'R$ 7,9 mi', 'R$ 8 mi', 'R$ 8 mi', 'R$ 8 mi', 'R$ 8 mi', 'R$ 8 mi'],eixo:['R$ 8 mi', 'R$ 4 mi', 'R$ 0'] as [string,string,string]}
+const G_DISPONIVEL = {titulo:'Saldo disponível',serie:[2.1, 2.3, 2.1, 2, 2.1, 2, 2, 2, 2, 2, 2, 1.9],rotulo:['R$ 2,1 mi', 'R$ 2,3 mi', 'R$ 2,1 mi', 'R$ 2 mi', 'R$ 2,1 mi', 'R$ 2 mi', 'R$ 2 mi', 'R$ 2 mi', 'R$ 2 mi', 'R$ 2 mi', 'R$ 2 mi', 'R$ 1,9 mi'],eixo:['R$ 2,3 mi', 'R$ 1,1 mi', 'R$ 0'] as [string,string,string]}
 
-const QTD_EMPRESAS = {titulo:'Quantidade de empresas',serie:[0, 0, 0, 0, 0, 0, 0, 0, 12, 2, 0, 0],escala:12}
-const QTD_PERDCOMP = {titulo:'Quantidade de PER/DCOMP',serie:[3, 16, 15, 13, 16, 8, 5, 47, 80, 0, 0, 0],escala:80}
+const QTD_EMPRESAS = {titulo:'Quantidade de empresas',serie:[0, 0, 0, 0, 0, 0, 0, 12, 2, 0, 0, 1],escala:12,ticks:[0, 5, 10]}
+const QTD_PERDCOMP = {titulo:'Quantidade de PER/DCOMP',serie:[15, 15, 13, 15, 8, 5, 47, 12, 0, 0, 0, 0],escala:50,ticks:[0, 20, 40]}
 
 const EMPRESAS_TOP = [
-  {nome:'EMPRESA EXEMPLO 1',credito:19.2,saldo:23.6,rc:'R$ 19.161.402',rs:'R$ 23.612.673'},
-  {nome:'EMPRESA EXEMPLO 2',credito:6.5,saldo:4.6,rc:'R$ 6.484.133',rs:'R$ 4.593.711'},
-  {nome:'EMPRESA EXEMPLO 3',credito:2.9,saldo:2.1,rc:'R$ 2.856.778',rs:'R$ 2.143.871'},
-  {nome:'EMPRESA EXEMPLO 4',credito:0.19,saldo:0.19,rc:'R$ 239.741',rs:'R$ 194.543'},
-  {nome:'EMPRESA EXEMPLO 5',credito:0.2,saldo:0.09,rc:'R$ 204.982',rs:'R$ 94.137'},
+  {nome:'EMPRESA EXEMPLO 1',credito:6.48,saldo:4.59,rc:'R$ 6.484.133',rs:'R$ 4.593.711'},
+  {nome:'EMPRESA EXEMPLO 2',credito:2.86,saldo:2.14,rc:'R$ 2.856.778',rs:'R$ 2.143.871'},
+  {nome:'EMPRESA EXEMPLO 3',credito:0.24,saldo:0.19,rc:'R$ 239.741',rs:'R$ 194.543'},
+  {nome:'EMPRESA EXEMPLO 4',credito:0.2,saldo:0.09,rc:'R$ 204.982',rs:'R$ 94.137'},
+  {nome:'EMPRESA EXEMPLO 5',credito:0.11,saldo:0.08,rc:'R$ 111.330',rs:'R$ 83.221'},
 ]
 
 type ClientePerdcomp = {empresa:string;cnpj:string;hora:string;de:string;resp:string;email:string;}
@@ -1764,9 +1764,15 @@ function CabecalhoPerdcomp (ativa: 'dash' | 'clientes') {
   )
   return(
     <div mix={css({display:'flex',flexDirection:'column',gap:'16px'})}>
-      <div>
-        <h3 mix={h1}>Controle PER/DCOMP</h3>
-        <p mix={css({margin:'4px 0 0', fontSize:'14px',color:A.muted})}>Gerencie e acompanhe suas PER/DCOMP.</p>
+      <div mix={css({ display: 'flex', alignItems: 'flex-start', gap: '16px' })}>
+        <div mix={css({ flex: 1 })}>
+          <h3 mix={h1}>Controle PER/DCOMP</h3>
+          <p mix={css({margin:'4px 0 0', fontSize:'14px',color:A.muted})}>Gerencie e acompanhe suas PER/DCOMP.</p>
+        </div>
+        <button type="button" data-app-nav="" data-target="perdcomp-clientes" mix={btnPrimario}>
+          <span mix={css({ display: 'inline-flex' })}>{Icone(ICONE.add, 14)}</span>
+          Consultar empresa
+        </button>
       </div>
       <div mix={css({display:'flex',gap:'24px', borderBottom:`1px solid ${A.line}`})}>
         {aba('Dashboard consolidado', 'perdcomp', ativa === 'dash')}
@@ -1778,7 +1784,7 @@ function CabecalhoPerdcomp (ativa: 'dash' | 'clientes') {
 
 function KpiPerdcomp(k: (typeof KPIS_PERDCOMP)[number]) {
   return (
-    <div mix={[painel, css({ position: 'relative', overflow: 'hidden', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' })]}>
+    <div mix={[painel, css({ position: 'relative', overflow: 'hidden', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }), k.destaque ? css({ background: A.cyanSoft }) : css({})]}>
       {QuadriculadoCard()}
       <span mix={css({ position: 'relative', color: A.cyan })}>{Icone(k.icone, 24)}</span>
       <span mix={css({ position: 'relative' })}>
@@ -1791,7 +1797,7 @@ function KpiPerdcomp(k: (typeof KPIS_PERDCOMP)[number]) {
 
 function GraficoLinha(g: typeof G_CREDITO) {
   const max = Math.max(...g.serie)
-  const min = Math.min(...g.serie)
+  const min = Math.min(0, ...g.serie)
   const px = (i: number) => 60 + (i * 480) / (g.serie.length - 1)
   const py = (v: number) => 28 + ((max - v) * 128) / (max - min || 1)
   const pts = g.serie.map((v, i) => `${px(i)},${py(v)}`).join(' ')
@@ -1827,39 +1833,51 @@ function GraficoLinha(g: typeof G_CREDITO) {
               data-tip-cor={A.cyan}
               data-tip-linhas={`${MESES[i]}|${g.rotulo[i]}`}
             />
-            {i % 2 === 0 ? (
-              <text x={px(i)} y={py(v) - 9} text-anchor="middle" font-size="9" fill={A.slate}>{g.rotulo[i]}</text>
-            ) : null}
+            <text x={px(i)} y={py(v) - 9} text-anchor="middle" font-size="8.5" fill={A.slate}>{g.rotulo[i]}</text>
           </g>
         ))}
-        {MESES.map((m, i) => (i % 2 === 0 ? <text x={px(i)} y="182" text-anchor="middle" font-size="10" fill={A.muted}>{m}</text> : null))}
+        {MESES.map((m, i) => (i % 2 === 0 || i === MESES.length - 1 ? <text x={px(i)} y="182" text-anchor="middle" font-size="10" fill={A.muted}>{m}</text> : null))}
       </svg>
     </div>
   )
 }
 
 function GraficoColunas(g: typeof QTD_EMPRESAS) {
+  const pct = (v: number) => (v / g.escala) * 100
   return (
     <div mix={painel}>
       <div mix={tituloGrafico}>{g.titulo}</div>
-      <div mix={css({ display: 'flex', alignItems: 'flex-end', gap: '10px', height: '170px', padding: '28px 20px 0' })}>
-        {g.serie.map((v, i) => (
-          <div mix={css({ flex: 1, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' })}>
-            <strong mix={[num, css({ fontSize: '12px', color: A.navy })]}>{v}</strong>
-            <div
-              style={{ height: `${(v / g.escala) * 100}%` }}
-              data-ponto-grafico=""
-              data-tip-titulo={g.titulo}
-              data-tip-cor={A.navy}
-              data-tip-linhas={`${MESES[i]}|${v}`}
-              mix={css({ width: '100%', maxWidth: '32px', minHeight: '2px', borderRadius: '4px 4px 0 0', background: A.navy })}
-            />
+      <div mix={css({ display: 'flex', gap: '12px', padding: '28px 20px 0 16px' })}>
+        {/* eixo Y posicionado pelo valor (0/5/10, 0/20/40), como no app real */}
+        <div mix={css({ position: 'relative', width: '22px', height: '170px', flexShrink: 0 })}>
+          {g.ticks.map((t) => (
+            <span style={{ bottom: `${pct(t)}%` }} mix={[num, css({ position: 'absolute', right: 0, transform: 'translateY(50%)', fontSize: '10px', color: A.muted })]}>{t}</span>
+          ))}
+        </div>
+        <div mix={css({ position: 'relative', flex: 1, height: '170px' })}>
+          {g.ticks.map((t) => (
+            <span style={{ bottom: `${pct(t)}%` }} mix={css({ position: 'absolute', left: 0, right: 0, height: '1px', background: A.line })} />
+          ))}
+          <div mix={css({ position: 'relative', display: 'flex', alignItems: 'flex-end', gap: '10px', height: '100%' })}>
+            {g.serie.map((v, i) => (
+              <div mix={css({ flex: 1, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' })}>
+                <strong mix={[num, css({ fontSize: '12px', color: A.navy })]}>{v}</strong>
+                <div
+                  style={{ height: `${pct(v)}%` }}
+                  data-ponto-grafico=""
+                  data-tip-titulo={g.titulo}
+                  data-tip-cor={A.navy}
+                  data-tip-linhas={`${MESES[i]}|${v}`}
+                  mix={css({ width: '100%', maxWidth: '32px', minHeight: '2px', borderRadius: '4px 4px 0 0', background: A.navy })}
+                />
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
-      <div mix={css({ display: 'flex', gap: '10px', padding: '8px 20px 20px' })}>
+      <div mix={css({ display: 'flex', gap: '10px', padding: '8px 20px 20px 50px' })}>
         {MESES.map((m) => (
-          <span mix={[num, css({ flex: 1, textAlign: 'center', fontSize: '10px', color: A.muted, transform: 'rotate(-35deg)' })]}>{m}</span>
+          <span mix={[num, css({ flex: 1, textAlign: 'center', fontSize: '10px', color: A.muted })]}>{m}</span>
         ))}
       </div>
     </div>
@@ -1867,7 +1885,7 @@ function GraficoColunas(g: typeof QTD_EMPRESAS) {
 }
 
 function GraficoEmpresas() {
-  const max = 24
+  const max = 8
   const barra = (frac: number, cor: string, rotulo: string, empresa: string, serie: string) => (
     <span mix={css({ display: 'flex', alignItems: 'center', gap: '8px' })}>
       <span
@@ -1883,7 +1901,7 @@ function GraficoEmpresas() {
   )
   return (
     <div mix={painel}>
-      <div mix={tituloGrafico}>5 principais empresas</div>
+      <div mix={tituloGrafico}>Principais empresas</div>
       <div mix={css({ display: 'flex', flexDirection: 'column', gap: '16px', padding: '20px' })}>
         {EMPRESAS_TOP.map((e) => (
           <div mix={css({ display: 'grid', gridTemplateColumns: '180px 1fr', gap: '12px', alignItems: 'center' })}>
@@ -1894,6 +1912,12 @@ function GraficoEmpresas() {
             </span>
           </div>
         ))}
+        <div mix={css({ display: 'grid', gridTemplateColumns: '180px 1fr', gap: '12px' })}>
+          <span />
+          <span mix={css({ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: A.muted })}>
+            {['R$ 0', '2 mi', '4 mi', '6 mi', '8 mi'].map((r) => <span mix={num}>{r}</span>)}
+          </span>
+        </div>
         <div mix={css({ display: 'flex', justifyContent: 'center', gap: '20px', fontSize: '12px', color: A.slate })}>
           <span mix={css({ display: 'flex', alignItems: 'center', gap: '6px' })}>
             <span mix={css({ width: '12px', height: '12px', borderRadius: '3px', background: 'rgba(0, 196, 229, 0.55)' })} /> Crédito atualizado
@@ -1962,10 +1986,10 @@ function TelaPerdcompDash() {
           </div>
           <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' })}>
             {GraficoEmpresas()}
-            {GraficoColunas(QTD_EMPRESAS)}
+            {GraficoLinha(G_DISPONIVEL)}
             {GraficoLinha(G_CREDITO)}
             {GraficoLinha(G_COMPENSADO)}
-            {GraficoLinha(G_DISPONIVEL)}
+            {GraficoColunas(QTD_EMPRESAS)}
             {GraficoColunas(QTD_PERDCOMP)}
           </div>
         </div>
@@ -3856,7 +3880,7 @@ const ICMS_ESTABELECIMENTOS = {
   total: ['', '', '1.388.554'],
 }
 
-function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[][]; total: string[] }, comCaixa = false) {
+function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[][]; total?: string[] }, comCaixa = false) {
   const th = css({ padding: '10px 16px', fontSize: '13.5px', fontWeight: 700, color: A.text, textAlign: 'left', whiteSpace: 'nowrap', borderBottom: `1px solid ${A.line}` })
   const td = css({ padding: '10px 16px', fontSize: '13.5px', color: A.slate, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px', borderBottom: `1px solid ${A.cinza}` })
   const tdTotal = css({ padding: '11px 16px', fontSize: '13.5px', fontWeight: 700, color: '#ffffff', background: A.navy, whiteSpace: 'nowrap' })
@@ -3891,12 +3915,14 @@ function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[]
                 ))}
               </tr>
             ))}
-            <tr>
-              {comCaixa ? <td mix={tdTotal} /> : null}
-              {dados.total.map((valor) => (
-                <td mix={[tdTotal, num]}>{valor}</td>
-              ))}
-            </tr>
+            {dados.total ? (
+              <tr>
+                {comCaixa ? <td mix={tdTotal} /> : null}
+                {dados.total.map((valor) => (
+                  <td mix={[tdTotal, num]}>{valor}</td>
+                ))}
+              </tr>
+            ) : null}
           </tbody>
         </table>
       </div>
@@ -3913,7 +3939,7 @@ function AbaDiag(rotulo: string, ativa: boolean, comSeta: boolean) {
   )
 }
 
-function KpiDiag(rotulo: string, valor: string, refinada?: { rotulo: string; valor: string; ruim?: boolean; bom?: boolean; traco?: boolean; campo?: string }, valorGrande = false, campo = '') {
+function KpiDiag(rotulo: string, valor: string, refinada?: { rotulo: string; valor: string; ruim?: boolean; bom?: boolean; info?: boolean; traco?: boolean; seta?: 'cima' | 'baixo'; campo?: string }, valorGrande = false, campo = '') {
   return (
     <div mix={[painel, css({ position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' })]}>
       {QuadriculadoCard()}
@@ -3926,15 +3952,15 @@ function KpiDiag(rotulo: string, valor: string, refinada?: { rotulo: string; val
           <span mix={css({ position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', display: 'grid', placeItems: 'center', width: '28px', height: '28px', borderRadius: '50%', background: A.card, border: `1px solid ${A.line}`, color: A.muted })}>
             {Icone(ICONE.chevronBaixo, 10)}
           </span>
-          <div mix={css({ display: 'flex', alignItems: 'center', gap: '10px', padding: '18px 24px', background: refinada.ruim ? 'linear-gradient(180deg, rgba(254, 226, 226, 0), #fee2e2)' : refinada.bom ? 'linear-gradient(180deg, rgba(220, 252, 231, 0), #dcfce7)' : 'transparent' })}>
+          <div mix={css({ display: 'flex', alignItems: 'center', gap: '10px', padding: '18px 24px', background: refinada.ruim ? 'linear-gradient(180deg, rgba(254, 226, 226, 0), #fee2e2)' : refinada.info ? 'linear-gradient(180deg, rgba(234, 255, 255, 0), #eaffff)' : refinada.bom ? 'linear-gradient(180deg, rgba(220, 252, 231, 0), #dcfce7)' : 'transparent' })}>
             <span mix={css({ flex: 1, fontSize: '13px', color: A.slate })}>{refinada.rotulo}</span>
-            <strong data-campo={refinada.campo || ''} mix={[num, css({ fontSize: '15px', color: refinada.ruim ? A.red : refinada.bom ? A.green : A.text })]}>{refinada.valor}</strong>
-            {refinada.ruim ? (
-              <span mix={css({ display: 'inline-flex', color: A.red })}>{Icone(ICONE.setaBaixo, 13)}</span>
-            ) : refinada.bom ? (
-              <span mix={css({ display: 'inline-flex', color: A.green })}>{Icone(ICONE.setaCima, 13)}</span>
-            ) : refinada.traco ? (
+            <strong data-campo={refinada.campo || ''} mix={[num, css({ fontSize: '15px', color: refinada.ruim ? A.red : refinada.info ? A.cyan : refinada.bom ? A.green : A.text })]}>{refinada.valor}</strong>
+            {refinada.traco ? (
               <span mix={css({ color: A.muted })}>−</span>
+            ) : refinada.ruim || refinada.bom || refinada.info ? (
+              <span mix={css({ display: 'inline-flex', color: refinada.ruim ? A.red : refinada.info ? A.cyan : A.green })}>
+                {Icone(refinada.ruim || refinada.info || refinada.seta === 'baixo' ? ICONE.setaBaixo : ICONE.setaCima, 13)}
+              </span>
             ) : null}
           </div>
         </div>
@@ -4047,12 +4073,13 @@ function TelaDiagnosticoIpi() {
 
           <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' })}>
             {KpiDiag('Possível Oportunidades (Prévia)', 'R$ 0,00', { rotulo: 'Possível Oportunidades (Refinada)', valor: 'R$ 0,00', traco: true })}
-            {KpiDiag('Oportunidades Analisar (Prévia)', '—', { rotulo: 'Possível Oportunidades Analisar (Refinada)', valor: 'R$ 0,00' })}
+            {KpiDiag('Oportunidades a Explorar (Prévia)', DIAGS[0].ipiExp, { rotulo: 'Oportunidades a Explorar (Refinada)', valor: 'R$ 0,00', bom: true, seta: 'baixo' }, false, 'ipiExp')}
             {KpiDiag('Pagamentos Efetuados', 'R$ 0,00', { rotulo: 'Compensações Efetuadas (DCTF)', valor: DIAGS[0].ipiComp, bom: true, campo: 'ipiComp' })}
           </div>
 
-          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' })}>
-            {KpiDiag('Compensações Efetuadas (DCTF)', DIAGS[0].ipiComp, undefined, false, 'ipiComp')}
+          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'stretch' })}>
+            {TabelaDiag(IPI_OPORTUNIDADES)}
+            {TabelaDiag(IPI_EXPLORAR)}
           </div>
         </div>
       </div>
@@ -4060,29 +4087,55 @@ function TelaDiagnosticoIpi() {
   )
 }
 
-// tabelas do PIS/COFINS (no app real aparecem com erro de carregamento;
-// aqui preenchidas — colunas somam certinho e o total geral bate com o KPI)
-const PISCOFINS_REGIME = {
-  titulo: 'Regime de Incidência - PIS/COFINS',
-  colunas: ['', '2021', '2022', 'Total'],
+// tabelas do IPI: a linha Insumos soma exatamente o total IPI da tabela
+// "Possibilidades a Explorar" da Visão Geral (R$ 482.857,72) e o KPI ipiExp
+const IPI_OPORTUNIDADES = {
+  titulo: 'Possíveis Oportunidades',
+  colunas: ['', 'Total'],
   linhas: [
-    ['Não Cumulativo', 'R$ 3.981.220,14', 'R$ 4.427.903,66', 'R$ 21.409.113,05'],
-    ['Cumulativo', 'R$ 812.334,90', 'R$ 745.118,22', 'R$ 3.902.446,78'],
-    ['Monofásico', 'R$ 401.876,55', 'R$ 388.204,17', 'R$ 1.943.021,88'],
-    ['Alíquota Zero', 'R$ 118.905,73', 'R$ 96.417,28', 'R$ 512.334,60'],
+    ['Crédito Presumido ZFM', 'R$ 0,00'],
+    ['Bonificação', 'R$ 0,00'],
   ],
-  total: ['Total', 'R$ 5.314.337,32', 'R$ 5.657.643,33', 'R$ 27.766.916,31'],
+  total: ['Total', 'R$ 0,00'],
 }
+
+const IPI_EXPLORAR = {
+  titulo: 'Possibilidades a Explorar',
+  colunas: ['', '2021', '2022', '2023', '2024', '2025', 'Total'],
+  linhas: [['Insumos', 'R$ 0,00', 'R$ 4.715,11', 'R$ 6.639,09', 'R$ 92.071,84', 'R$ 379.431,68', 'R$ 482.857,72']],
+}
+
+// tabelas do PIS/COFINS: colunas somam certinho e os totais batem com a linha
+// PIS/COFINS das tabelas da Visão Geral (249.541,44 e 239.587,06) e com os
+// KPIs pcPrev/pcExp
+const PISCOFINS_REGIME = [
+  ['2021', '1 - Não-cumulativo'],
+  ['2022', '1 - Não-cumulativo'],
+  ['2023', '1 - Não-cumulativo'],
+  ['2024', 'Abra para ver os dados'],
+  ['2025', '1 - Não-cumulativo'],
+]
 
 const PISCOFINS_OPORTUNIDADES = {
   titulo: 'Possíveis Oportunidades',
   colunas: ['', '2021', '2022', 'Total'],
   linhas: [
-    ['Insumos (Créditos)', 'R$ 21.310,45', 'R$ 47.612,80', 'R$ 141.520,66'],
-    ['Monofásico', 'R$ 9.884,12', 'R$ 15.006,91', 'R$ 78.410,22'],
-    ['Exclusão ICMS da Base', 'R$ 3.115,08', 'R$ 6.240,55', 'R$ 28.486,52'],
+    ['Possível Oportunidade - ENERGIA ELÉTRICA', 'R$ 0,00', 'R$ 0,00', 'R$ 41.203,17'],
+    ['Possível Oportunidade - FRETES', 'R$ 158,08', 'R$ 0,00', 'R$ 147.996,52'],
+    ['Possível Oportunidade - INSUMO/REVENDA', 'R$ 0,00', 'R$ 0,00', 'R$ 60.341,75'],
   ],
-  total: ['Total', 'R$ 34.309,65', 'R$ 68.860,26', 'R$ 248.417,40'],
+  total: ['Total', 'R$ 158,08', 'R$ 0,00', 'R$ 249.541,44'],
+}
+
+const PISCOFINS_EXPLORAR = {
+  titulo: 'Possibilidades a Explorar',
+  colunas: ['', '2021', '2022', '2023', 'Total'],
+  linhas: [
+    ['Analisar - Itens que não constam no EFD-C - PIS/COFINS', 'R$ 0,00', 'R$ 0,00', 'R$ 87.412,30', 'R$ 226.150,41'],
+    ['Analisar - Itens que não constam no EFD-C', 'R$ 0,00', 'R$ 0,00', 'R$ 4.903,88', 'R$ 13.436,65'],
+    ['Analisar - Serviços sem créditos - PIS/COFINS', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+  ],
+  total: ['Total', 'R$ 0,00', 'R$ 0,00', 'R$ 92.316,18', 'R$ 239.587,06'],
 }
 
 function BannerAnaliseAtiva() {
@@ -4142,32 +4195,33 @@ function TelaDiagnosticoPisCofins() {
             </div>
           </div>
 
-          <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '12px 16px' })]}>
-            {AbaDiag('Resumo', true, false)}
+          {BannerAnaliseAtiva()}
+
+          <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '10px 16px' })]}>
+            <span mix={css({ padding: '7px 14px', borderRadius: '8px', background: A.cyanSoft, fontSize: '14px', fontWeight: 600, color: A.cyan })}>
+              Resumo
+            </span>
             {AbaDiag('Fluxo Operacional', false, true)}
-            {AbaDiag('Entradas', false, true)}
-            {AbaDiag('Saídas', false, true)}
+            {AbaDiag('Análises Entradas', false, true)}
+            {AbaDiag('Análises Saídas', false, true)}
             <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
-              <span mix={btnContorno}>{Icone(ICONE.download, 14)} Exportar</span>
-              <span mix={btnPrimario}>{Icone(ICONE.checklist, 14)} Gerar retificação</span>
+              <span mix={[btnContorno, css({ width: '40px', height: '35px', padding: 0, justifyContent: 'center' })]}>{Icone(ICONE.download, 14)}</span>
+              <span mix={btnPrimario}>Gerar retificação</span>
             </span>
           </div>
 
-          {BannerAnaliseAtiva()}
+          <strong mix={css({ position: 'relative', fontSize: '17px' })}>Resumo</strong>
 
           <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' })}>
-            {KpiDiag('Possível Oportunidades (Prévia)', DIAGS[0].pcPrev, { rotulo: 'Possível Oportunidades (Refinada)', valor: 'R$ 0,00', ruim: true }, false, 'pcPrev')}
-            {KpiDiag('Oportunidades Analisar (Prévia)', 'R$ 0,00', { rotulo: 'Possível Oportunidades Analisar (Refinada)', valor: 'R$ 0,00', traco: true })}
-            {KpiDiag('Pagamentos PIS/COFINS', '—', { rotulo: 'Compensações Efetuadas (DCTF)', valor: '—', traco: true })}
+            {KpiDiag('Possível Oportunidades (Prévia)', DIAGS[0].pcPrev, { rotulo: 'Possível Oportunidades (Refinada)', valor: 'R$ 0,00', bom: true, seta: 'baixo' }, false, 'pcPrev')}
+            {KpiDiag('Oportunidades a Explorar (Prévia)', DIAGS[0].pcExp, { rotulo: 'Oportunidades a Explorar (Refinada)', valor: 'R$ 0,00', info: true }, false, 'pcExp')}
+            {KpiDiag('Pagamentos PIS/COFINS', 'R$ 0,00', { rotulo: 'Compensações Efetuadas (DCTF)', valor: 'R$ 0,00', traco: true })}
           </div>
 
-          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'start' })}>
-            {TabelaDiag(PISCOFINS_REGIME)}
+          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '16px', alignItems: 'start' })}>
+            {TabelaPrev('Regime de Incidência - PIS/COFINS', ['periodo', 'Regime de Incidência Tributária'], PISCOFINS_REGIME, { expansor: true, setaCol1: true })}
             {TabelaDiag(PISCOFINS_OPORTUNIDADES)}
-          </div>
-
-          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' })}>
-            {KpiDiag('Compensações Efetuadas (DCTF)', '—')}
+            {TabelaDiag(PISCOFINS_EXPLORAR)}
           </div>
         </div>
       </div>
@@ -4350,26 +4404,31 @@ function TelaDiagnosticoIrpj() {
             </div>
           </div>
 
-          <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '12px 16px' })]}>
-            {AbaDiag('Resumo', true, false)}
+          {BannerAnalise()}
+
+          <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '10px 16px' })]}>
+            <span mix={css({ padding: '7px 14px', borderRadius: '8px', background: A.cyanSoft, fontSize: '14px', fontWeight: 600, color: A.cyan })}>
+              Resumo
+            </span>
             {AbaDiag('Fluxo Operacional', false, true)}
             {AbaDiag('CRÉDITOS', false, true)}
             <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
-              <span mix={btnContorno}>{Icone(ICONE.download, 14)} Exportar</span>
-              <span mix={btnPrimario}>{Icone(ICONE.checklist, 14)} Gerar retificação</span>
+              <span mix={[btnContorno, css({ width: '40px', height: '35px', padding: 0, justifyContent: 'center' })]}>{Icone(ICONE.download, 14)}</span>
+              <span mix={[btnContorno, css({ color: A.muted })]}>Gerar retificação</span>
             </span>
           </div>
 
-          {BannerAnalise()}
+          <strong mix={css({ position: 'relative', fontSize: '17px' })}>Resumo</strong>
 
-          {/* como no app real: um único card "Tabela" alto, na metade esquerda */}
-          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'start' })}>
+          {/* como no app real: card "Tabela" alto à esquerda e o KPI de pagamentos esticado à direita */}
+          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px', alignItems: 'stretch' })}>
             {TabelaPrev(
               'Tabela',
               ['movimentacao', 'cnpj'],
               [['0 - Bloco com dados informados', '']],
               { expansor: true, alturaMin: '560px' },
             )}
+            {KpiDiag('Pagamentos IRPJ/CSLL', '—', { rotulo: 'Compensações Efetuadas (DCTF)', valor: 'R$ 0,00' })}
           </div>
         </div>
       </div>
@@ -4599,30 +4658,40 @@ function GraficoDarfs() {
   )
 }
 
-function GraficoReceitasCompras() {
-  const d0 = DIAGS[0]
-  return (
-    <div mix={[painel, css({ display: 'flex', flexDirection: 'column' })]}>
-      {CabecalhoCardDiag('Receitas/ Compras', false)}
-      <div mix={css({ flex: 1, display: 'flex', gap: '12px', padding: '22px 24px 14px' })}>
-        <div mix={css({ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', textAlign: 'right', paddingBottom: '22px' })}>
-          {[0, 1, 2, 3, 4].map((i) => (
-            <span data-campo={`eixoRC${i}`} mix={[num, css({ fontSize: '11px', color: A.muted })]}>{d0[`eixoRC${i}`]}</span>
-          ))}
-        </div>
-        <div mix={css({ flex: 1, display: 'flex', flexDirection: 'column' })}>
-          <div mix={css({ flex: 1, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: '18px', borderBottom: `1px solid ${A.lineForte}`, minHeight: '260px' })}>
-            <span style={{ height: d0.receitasE.split(':')[1] }} data-campo-estilo="receitasE" data-ponto-grafico="" data-tip-linhas={d0.receitasT} data-campo-tip="receitasT" mix={css({ width: '72px', background: '#56c2e0', borderRadius: '3px 3px 0 0' })} />
-            <span style={{ height: d0.comprasE.split(':')[1] }} data-campo-estilo="comprasE" data-ponto-grafico="" data-tip-linhas={d0.comprasT} data-campo-tip="comprasT" mix={css({ width: '72px', background: '#56c2e0', borderRadius: '3px 3px 0 0' })} />
-          </div>
-          <span data-campo="cnpjNum" mix={[num, css({ textAlign: 'center', fontSize: '11.5px', color: A.slate, paddingTop: '6px' })]}>{d0.cnpjNum}</span>
-        </div>
-      </div>
-    </div>
-  )
+// Visão geral: tabelas fixas na base (empresa padrão); os KPIs grandes escalam
+// por empresa via data-campo. Colunas e total geral somam certinho, e o total
+// de cada tabela bate com a base dos KPIs posOp/posExp.
+const VISAO_OPORTUNIDADES = {
+  titulo: 'Possíveis Oportunidades',
+  colunas: ['', '2021', '2022', 'Total'],
+  linhas: [
+    ['ICMS', 'R$ 11.074,64', 'R$ 13.088,03', 'R$ 1.186.404,88'],
+    ['PIS/COFINS', 'R$ 158,08', 'R$ 0,00', 'R$ 249.541,44'],
+    ['IPI', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+  ],
+  total: ['Total', 'R$ 11.232,72', 'R$ 13.088,03', 'R$ 1.435.946,32'],
 }
 
-function TelaDiagnosticoVisao() {
+const VISAO_EXPLORAR = {
+  titulo: 'Possibilidades a Explorar',
+  colunas: ['', '2021', '2022', 'Total'],
+  linhas: [
+    ['ICMS', 'R$ 128.502,87', 'R$ 362.562,00', 'R$ 1.166.816,94'],
+    ['PIS/COFINS', 'R$ 0,00', 'R$ 0,00', 'R$ 239.587,06'],
+    ['IPI', 'R$ 0,00', 'R$ 4.715,11', 'R$ 482.857,72'],
+  ],
+  total: ['Total', 'R$ 128.502,87', 'R$ 367.277,11', 'R$ 1.889.261,72'],
+}
+
+const VISAO_REGIMES = [
+  ['2021', 'Real/Estimativa'],
+  ['2022', 'Real/Estimativa'],
+  ['2023', 'Real/Trimestral'],
+  ['2024', 'Real/Trimestral'],
+]
+
+// exportada: o hero da home renderiza uma prévia emoldurada desta tela
+export function TelaDiagnosticoVisao() {
   return (
     <div data-app-screen="diagnostico-visao" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
@@ -4651,36 +4720,40 @@ function TelaDiagnosticoVisao() {
           </div>
           <div mix={css({ position: 'relative', height: '1px', background: A.line })} />
 
-          <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '12px 16px' })]}>
-            {AbaDiag('Resumo', true, false)}
+          {BannerAnalise()}
+
+          <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '10px 16px' })]}>
+            <span mix={css({ padding: '7px 14px', borderRadius: '8px', background: A.cyanSoft, fontSize: '14px', fontWeight: 600, color: A.cyan })}>
+              Resumo
+            </span>
             <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
-              <span mix={btnContorno}>{Icone(ICONE.download, 14)} Exportar</span>
-              <span mix={btnPrimario}>{Icone(ICONE.checklist, 14)} Gerar retificação</span>
+              <span mix={[btnContorno, css({ width: '40px', height: '35px', padding: 0, justifyContent: 'center' })]}>{Icone(ICONE.download, 14)}</span>
+              <span mix={[btnContorno, css({ color: A.muted })]}>Gerar retificação</span>
             </span>
           </div>
 
-          {BannerAnalise()}
+          <strong mix={css({ position: 'relative', fontSize: '17px' })}>Resumo</strong>
 
           <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' })}>
-            {KpiDiag('Possíveis Oportunidades', '—', { rotulo: 'Pós reforma', valor: DIAGS[0].posReforma, campo: 'posReforma' })}
-            {KpiDiag('Oportunidades a Explorar', '—', { rotulo: 'Pós reforma', valor: DIAGS[0].posReforma, campo: 'posReforma' })}
+            {KpiDiag('Possíveis Oportunidades (Prévia)', DIAGS[0].posOp, { rotulo: 'Valores Refinados', valor: 'R$ 0,00', bom: true }, false, 'posOp')}
+            {KpiDiag('Possibilidades a Explorar (Prévia)', DIAGS[0].posExp, { rotulo: 'Valores Refinados', valor: 'R$ 0,00', bom: true }, false, 'posExp')}
           </div>
 
           <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' })}>
-            {KpiDiag('Compras', '—')}
             {KpiDiag('Receitas', DIAGS[0].kpiReceitas, undefined, false, 'kpiReceitas')}
+            {KpiDiag('Compras', DIAGS[0].kpiCompras, undefined, false, 'kpiCompras')}
             {KpiDiag("DARF's Recolhidos", DIAGS[0].kpiDarfs, undefined, false, 'kpiDarfs')}
             {KpiDiag('ICMS a Recolher', DIAGS[0].kpiIcms, undefined, false, 'kpiIcms')}
           </div>
 
-          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1.7fr 1.3fr', gap: '16px', alignItems: 'stretch' })}>
-            <div mix={[painel, css({ display: 'flex', flexDirection: 'column' })]}>
-              {CabecalhoCardDiag('Regime Tributário', true)}
-              {/* vazio como no app real */}
-              <div mix={css({ flex: 1, minHeight: '320px' })} />
-            </div>
+          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'start' })}>
+            {TabelaDiag(VISAO_OPORTUNIDADES)}
+            {TabelaDiag(VISAO_EXPLORAR)}
+          </div>
+
+          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'stretch' })}>
             {GraficoDarfs()}
-            {GraficoReceitasCompras()}
+            {TabelaPrev('Regime Tributário', ['ANO', 'regime_tributario'], VISAO_REGIMES, { setaCol1: true })}
           </div>
         </div>
       </div>
@@ -4856,7 +4929,13 @@ function geraDiag(e: Empresa, i: number): Record<string, string> {
   d.icmsPrev1 = moeda(1166816.94 * f)
   d.icmsPrev2 = moeda(1186514.97 * f)
   d.ipiComp = moeda(3825.92 * f)
-  d.pcPrev = moeda(248417.4 * f)
+  d.ipiExp = moeda(482857.72 * f)
+  // Visão geral: KPIs grandes (base = total das tabelas fixas) e Compras
+  d.posOp = moeda(1435946.32 * f)
+  d.posExp = moeda(1889261.72 * f)
+  d.kpiCompras = moeda(942189384.42 * f)
+  d.pcPrev = moeda(249541.44 * f)
+  d.pcExp = moeda(239587.06 * f)
   d.cnpjNum = e.cnpj.replace(/\D/g, '')
   return d
 }

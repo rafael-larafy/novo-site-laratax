@@ -22,36 +22,36 @@ const PAINS = [
   {
     tag:'Fricção',
     cor:ciano,
-    title: 'Baixa manual e dispersa',
-    text: 'e-CAC, SPED e e-Social exigem dias de coleta manual em portais diferentes.',
+    title: 'Coleta braçal, portal por portal',
+    text: 'Alguém do time passa dias baixando arquivo por arquivo: e-CAC, SPED, e-Social, cada um com seu certificado e sua fila.',
   },
   {
     tag:'Gargalo',
     cor:amarelo,
-    title: 'Limitações humanas',
-    text: 'Planilhas não sustentam análises profundas de milhões de registros.',
+    title: 'A planilha não dá conta',
+    text: 'São milhões de registros por empresa. Nenhum Excel aguenta, e ninguém cruza isso na mão sem deixar coisa para trás.',
   },
   {
     tag:'Custo',
     cor:laranja,
-    title: 'Custo de oportunidade',
-    text: 'Semanas de trabalho imobilizam a equipe fiscal em tarefas repetitivas.',
+    title: 'Tempo caro em tarefa repetitiva',
+    text: 'Enquanto a equipe copia, cola e confere, a análise que realmente gera receita fica esperando na fila.',
   },
   {
     tag:'Perda',
     cor:vermelho,
-    title: 'Perda de créditos',
-    text: 'Oportunidades expiram nas janelas de prescrição antes de serem identificadas.',
+    title: 'Crédito que prescreve em silêncio',
+    text: 'Crédito tributário tem prazo. O que ninguém encontra a tempo prescreve, e prescrito não volta.',
     selo:'Irreversível - janela de prescrição'
   },
 ]
 
 const sintomas = [
-  'Muitas horas gastas',
-  'Erros humanos',
-  'Limite de Dados',
-  'Impossível escalar',
-  'Operação inconsistente',
+  'Dias perdidos em portais',
+  'Erro manual vira passivo',
+  'Planilha trava no volume',
+  'Equipe presa no repetitivo',
+  'Cada mês sai de um jeito',
 ]
 
 
@@ -83,8 +83,8 @@ export function Pains() {
             A rotina fiscal manual não escala
           </h2>
           <p mix={[lead,css({marginBottom:0})]}>
-            Cada etapa manual empurra a próxima: a coleta atrasa a análise, a análise imobiliza a
-            equipe e os créditos vencem antes de aparecer.
+            Quem fecha apuração conhece o ciclo: a coleta engole os dias, a análise prende a equipe
+            e, quando sobra fôlego para caçar crédito, parte dele já prescreveu.
           </p>
           <p mix={css({
             margin:'48px 0 0',
