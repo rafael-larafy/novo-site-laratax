@@ -3991,9 +3991,8 @@ function TelaDiagnosticoIcms() {
     <div data-app-screen="diagnostico-icms" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-icms')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
-        {ConviteDiag()}
-        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
+        <div mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
@@ -4051,9 +4050,8 @@ function TelaDiagnosticoIpi() {
     <div data-app-screen="diagnostico-ipi" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-ipi')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
-        {ConviteDiag()}
-        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
+        <div mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
@@ -4188,9 +4186,8 @@ function TelaDiagnosticoPisCofins() {
     <div data-app-screen="diagnostico-piscofins" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
       {MenuDiagnostico('diagnostico-piscofins')}
-      <div mix={[colConteudo, css({ paddingLeft: '16px', position: 'relative' })]}>
-        {ConviteDiag()}
-        <div data-diag-borrado="" mix={[painel, painelConteudo]}>
+      <div mix={[colConteudo, css({ paddingLeft: '16px' })]}>
+        <div mix={[painel, painelConteudo]}>
           <div mix={degradeTopo} />
           <div mix={css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' })}>
             <div mix={css({ flex: 1, minWidth: '260px' })}>
