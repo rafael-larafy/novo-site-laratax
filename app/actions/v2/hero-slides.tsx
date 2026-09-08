@@ -6,7 +6,7 @@ import {
   btnGhost,
   btnPrimary,
   container,
-  surfaceContrast,
+  surfaceBase,
 } from '../../ui/tokens.ts'
 import { CLIENTES } from '../home/logos.tsx'
 
@@ -84,8 +84,8 @@ const FOCI = ['70% 18%', '22% 28%', '78% 68%', '28% 74%', '60% 42%', '38% 14%', 
 function scene(i: number) {
   const focus = FOCI[i % FOCI.length]
   return [
-    `radial-gradient(ellipse 46% 38% at ${focus}, rgba(0, 194, 239, 0.16), transparent 70%)`,
-    `radial-gradient(1100px 720px at ${focus}, #06222F 0%, ${COLORS.ink} 68%)`,
+    `radial-gradient(ellipse 46% 38% at ${focus}, color-mix(in srgb, var(--accent-graphic) 16%, transparent), transparent 70%)`,
+    `radial-gradient(1100px 720px at ${focus}, color-mix(in srgb, var(--accent-graphic) 9%, var(--surface)) 0%, var(--surface) 68%)`,
   ].join(', ')
 }
 
@@ -95,8 +95,8 @@ const glassCard = css({
   bottom: 0,
   padding: '16px',
   borderRadius: '14px',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
-  background: 'rgba(255, 255, 255, 0.06)',
+  border: '1px solid var(--line)',
+  background: 'color-mix(in srgb, var(--surface) 65%, transparent)',
   backdropFilter: 'blur(12px)',
   WebkitBackdropFilter: 'blur(12px)',
 })
@@ -107,7 +107,7 @@ export function HeroSlides() {
       id="inicio"
       data-hero-slides=""
       mix={[
-        surfaceContrast,
+        surfaceBase,
         css({
           position: 'relative',
           minHeight: '100vh',
@@ -115,7 +115,7 @@ export function HeroSlides() {
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          backgroundColor: COLORS.ink,
+          backgroundColor: 'var(--surface)',
         }),
       ]}
     >
@@ -125,12 +125,12 @@ export function HeroSlides() {
         [data-hero-card] { opacity: 0; transform: translateY(16px); pointer-events: none;
           transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
         [data-hero-card][data-on='true'] { opacity: 1; transform: none; }
-        [data-hero-cat] { color: rgba(255, 255, 255, 0.45); transition: color 160ms ease; }
-        [data-hero-title] { color: rgba(255, 255, 255, 0.55); transition: color 160ms ease; }
-        [data-hero-tab]:hover [data-hero-cat] { color: rgba(255, 255, 255, 0.7); }
-        [data-hero-tab]:hover [data-hero-title] { color: rgba(255, 255, 255, 0.8); }
+        [data-hero-cat] { color: color-mix(in srgb, var(--text) 45%, transparent); transition: color 160ms ease; }
+        [data-hero-title] { color: color-mix(in srgb, var(--text) 60%, transparent); transition: color 160ms ease; }
+        [data-hero-tab]:hover [data-hero-cat] { color: color-mix(in srgb, var(--text) 75%, transparent); }
+        [data-hero-tab]:hover [data-hero-title] { color: color-mix(in srgb, var(--text) 85%, transparent); }
         [data-hero-tab][data-on='true'] [data-hero-cat] { color: ${COLORS.cyanBright}; }
-        [data-hero-tab][data-on='true'] [data-hero-title] { color: #ffffff; }
+        [data-hero-tab][data-on='true'] [data-hero-title] { color: var(--text); }
         @keyframes hero-logos-scroll { to { transform: translateX(-50%); } }
         [data-hero-logos] { animation: hero-logos-scroll 32s linear infinite; }
         @media (prefers-reduced-motion: reduce) {
@@ -153,7 +153,7 @@ export function HeroSlides() {
                 content: '""',
                 position: 'absolute',
                 inset: 0,
-                background: 'rgba(2, 17, 24, 0.6)',
+                background: 'color-mix(in srgb, var(--surface) 78%, transparent)',
               },
             })}
             style={{ backgroundImage: scene(i) }}
@@ -181,7 +181,7 @@ export function HeroSlides() {
           inset: 0,
           pointerEvents: 'none',
           backgroundImage:
-            'radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px)',
+            'radial-gradient(color-mix(in srgb, var(--text) 8%, transparent) 1px, transparent 1px)',
           backgroundSize: '32px 32px',
           maskImage: 'radial-gradient(ellipse at 50% 30%, black, transparent 75%)',
           WebkitMaskImage: 'radial-gradient(ellipse at 50% 30%, black, transparent 75%)',
@@ -194,7 +194,7 @@ export function HeroSlides() {
           inset: 0,
           pointerEvents: 'none',
           background:
-            'linear-gradient(90deg, rgba(2, 17, 24, 0.92) 0%, rgba(2, 17, 24, 0.6) 42%, rgba(2, 17, 24, 0.12) 100%)',
+            'linear-gradient(90deg, color-mix(in srgb, var(--surface) 94%, transparent) 0%, color-mix(in srgb, var(--surface) 66%, transparent) 42%, color-mix(in srgb, var(--surface) 24%, transparent) 100%)',
         })}
       />
       <div
@@ -204,7 +204,7 @@ export function HeroSlides() {
           inset: 0,
           pointerEvents: 'none',
           background:
-            'linear-gradient(to top, rgba(2, 17, 24, 0.9) 0%, rgba(2, 17, 24, 0) 36%)',
+            'linear-gradient(to top, color-mix(in srgb, var(--surface) 90%, transparent) 0%, transparent 36%)',
         })}
       />
 
@@ -327,7 +327,7 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
                       display: 'block',
                       fontSize: '13px',
                       fontWeight: 600,
-                      color: '#ffffff',
+                      color: 'var(--text)',
                     })}
                   >
                     {a.category}
@@ -339,7 +339,7 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
                       fontSize: '10.5px',
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
-                      color: 'rgba(255, 255, 255, 0.4)',
+                      color: 'var(--muted)',
                     })}
                   >
                     Área da plataforma
@@ -351,7 +351,7 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
                   margin: '12px 0 0',
                   fontSize: '13px',
                   lineHeight: 1.6,
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: 'var(--muted)',
                 })}
               >
                 {a.fact}
@@ -377,7 +377,7 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
           fontWeight: 600,
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
-          color: 'rgba(255, 255, 255, 0.4)',
+          color: 'var(--muted)',
           transition: 'opacity 0.5s ease',
           '@media (min-width: 960px)': { display: 'none' },
         })}
@@ -439,7 +439,7 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
                 height: '3px',
                 borderRadius: '999px',
                 overflow: 'hidden',
-                background: 'rgba(255, 255, 255, 0.16)',
+                background: 'var(--line)',
               })}
             >
               <span
@@ -490,8 +490,7 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
         ))}
       </nav>
 
-      {/* faixa de clientes embutida na base do hero — segue o tema da página
-          (vars de nível de TEMA, não as locais do surfaceContrast do hero) */}
+      {/* faixa de clientes embutida na base do hero */}
       <div
         mix={css({
           position: 'relative',

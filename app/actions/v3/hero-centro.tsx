@@ -1,6 +1,6 @@
 import { css } from 'remix/ui'
 
-import { FONT_MONO, btnGhost, btnPrimary, container, surfaceContrast } from '../../ui/tokens.ts'
+import { FONT_MONO, btnGhost, btnPrimary, container, surfaceBase } from '../../ui/tokens.ts'
 import { CSS_CARD_SOLTO, CardSolto } from '../home/hero.tsx'
 import { DIAGS, TelaDiagnosticoVisao } from '../home/plataforma-app.tsx'
 
@@ -19,14 +19,14 @@ export function HeroCentro() {
     <section
       id="inicio"
       mix={[
-        surfaceContrast,
+        surfaceBase,
         css({
           position: 'relative',
           overflow: 'hidden',
           paddingTop: '148px',
           // sem padding embaixo: a tela do produto encosta na borda
           backgroundImage:
-            'radial-gradient(ellipse 70% 55% at 50% 0%, rgba(7, 224, 255, 0.16), transparent 70%)',
+            'radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--accent-graphic) 18%, transparent), transparent 70%)',
           '@media (max-width: 720px)': { paddingTop: '112px' },
         }),
       ]}
@@ -46,7 +46,7 @@ export function HeroCentro() {
             // o wash ciano volta por cima do vídeo, senão o fundo da seção
             // fica escondido embaixo dele
             background:
-              'radial-gradient(ellipse 70% 55% at 50% 0%, rgba(7, 224, 255, 0.16), transparent 70%), linear-gradient(180deg, rgba(2, 17, 24, 0.88) 0%, rgba(2, 17, 24, 0.93) 55%, rgba(2, 17, 24, 0.98) 100%)',
+              'radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--accent-graphic) 16%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, transparent) 0%, color-mix(in srgb, var(--surface) 95%, transparent) 55%, var(--surface) 100%)',
           },
         })}
       >
