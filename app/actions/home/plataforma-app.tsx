@@ -162,7 +162,7 @@ const DARF_ROTULOS = [
   'UIÇÃO TERCEIROS - SESI', 'CSLL - DEMAIS BAL TRIM', 'CRA - DEPÓSITO JUDICIAL', 'A PARTE DO AFRMM (FMM)',
   'SERV PRESTADOS POR PJ', 'TENÇÃO PREVIDENCIÁRIA',
 ]
-const DIAGS = CLIENTES_EMPRESAS.map((e, i) => geraDiag(e, i))
+export const DIAGS = CLIENTES_EMPRESAS.map((e, i) => geraDiag(e, i))
 const PROJETOS: Projeto[] = geraProjetos(10)
 
 const UF_EMPRESAS = contagem((e) => e.uf)
@@ -3955,9 +3955,9 @@ function AbaDiag(rotulo: string, ativa: boolean, comSeta: boolean) {
   )
 }
 
-function KpiDiag(rotulo: string, valor: string, refinada?: { rotulo: string; valor: string; ruim?: boolean; bom?: boolean; info?: boolean; traco?: boolean; seta?: 'cima' | 'baixo'; campo?: string }, valorGrande = false, campo = '') {
+export function KpiDiag(rotulo: string, valor: string, refinada?: { rotulo: string; valor: string; ruim?: boolean; bom?: boolean; info?: boolean; traco?: boolean; seta?: 'cima' | 'baixo'; campo?: string }, valorGrande = false, campo = '') {
   return (
-    <div mix={[painel, css({ position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' })]}>
+    <div data-kpi="" mix={[painel, css({ position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' })]}>
       {QuadriculadoCard()}
       <div mix={css({ position: 'relative', flex: 1, padding: '22px 24px 26px' })}>
         <span mix={css({ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '6px' })}>{rotulo}</span>
