@@ -4,10 +4,6 @@ import { FONT_MONO, btnPrimary, card, container } from '../../ui/tokens.ts'
 import { CLIENTES } from '../home/logos.tsx'
 import { TelaDiagnosticoVisao } from '../home/plataforma-app.tsx'
 
-// Hero em bento: a mensagem ocupa a célula grande e cada célula menor isola um
-// fato do produto. Serve quando há várias frentes de valor com peso parecido
-// (diagnóstico, PER/DCOMP, reforma) em vez de uma promessa única.
-
 const rotulo = css({
   margin: 0,
   fontFamily: FONT_MONO,
