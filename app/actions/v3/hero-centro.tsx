@@ -75,7 +75,7 @@ export function HeroCentro() {
 
       <div mix={[container, css({ position: 'relative', zIndex: 1, textAlign: 'center' })]}>
         <p
-          data-scramble="Hiperautomação tributária"
+          data-scramble="A central de comando do tributarista"
           mix={css({
             margin: '0 0 24px',
             fontFamily: FONT_MONO,
@@ -86,7 +86,7 @@ export function HeroCentro() {
             color: 'var(--accent)',
           })}
         >
-          Hiperautomação tributária
+          A central de comando do tributarista
         </p>
 
         <div data-reveal="">
