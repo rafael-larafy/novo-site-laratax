@@ -238,7 +238,7 @@ export function HeroSlides() {
               color: 'var(--accent)',
             })}
           >
-            LaraTAX | Hiperautomação Tributária
+            LaraTAX | A Central de comando do tributarista
           </p>
           <h1
             mix={css({
