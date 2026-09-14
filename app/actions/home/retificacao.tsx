@@ -14,34 +14,31 @@ import {
 } from '../../ui/tokens.ts'
 
 const BULLETS = [
-  'Alíquotas configuráveis de IBS, CBS e IS',
-  'Apuração via SPED ou notas fiscais',
-  'Relatórios de transição 2026–2033',
+  'Arquivo retificador gerado pelo sistema',
+  'Memória de cálculo e lastro de cada ajuste',
+  'PER/DCOMP na sequência, sem sair da plataforma',
 ]
 
-const OLD_LEFT = ['PIS', 'COFINS', 'IPI']
-const OLD_RIGHT = ['ICMS', 'ISS', 'ICMS-ST']
-const NEW_CENTER = ['CBS', 'IBS', 'Imposto Seletivo']
+const ENTRADAS = ['EFD ICMS/IPI', 'EFD Contribuições', 'DCTF']
+const SAIDAS = ['EFD retificada', 'DCTF retificadora', 'PER/DCOMP']
 
 const ROW_Y = [40, 140, 240]
 
-// PIS/COFINS → CBS. O IPI fica sem seta de propósito: o Imposto Seletivo é
-// tributo NOVO, não sucessor do IPI (que permanece com escopo reduzido).
-const LEFT_FLOWS = [
-  'M130,62 C165,62 180,62 215,62',
-  'M130,162 C170,162 175,70 215,70',
+const ENTRADA_FLOWS = [
+  'M150,62 C190,62 180,152 210,152',
+  'M150,162 C180,162 185,152 210,152',
+  'M150,262 C190,262 180,152 210,152',
 ]
 
-// ICMS/ISS/ICMS-ST → IBS.
-const RIGHT_FLOWS = [
-  'M430,62 C390,62 385,158 345,158',
-  'M430,162 C395,162 380,162 345,162',
-  'M430,262 C390,262 385,166 345,166',
+const SAIDA_FLOWS = [
+  'M350,152 C380,152 375,62 410,62',
+  'M350,152 C380,152 380,162 410,162',
+  'M350,152 C380,152 375,262 410,262',
 ]
 
-export function Reforma() {
+export function Retificacao() {
   return () => (
-    <section id="reforma" mix={css({padding:'12px 0', scrollMarginTop:'84px'})}>
+    <section id="retificacao" mix={css({padding:'12px 0', scrollMarginTop:'84px'})}>
       <div
       mix={[
         surfaceContrast,
@@ -75,13 +72,14 @@ export function Reforma() {
         ]}
       >
         <div data-reveal-left="">
-          <p mix={eyebrow}>03 / Reforma Tributária</p>
+          <p mix={eyebrow}>03 / Retificação automática</p>
           <h2 mix={heading2}>
-            Simule hoje o impacto do IVA Dual na sua operação
+            A retificação sai pronta da própria apuração
           </h2>
           <p mix={[lead, css({ marginBottom: '32px' })]}>
-            IBS, CBS e Imposto Seletivo: veja o efeito da reforma nas suas compras, vendas e carga
-            tributária efetiva antes de 2026, com dados reais do seu SPED e das suas notas fiscais.
+            A LaraTAX compara o que foi entregue com o que os seus documentos mostram e gera o
+            arquivo retificador de EFD, EFD Contribuições e DCTF, com a memória de cálculo do
+            ajuste e o PER/DCOMP logo na sequência.
           </p>
           <ul
             role="list"
@@ -129,7 +127,7 @@ export function Reforma() {
               }),
             ]}
           >
-            Ver a simulação na prática <span data-arrow aria-hidden="true">→</span>
+            Ver a retificação na prática <span data-arrow aria-hidden="true">→</span>
           </a>
         </div>
         <FlowPanel />
@@ -139,8 +137,6 @@ export function Reforma() {
   )
 }
 
-// Fluxo "Tributos atuais → Novos tributos" em SVG server-rendered,
-// mesma técnica de cometa do hero (pathLength=100 + stroke-dasharray).
 function FlowPanel() {
   return () => (
     <div
@@ -149,46 +145,49 @@ function FlowPanel() {
         card,
         css({
           padding: '40px 32px',
-          // no mobile o SVG rola horizontalmente em vez de encolher até ficar ilegível
-          '@media (max-width: 720px)': { overflowX: 'auto', padding: '24px 16px' },
+          '@media (max-width: 720px)': {
+            overflowX: 'auto',
+            padding: '24px 16px',
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehaviorX: 'contain',
+            maskImage: 'linear-gradient(90deg, black 82%, transparent)',
+            WebkitMaskImage: 'linear-gradient(90deg, black 82%, transparent)',
+          },
         }),
       ]}
     >
       <svg
         viewBox="0 0 560 300"
         role="img"
-        aria-label="Diagrama: PIS e COFINS convergem para CBS; ICMS, ISS e ICMS-ST convergem para IBS; o Imposto Seletivo é um tributo novo e o IPI permanece com escopo reduzido"
+        aria-label="Diagrama: EFD ICMS/IPI, EFD Contribuições e DCTF entram na retificação automática, que devolve arquivo retificador, DCTF retificadora e PER/DCOMP"
         mix={css({ width: '100%', minWidth: '480px', height: 'auto', display: 'block' })}
       >
-        {/* cabeçalhos */}
         <text
-          x="70"
+          x="80"
           y="16"
           text-anchor="middle"
           fill="var(--muted)"
           font-family={FONT_MONO}
-          font-size="13"
+          font-size="12"
           letter-spacing="0.1em"
         >
-          TRIBUTOS ATUAIS
+          O QUE FOI ENTREGUE
         </text>
         <text
-          x="280"
+          x="480"
           y="16"
           text-anchor="middle"
           fill="var(--accent)"
           font-family={FONT_MONO}
-          font-size="13"
+          font-size="12"
           letter-spacing="0.1em"
         >
-          NOVOS TRIBUTOS
+          GERADO PELA LARATAX
         </text>
-        {/* trilhos */}
-        {[...LEFT_FLOWS, ...RIGHT_FLOWS].map((d) => (
+        {[...ENTRADA_FLOWS, ...SAIDA_FLOWS].map((d) => (
           <path d={d} fill="none" stroke="var(--line)" stroke-width="1.5" />
         ))}
-        {/* cometas */}
-        {[...LEFT_FLOWS, ...RIGHT_FLOWS].map((d, i) => (
+        {[...ENTRADA_FLOWS, ...SAIDA_FLOWS].map((d, i) => (
           <path
             d={d}
             data-flow=""
@@ -200,92 +199,97 @@ function FlowPanel() {
             style={{ animationDelay: `${i * 0.45}s` }}
           />
         ))}
-        {/* tributos atuais — esquerda */}
-        {OLD_LEFT.map((label, i) => (
+        {ENTRADAS.map((label, i) => (
           <g>
             <rect
               x="10"
               y={ROW_Y[i]}
-              width="120"
+              width="140"
               height="44"
               rx="10"
               fill="var(--surface-2)"
               stroke="var(--line)"
             />
             <text
-              x="70"
+              x="80"
               y={ROW_Y[i]! + 27}
               text-anchor="middle"
               fill="var(--text)"
               font-family={FONT_MONO}
-              font-size="14"
+              font-size="11"
             >
               {label}
             </text>
-            {label === 'IPI' ? (
-              <text
-                x="70"
-                y={ROW_Y[i]! + 57}
-                text-anchor="middle"
-                fill="var(--muted)"
-                font-family={FONT_MONO}
-                font-size="9"
-              >
-                segue, com escopo reduzido
-              </text>
-            ) : null}
           </g>
         ))}
-        {/* tributos atuais — direita */}
-        {OLD_RIGHT.map((label, i) => (
+        {SAIDAS.map((label, i) => (
           <g>
             <rect
-              x="430"
+              x="410"
               y={ROW_Y[i]}
-              width="120"
+              width="140"
               height="44"
               rx="10"
               fill="var(--surface-2)"
               stroke="var(--line)"
             />
             <text
-              x="490"
+              x="480"
               y={ROW_Y[i]! + 27}
               text-anchor="middle"
               fill="var(--text)"
               font-family={FONT_MONO}
-              font-size="14"
+              font-size="11"
             >
               {label}
             </text>
           </g>
         ))}
-        {/* novos tributos — centro, destacados */}
-        {NEW_CENTER.map((label, i) => (
-          <g>
-            <rect
-              x="215"
-              y={ROW_Y[i]}
-              width="130"
-              height="44"
-              rx="10"
-              fill="var(--surface)"
-              stroke={COLORS.cyan}
-            />
-            <text
-              x="280"
-              y={ROW_Y[i]! + 27}
-              text-anchor="middle"
-              fill={COLORS.cyanBright}
-              font-family={FONT_MONO}
-              // 12: "Imposto Seletivo" é o rótulo mais longo e encostava na borda da caixa
-              font-size="12"
-            >
-              {label}
-            </text>
-          </g>
-        ))}
+        <rect
+          x="210"
+          y="120"
+          width="140"
+          height="64"
+          rx="12"
+          fill="var(--surface)"
+          stroke={COLORS.cyan}
+        />
+        <text
+          x="280"
+          y="147"
+          text-anchor="middle"
+          fill={COLORS.cyanBright}
+          font-family={FONT_MONO}
+          font-size="12"
+        >
+          Retificação
+        </text>
+        <text
+          x="280"
+          y="165"
+          text-anchor="middle"
+          fill={COLORS.cyanBright}
+          font-family={FONT_MONO}
+          font-size="12"
+        >
+          automática
+        </text>
       </svg>
+      <p
+        aria-hidden="true"
+        mix={css({
+          display: 'none',
+          margin: '12px 0 0',
+          fontFamily: FONT_MONO,
+          fontSize: '11px',
+          letterSpacing: '0.18em',
+          textTransform: 'uppercase',
+          color: 'var(--muted)',
+          '@media (max-width: 720px)': { display: 'block' },
+        })}
+      >
+        Arraste para ver o fluxo →
+      </p>
     </div>
   )
 }

@@ -53,7 +53,6 @@ const RETIFICACAO = [
   },
 ]
 
-// X da marca (mesmos paths do dock flutuante), usado como grafismo dos painéis
 function MarcaX(tam: number, cor: string, opacidade: number) {
   return (
     <svg width={tam} height={tam} viewBox="-200 -215 1784 1845" fill={cor} aria-hidden="true" mix={css({ opacity: String(opacidade) })}>
@@ -90,7 +89,6 @@ export function RecursosPage() {
     <Document>
       <Header />
       <main>
-        {/* hero */}
         <section mix={[section, css({ paddingBottom: '48px', textAlign: 'center' })]}>
           <div mix={container}>
             <p mix={[eyebrow, css({ justifyContent: 'center', '&::before': { display: 'none' } })]}>Recursos</p>
@@ -117,7 +115,6 @@ export function RecursosPage() {
           </div>
         </section>
 
-        {/* baixas automáticas */}
         <section id="baixas" mix={css({ padding: '12px 0', scrollMarginTop: '84px' })}>
           <div mix={[surfaceContrast, stage]}>
             <style>{`
@@ -182,7 +179,6 @@ export function RecursosPage() {
                 ))}
               </div>
 
-              {/* arquivos convergindo para o LaraTAX */}
               <div mix={css({ maxWidth: '680px', margin: '0 auto' })}>
                 <div mix={css({ display: 'flex', justifyContent: 'space-between', gap: '8px' })}>
                   {ARQUIVOS.map((a) => (
@@ -238,7 +234,6 @@ export function RecursosPage() {
           </div>
         </section>
 
-        {/* estruturação e processamento */}
         <section mix={section}>
           <div mix={[container, colunas2]}>
             <div data-reveal-left="" mix={painelVisual}>
@@ -265,7 +260,6 @@ export function RecursosPage() {
           </div>
         </section>
 
-        {/* motor de regras */}
         <section mix={[section, css({ paddingTop: 0 })]}>
           <div mix={[container, colunas2]}>
             <div data-reveal-left="">
@@ -291,7 +285,6 @@ export function RecursosPage() {
           </div>
         </section>
 
-        {/* dashboards */}
         <section mix={css({ padding: '12px 0' })}>
           <div mix={[surfaceContrast, stage]}>
             <div mix={container}>
@@ -323,7 +316,6 @@ export function RecursosPage() {
               </div>
 
               <div mix={[card, colunas2, css({ gap: '40px', alignItems: 'center' })]}>
-                {/* mock estilizado de painel (sem screenshot: grafismo próprio) */}
                 <div mix={css({ display: 'flex', flexDirection: 'column', gap: '10px' })}>
                   <div mix={css({ display: 'flex', gap: '10px' })}>
                     {['74%', '2,1 bi', 'R$ 13M'].map((v) => (
@@ -378,7 +370,6 @@ export function RecursosPage() {
           </div>
         </section>
 
-        {/* retificação */}
         <section mix={section}>
           <div mix={container}>
             <p mix={eyebrow}>05 / Hora de recuperar os tributos</p>

@@ -15,8 +15,13 @@ export function Platform() {
           Navegue pela plataforma como ela é: da visão geral aos projetos, do início de um
           diagnóstico ao módulo da Reforma Tributária.
         </p>
-        {/* a réplica é desktop-only: no celular vira o aviso abaixo */}
-        <div mix={css({ '@media (max-width: 720px)': { display: 'none' } })}>
+        <div
+          mix={css({
+            contentVisibility: 'auto',
+            containIntrinsicHeight: 'auto 1100px',
+            '@media (max-width: 720px)': { display: 'none' },
+          })}
+        >
           <PlataformaApp />
         </div>
         <div

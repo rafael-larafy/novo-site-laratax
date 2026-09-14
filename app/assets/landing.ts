@@ -2,7 +2,6 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 
-
 for (const a of document.querySelectorAll('a')) {
   a.setAttribute('rmx-document', '')
 }
@@ -37,6 +36,59 @@ if (toggle) {
   })
 }
 
+type Conexao = { saveData?: boolean; effectiveType?: string }
+const nav = navigator as Navigator & { connection?: Conexao; deviceMemory?: number }
+
+const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const conexaoRuim =
+  Boolean(nav.connection?.saveData) || /(^|-)2g$|(^|-)3g$/.test(nav.connection?.effectiveType ?? '')
+const aparelhoFraco =
+  (nav.deviceMemory !== undefined && nav.deviceMemory < 4) ||
+  (nav.hardwareConcurrency !== undefined && nav.hardwareConcurrency < 4)
+
+if (aparelhoFraco || conexaoRuim) document.documentElement.dataset.leve = 'true'
+
+const podeVideo = () =>
+  !semMovimento &&
+  !conexaoRuim &&
+  !aparelhoFraco &&
+  window.matchMedia('(min-width: 721px)').matches
+
+function aposCarregar(acao: () => void) {
+  if (document.readyState === 'complete') acao()
+  else window.addEventListener('load', acao, { once: true })
+}
+
+function ligarVideo(video: HTMLVideoElement) {
+  const fonte = video.dataset.videoSrc
+  if (!fonte) return
+  if (video.src) {
+    video.play().catch(() => {})
+    return
+  }
+  aposCarregar(() => {
+    video.src = fonte
+    video.play().catch(() => {})
+  })
+}
+
+const videosSoltos = Array.from(
+  document.querySelectorAll<HTMLVideoElement>('[data-video-src]'),
+).filter((v) => !v.closest('[data-hero-slides]'))
+
+if (videosSoltos.length && podeVideo()) {
+  const olho = new IntersectionObserver(
+    (entradas) => {
+      for (const e of entradas) {
+        const video = e.target as HTMLVideoElement
+        if (e.isIntersecting) ligarVideo(video)
+        else if (video.src) video.pause()
+      }
+    },
+    { rootMargin: '200px' },
+  )
+  for (const v of videosSoltos) olho.observe(v)
+}
 
 gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin)
 
@@ -59,7 +111,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     })
   })
 
-
   ScrollTrigger.batch('[data-reveal]', {
     start: 'top 85%',
     once: true,
@@ -73,7 +124,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
         overwrite: true,
       }),
   })
-
 
   for (const [attr, x] of [
     ['[data-reveal-left]', -DIST.lateral],
@@ -90,7 +140,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     })
   }
 
-
   ScrollTrigger.batch('[data-stagger] > *', {
     start: 'top 85%',
     once: true,
@@ -105,7 +154,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       }),
   })
 
-
   gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((el) => {
     gsap.to(el, {
       yPercent: parseFloat(el.dataset.parallax || '-10'),
@@ -119,7 +167,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       },
     })
   })
-
 
   document.querySelectorAll<HTMLElement>('[data-progress-line]').forEach((line) => {
     if (line.closest('[data-steps-pin]')) return
@@ -140,7 +187,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     )
   })
 
-
   document.querySelectorAll<HTMLElement>('[data-shimmer]').forEach((el) => {
     gsap.fromTo(
       el,
@@ -153,7 +199,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       },
     )
   })
-
 
   document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
     const target = parseFloat(el.dataset.count || '0')
@@ -175,14 +220,20 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     })
   })
 
-
-  // cards de KPI da previa no hero: sobem com fade e os valores contam do
-  // zero; a linha inteira repete a cada 30s
   const heroKpis = gsap.utils.toArray<HTMLElement>('[data-hero-app] [data-kpi], [data-hero-solto] [data-kpi]')
   if (heroKpis.length) {
     const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
     const passo = 0.09
     const linha = gsap.timeline({ delay: 0.35, repeat: -1, repeatDelay: 30 })
+    const heroSecao = heroKpis[0].closest('section')
+    if (heroSecao) {
+      ScrollTrigger.create({
+        trigger: heroSecao,
+        start: 'top bottom',
+        end: 'bottom top',
+        onToggle: (self) => (self.isActive ? linha.play() : linha.pause()),
+      })
+    }
     linha.from(heroKpis, {
       y: 30,
       opacity: 0,
@@ -191,7 +242,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       ease: EASE.card,
     }, 0)
     heroKpis.forEach((card, i) => {
-      // ponytail: o primeiro <strong> do KpiDiag e sempre o valor principal
       const el = card.querySelector<HTMLElement>('strong')
       if (!el) return
       const alvo = parseFloat((el.textContent || '').replace(/[^\d,]/g, '').replace(',', '.'))
@@ -214,7 +264,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
   }
 })
 
-// scroll lateral dos passos 1→7 .
 const stepsWrap = document.querySelector<HTMLElement>('[data-steps-pin]')
 const trilho = stepsWrap?.querySelector<HTMLElement>('ol')
 if (stepsWrap && trilho) {
@@ -248,13 +297,11 @@ if (stepsWrap && trilho) {
   })
 }
 
-// seletor de versão no header: destaca a rota atual
 const aqui = location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '') || '/'
 for (const el of document.querySelectorAll<HTMLAnchorElement>('[data-versao]')) {
   el.dataset.on = new URL(el.href).pathname.replace(/\/$/, '') === aqui || (aqui === '/' && el.getAttribute('href') === '/') ? 'true' : 'false'
 }
 
-//  réplica do LaraTAX 
 const appDemo = document.querySelector<HTMLElement>('[data-app-demo]')
 if (appDemo) {
   const telas = Array.from(appDemo.querySelectorAll<HTMLElement>('[data-app-screen]'))
@@ -278,9 +325,6 @@ if (appDemo) {
           .querySelector<HTMLElement>(`[data-app-screen="${alvo}"] [data-sub-nav][data-sub-target="${aba}"]`)
           ?.click()
       }
-      // copia os dados da linha clicada para TODAS as telas (última empresa
-      // clicada vence): texto em [data-campo], tooltip em [data-campo-tip],
-      // dimensão de barra em [data-campo-estilo] (valor "prop:valor")
       const detalhe = c.dataset.detalhe
       if (detalhe) {
         Object.entries(JSON.parse(detalhe) as Record<string, string>).forEach(([campo, valor]) => {
@@ -299,7 +343,6 @@ if (appDemo) {
     })
   })
 
-  // ordem aleatória a cada carga da página: embaralha os filhos de [data-embaralha]
   appDemo.querySelectorAll<HTMLElement>('[data-embaralha]').forEach((caixa) => {
     const filhos = Array.from(caixa.children)
     for (let i = filhos.length - 1; i > 0; i--) {
@@ -325,8 +368,6 @@ if (appDemo) {
     })
   })
 
-  // Tooltip dos gráficos: [data-ponto-grafico] preenche e posiciona o
-  // [data-tip-flutuante] (coordenadas divididas pelo zoom da janela).
   const tip = appDemo.querySelector<HTMLElement>('[data-tip-flutuante]')
   const corpoTip = appDemo.querySelector<HTMLElement>('[data-app-body]')
   if (tip && corpoTip) {
@@ -378,7 +419,6 @@ if (appDemo) {
     })
   }
 
-
   const expandir = appDemo.querySelector<HTMLElement>('[data-app-expandir]')
   const corpoApp = appDemo.querySelector<HTMLElement>('[data-app-body]')
   const rotuloExpandir = appDemo.querySelector<HTMLElement>('[data-app-expandir-rotulo]')
@@ -420,10 +460,6 @@ if (appDemo) {
   })
 }
 
-//  linha do tempo da página Sobre (jornada)
-// espinha central: fio e estrela seguem o centro da viewport; no desktop só o
-// card sob o centro fica aceso/aberto, no mobile abre ao cruzar 80% da altura.
-// Sem JS ou com reduced-motion os painéis ficam abertos (CSS não esconde nada).
 const jornada = document.querySelector<HTMLElement>('[data-jornada]')
 if (jornada) {
   const fio = jornada.querySelector<HTMLElement>('[data-jornada-fio]')
@@ -540,8 +576,6 @@ if (jornada) {
   }
 }
 
-//  hero carrossel
-
 const heroSlides = document.querySelector<HTMLElement>('[data-hero-slides]')
 if (heroSlides) {
   const HERO_DURATION = 7000
@@ -550,7 +584,13 @@ if (heroSlides) {
   const tabs = Array.from(heroSlides.querySelectorAll<HTMLButtonElement>('[data-hero-tab]'))
   const bars = Array.from(heroSlides.querySelectorAll<HTMLElement>('[data-hero-bar]'))
   const heroNav = heroSlides.querySelector<HTMLElement>('[data-hero-nav]')
-  const heroReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const heroReduce = semMovimento
+
+  let heroVisivel = true
+  new IntersectionObserver(([e]) => {
+    heroVisivel = e.isIntersecting
+    heroLast = null
+  }).observe(heroSlides)
 
   let heroActive = 0
   let heroElapsed = 0
@@ -575,7 +615,7 @@ if (heroSlides) {
     bgs.forEach((bg, i) => {
       const video = bg.querySelector('video')
       if (!video) return
-      if (i === heroActive) video.play().catch(() => {})
+      if (i === heroActive && podeVideo()) ligarVideo(video)
       else video.pause()
     })
     const btn = tabs[heroActive]
@@ -593,7 +633,6 @@ if (heroSlides) {
 
   tabs.forEach((tab, i) => tab.addEventListener('click', () => goToSlide(i)))
 
-
   applySlide()
 
   if (heroReduce) {
@@ -608,6 +647,11 @@ if (heroSlides) {
     }, HERO_DURATION)
   } else {
     const tick = (ts: number) => {
+      if (!heroVisivel || document.hidden) {
+        heroLast = null
+        requestAnimationFrame(tick)
+        return
+      }
       if (heroLast === null) heroLast = ts
 
       heroElapsed += Math.min(ts - heroLast, 100)
@@ -621,7 +665,6 @@ if (heroSlides) {
     requestAnimationFrame(tick)
   }
 
-
   const hint = heroSlides.querySelector<HTMLElement>('[data-hero-hint]')
   heroNav?.addEventListener(
     'touchstart',
@@ -632,7 +675,18 @@ if (heroSlides) {
   )
 }
 
-//  floating dock 
+const marquees = document.querySelectorAll<HTMLElement>(
+  '[data-logos-track], [data-hero-logos], [data-bento-logos]',
+)
+if (marquees.length) {
+  const olho = new IntersectionObserver((entradas) => {
+    for (const e of entradas) {
+      ;(e.target as HTMLElement).style.animationPlayState = e.isIntersecting ? '' : 'paused'
+    }
+  })
+  for (const m of marquees) olho.observe(m)
+}
+
 const dockDesktop = document.querySelector<HTMLElement>('[data-dock-desktop]')
 const dockItems = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-dock-item]'))
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -663,7 +717,6 @@ if (dockDesktop && dockItems.length && !reduceMotion) {
   dockDesktop.addEventListener('mouseleave', reset)
 }
 
-// Marca o item da seção visível.
 if (dockItems.length && 'IntersectionObserver' in window) {
   const sections = dockItems
     .map((item) => {
@@ -690,26 +743,10 @@ if (dockItems.length && 'IntersectionObserver' in window) {
 
   for (const section of sections) observer.observe(section)
 
-  // Fecha o menu mobile ao escolher um destino.
   const mobile = document.querySelector<HTMLDetailsElement>('[data-dock-mobile]')
   for (const item of dockItems) {
     item.addEventListener('click', () => {
       if (mobile) mobile.open = false
     })
   }
-}
-
-// viewport cravado
-
-const vv = window.visualViewport
-const header = document.querySelector<HTMLElement>('header')
-const dock = document.querySelector<HTMLElement>('data-floating-dock')
-if (vv && dock) {
-  const colar = () => {
-  if (header) header.style.transform = `(translateY(${vv.offsetTop}px)`
-  const sobra = window.innerHeight - vv.height - vv.offsetTop
-  dock.style.transform = `translateY(${-sobra}px)`
-}
-vv.addEventListener('resize', colar)
-vv.addEventListener('scroll', colar)
 }

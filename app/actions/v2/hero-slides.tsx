@@ -10,10 +10,6 @@ import {
 } from '../../ui/tokens.ts'
 import { CLIENTES } from '../home/logos.tsx'
 
-// Hero-carrossel (port do hero React/framer-motion do v3-site-larafy):
-// fundo em crossfade + card-destaque + timeline de tabs com barra de
-// progresso. Slides = áreas da plataforma. Todo o estado vive em
-// landing.ts ([data-hero-slides]); sem JS o primeiro slide fica estático.
 type Area = {
   category: string
   title: string
@@ -71,14 +67,9 @@ const AREAS: Area[] = [
   },
 ]
 
-// Placeholder: um único vídeo (era "Composição 1_1.mp4"; renomeado — nome
-// com acento/espaço 404 no static middleware), cada área entrando numa
-// minutagem diferente (media fragment #t= funciona sem JS). Vídeo próprio
-// por área: preencha `video` no item acima. Duração do arquivo: ~26s.
 const PLACEHOLDER_VIDEO = '/hero-bg.mp4'
 const VIDEO_STARTS = [0, 4, 8, 11, 14, 18, 21]
 
-// Cena de gradiente por slide: fica atrás do vídeo enquanto ele carrega.
 const FOCI = ['70% 18%', '22% 28%', '78% 68%', '28% 74%', '60% 42%', '38% 14%', '74% 48%']
 
 function scene(i: number) {
@@ -139,7 +130,6 @@ export function HeroSlides() {
         }
       `}</style>
 
-      {/* fundos por slide, em crossfade */}
       <div aria-hidden="true" mix={css({ position: 'absolute', inset: 0 })}>
         {AREAS.map((a, i) => (
           <div
@@ -148,7 +138,6 @@ export function HeroSlides() {
             mix={css({
               position: 'absolute',
               inset: 0,
-              // scrim: o screencast é claro; sem isso o texto lava
               '&::after': {
                 content: '""',
                 position: 'absolute',
@@ -158,22 +147,18 @@ export function HeroSlides() {
             })}
             style={{ backgroundImage: scene(i) }}
           >
-            {/* só o slide inicial tem autoplay (funciona sem JS); os demais
-                são tocados/pausados pelo landing.ts ao trocar de slide */}
             <video
-              src={a.video ?? `${PLACEHOLDER_VIDEO}#t=${VIDEO_STARTS[i % VIDEO_STARTS.length]}`}
-              autoplay={i === 0}
+              data-video-src={a.video ?? `${PLACEHOLDER_VIDEO}#t=${VIDEO_STARTS[i % VIDEO_STARTS.length]}`}
               muted
               loop
               playsinline
-              preload={i === 0 ? 'auto' : 'metadata'}
+              preload="none"
               mix={css({ width: '100%', height: '100%', objectFit: 'cover' })}
             />
           </div>
         ))}
       </div>
 
-      {/* grade de pontos + véus de legibilidade (esquerda e base) */}
       <div
         aria-hidden="true"
         mix={css({
@@ -208,7 +193,6 @@ export function HeroSlides() {
         })}
       />
 
-      {/* conteúdo */}
       <div
         mix={[
           container,
@@ -250,8 +234,8 @@ export function HeroSlides() {
               color: 'var(--text)',
             })}
           >
-            Automatize a recuperação{' '}
-            <span mix={css({ color: 'var(--accent)' })}>de tributos</span>
+            A máquina de{' '}
+            <span mix={css({ color: 'var(--accent)' })}>fazer dinheiro</span> do tributarista
           </h1>
           <p
             mix={css({
@@ -262,7 +246,7 @@ export function HeroSlides() {
               maxWidth: '32em',
             })}
           >
-Sua operação tributária. De ponta a ponta. Da baixa automática das obrigações à retificação e ao PER/DCOMP. Tudo centralizado, rastreável e pronto para escalar.
+Encontramos em 40 minutos o dinheiro que você perdeu nos últimos 5 anos.
           </p>
           <div mix={css({ display: 'flex', gap: '16px', flexWrap: 'wrap' })}>
             <a href="#contato" mix={btnPrimary}>
@@ -274,7 +258,6 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
           </div>
         </div>
 
-        {/* destaque da área ativa (era o popup de depoimento no original) */}
         <div
           mix={css({
             position: 'relative',
@@ -361,7 +344,6 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
         </div>
       </div>
 
-      {/* dica de swipe (mobile) */}
       <div
         data-hero-hint=""
         aria-hidden="true"
@@ -386,7 +368,6 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
         <span mix={css({ color: COLORS.cyanBright })}>→</span>
       </div>
 
-      {/* timeline de áreas */}
       <nav
         data-hero-nav=""
         aria-label="Áreas da plataforma"
@@ -413,8 +394,6 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
             aria-current={i === 0 ? 'true' : undefined}
             mix={css({
               flex: '1 0 58%',
-              // button centraliza conteúdo na vertical por padrão; com títulos
-              // de 2-3 linhas as barras desalinhavam entre abas
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-start',
@@ -490,14 +469,11 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
         ))}
       </nav>
 
-      {/* faixa de clientes embutida na base do hero */}
       <div
         mix={css({
           position: 'relative',
           zIndex: 2,
           borderTop: '1px solid var(--t-base-line)',
-          // opaco: no claro fica branco de verdade (o vidro translúcido
-          // acinzentava sobre o vídeo escuro)
           background: 'var(--t-base-bg)',
         })}
       >
@@ -515,8 +491,6 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
             mix={css({
               display: 'flex',
               width: 'max-content',
-              // cada cópia ocupa a viewport inteira: com cópias mais estreitas
-              // que a tela, o fim do ciclo (-50%) deixava um vão à direita
               '& > div': {
                 display: 'flex',
                 alignItems: 'center',
@@ -532,6 +506,10 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
                 <img
                   src={c.src}
                   alt={c.alt}
+                  width={Math.round(c.w * 0.85)}
+                  height={Math.round(c.h * 0.85)}
+                  loading="lazy"
+                  decoding="async"
                   style={{ height: `${Math.round(c.h * 0.85)}px` }}
                   mix={css({
                     display: 'block',
@@ -546,6 +524,10 @@ Sua operação tributária. De ponta a ponta. Da baixa automática das obrigaç�
                 <img
                   src={c.src}
                   alt=""
+                  width={Math.round(c.w * 0.85)}
+                  height={Math.round(c.h * 0.85)}
+                  loading="lazy"
+                  decoding="async"
                   style={{ height: `${Math.round(c.h * 0.85)}px` }}
                   mix={css({
                     display: 'block',

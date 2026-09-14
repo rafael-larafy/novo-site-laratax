@@ -39,7 +39,6 @@ export function FinalCta() {
               card,
               css({
                 position: 'relative',
-                // um degrau acima do fundo da seção, para o card destacar nos dois temas
                 background: 'var(--surface-2)',
                 borderRadius: '16px',
                 padding: '64px',
@@ -57,7 +56,7 @@ export function FinalCta() {
               Fale com a gente
             </p>
             <h2 mix={[heading2, css({ margin: '0 auto 16px' })]}>
-              Veja o diagnóstico da sua empresa em 40 minutos
+              Em 40 minutos, veja o dinheiro que ficou para trás
             </h2>
             <p mix={[lead, css({ margin: '0 auto 40px' })]}>
               Agende uma apresentação com nossos especialistas. Temos time disponível para atender

@@ -17,20 +17,16 @@ function salvar(arquivo: string, corpo: Buffer | string) {
   fs.writeFileSync(destino, corpo)
 }
 
-// URLs /assets/... citadas em HTML (src/href) e em JS compilado (import "...")
 function acharAssets(texto: string): string[] {
   return [...texto.matchAll(/["'(](\/assets\/[^"'()\s\\]+)["')]/g)].map((m) => m[1])
 }
 
-// host estático serve .ts com MIME errado (browser bloqueia o módulo):
-// os arquivos compilados viram .js e as referências acompanham
 const comoJs = (url: string) => url.replace(/\.tsx?(?=$|[?#])/, '.js')
 const reescrever = (texto: string) =>
   texto.replaceAll(/(\/assets\/[^"'()\s\\]+?)\.tsx?(?=["')])/g, '$1.js')
 
 fs.rmSync(DIST, { recursive: true, force: true })
 
-// public/ vai inteiro, como o staticFiles serviria
 fs.cpSync('public', DIST, { recursive: true })
 
 const fila: string[] = []

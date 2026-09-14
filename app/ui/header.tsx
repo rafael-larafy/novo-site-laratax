@@ -4,7 +4,6 @@ import { Logo } from './logo.tsx'
 import { ThemeToggle } from './theme-toggle.tsx'
 import { FONT_MONO, btnPrimary, container } from './tokens.ts'
 
-
 export function Header() {
   return () => (
     <header
@@ -95,7 +94,6 @@ export function Header() {
               }),
             ]}
           >
-            {/* rótulo curto no mobile: o wordmark é largo e os três itens não cabem */}
             <span mix={css({ '@media (max-width: 560px)': { display: 'none' } })}>
               Agendar apresentação
             </span>
@@ -109,8 +107,6 @@ export function Header() {
   )
 }
 
-// Alternador entre as versões da home. O landing.ts marca [data-versao] com
-// data-on conforme a URL; sem JS o seletor ainda navega, só não destaca.
 function SeletorVersao() {
   const item = css({
     padding: '5px 12px',
@@ -136,7 +132,6 @@ function SeletorVersao() {
         borderRadius: '999px',
         border: '1px solid var(--line)',
         background: 'var(--surface-2)',
-        // abaixo disso o seletor centralizado passa por cima de "Sobre"
         '@media (max-width: 1150px)': { display: 'none' },
       })}
     >

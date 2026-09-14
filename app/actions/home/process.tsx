@@ -127,7 +127,6 @@ export function Process() {
           </a>
         </div>
 
-        {/* trilha vertical no mesmo desenho da seção "rotina fiscal manual" */}
         <div mix={css({ position: 'relative' })}>
           <div
             aria-hidden="true"

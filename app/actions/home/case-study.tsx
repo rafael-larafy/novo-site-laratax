@@ -103,9 +103,6 @@ export function CaseStudy() {
               card,
               css({
                 position: 'relative',
-                // este card É a superfície de contraste (ilha escura sobre a
-                // página clara), não um card apoiado numa. Sem isto, o --card-bg
-                // translúcido do mixin `card` venceria e o card sumiria no branco.
                 backgroundColor: 'var(--surface)',
                 backgroundImage:
                   'radial-gradient(circle at 90% 8%, rgba(7, 224, 255, 0.1), transparent 46%)',

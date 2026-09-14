@@ -34,7 +34,6 @@ const ESSENCIA = [
   },
 ]
 
-// compartilhada com a página de Carreiras
 export function CardsEssencia() {
   return (
     <div
@@ -320,7 +319,6 @@ export function SobrePage() {
           </div>
         </section>
 
-        {/* essência */}
         <section mix={css({ padding: '12px 0' })}>
           <div mix={[surfaceContrast, stage]}>
             <div mix={container}>
@@ -332,7 +330,6 @@ export function SobrePage() {
           </div>
         </section>
 
-        {/* história */}
         <section mix={section}>
           <div
             mix={[
@@ -381,7 +378,6 @@ export function SobrePage() {
           </div>
         </section>
 
-        {/* linha do tempo */}
         <section mix={css({ padding: '12px 0' })}>
           <div mix={[surfaceContrast, stage]}>
             <div mix={container}>
