@@ -39,11 +39,9 @@ const figure = css({
   color: 'var(--text)',
   whiteSpace: 'nowrap',
   fontVariantNumeric: 'tabular-nums',
-  // o espaço da mono é cheio demais: "40 min" e "2,1 bi" ficavam soltos
   wordSpacing: '-0.3em',
 })
 
-// Faixa compacta (ponte de prova quantitativa), não seção cheia.
 const strip = css({
   position: 'relative',
   overflow: 'hidden',
@@ -60,7 +58,6 @@ const shimmerOverlay = css({
     'linear-gradient(-70deg, transparent 20%, color-mix(in srgb, var(--accent) 5%, transparent) 50%, transparent 80%)',
 })
 
-// Seção de números soltos sobre o fundo, estilo Williams GP — sem cards.
 export function Stats() {
   return () => (
     <section id="numeros" mix={strip}>
@@ -78,7 +75,6 @@ export function Stats() {
             gap: '32px 0',
             marginTop: '72px',
             '@media (max-width: 720px)': {
-              // auto-fit degrada sozinho para 1 coluna em telas estreitas (nowrap de "< 40 min" não corta)
               gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
               gap: '40px 24px',
               marginTop: '48px',
@@ -88,7 +84,6 @@ export function Stats() {
           {STATS.map((s) => (
             <div mix={statItem}>
               <p mix={figure}>
-                {/* prefixo fixo fora do span para o contador não sobrescrevê-lo */}
                 {s.prefix ? <span mix={css({ color: 'var(--accent)', marginRight: '0.14em' })}>{s.prefix}</span> : null}
                 <span
                   data-count={s.value}

@@ -14,6 +14,5 @@ export const assetServer = createAssetServer({
   allow: ['app/assets/**', 'node_modules/**'],
   sourceMaps: isDevelopment ? 'external' : undefined,
   minify: !isDevelopment,
-  // watch em dev: sem isso, edições em app/assets/* ficam presas no cache do asset server
   watch: isDevelopment,
 })

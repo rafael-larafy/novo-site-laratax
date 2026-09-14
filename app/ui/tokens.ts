@@ -14,7 +14,6 @@ export const FONT_SANS =
 export const FONT_MONO =
   "'Kode Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace"
 
-
 export const surfaceBase = css({
   '--surface': 'var(--t-base-bg)',
   '--surface-2': 'var(--t-base-bg-2)',
@@ -59,7 +58,6 @@ export const section = css({
   '@media (max-width: 720px)': { padding: '72px 0' },
 })
 
-// Bloco de pontuação arredondado flutuando sobre a página, como no site atual.
 export const darkPanel = css({
   borderRadius: '28px',
   padding: '80px 56px',
@@ -75,7 +73,6 @@ export const stage = css ({
   border:'1px solid rgba (7,224,255,0.14)',
   '@media (max-width:720px)':{padding: '64px 0'},
 })
-
 
 export const eyebrow = css({
   margin: '0 0 20px',
@@ -168,7 +165,6 @@ export const btnGhost = css({
   textDecoration: 'none',
   cursor: 'pointer',
   transition: 'border-color 150ms ease',
-  // hover-fill que "infla" por baixo (scale3d menor no Y): premium sem JS
   '&::before': {
     content: '""',
     position: 'absolute',

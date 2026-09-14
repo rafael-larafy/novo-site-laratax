@@ -9,7 +9,7 @@ const NAV = [
     links: [
       ['Plataforma', '/#plataforma'],
       ['Recursos', '/recursos'],
-      ['Reforma Tributária', '/#reforma'],
+      ['Retificação automática', '/#retificacao'],
       ['Resultados', '/#resultados'],
     ],
   },
@@ -87,7 +87,6 @@ export function Footer() {
           {NAV.map((col) => (
             <nav aria-label={col.title}>
               <h2 mix={colTitle}>{col.title}</h2>
-              {/* role=list: Safari/VoiceOver perde a semântica com listStyle none */}
               <ul
                 role="list"
                 mix={css({

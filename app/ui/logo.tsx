@@ -1,14 +1,8 @@
 import type { Handle } from 'remix/ui'
 import { css } from 'remix/ui'
 
-// Wordmark oficial (export do Figma). As letras "Lara" e o "T" vinham em
-// #002E43; aqui usam var(--text) para acompanhar tema e superfície — navy no
-// header claro, brancas no footer escuro e no tema escuro. O "i" e o "AX"
-// ficam no ciano fixo da marca.
 const BRAND_CYAN = '#07E0FF'
 
-// height aceita número (px) ou qualquer comprimento CSS — o header usa clamp()
-// porque o wordmark é largo (~7,8:1) e precisa encolher no mobile.
 export function Logo(handle: Handle<{ height?: number | string }>) {
   return () => {
     let raw = handle.props.height ?? 28

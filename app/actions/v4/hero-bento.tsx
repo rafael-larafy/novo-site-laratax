@@ -49,7 +49,6 @@ export function HeroBento() {
         '@media (max-width: 720px)': { padding: '112px 0 48px' },
       })}
     >
-      {/* a réplica esconde as telas por padrão; aqui uma delas precisa aparecer */}
       <style>{`[data-hero-app] [data-app-screen] { display: flex; }
         @keyframes bento-logos { to { transform: translateX(-50%); } }
         [data-bento-logos] { animation: bento-logos 26s linear infinite; }
@@ -69,7 +68,6 @@ export function HeroBento() {
           }),
         ]}
       >
-        {/* célula grande: a mensagem */}
         <div
           mix={[
             card,
@@ -80,7 +78,6 @@ export function HeroBento() {
               flexDirection: 'column',
               justifyContent: 'center',
               padding: '48px',
-              // no mobile o mosaico vira uma coluna só
               '@media (max-width: 900px)': { gridColumn: 'auto', gridRow: 'auto' },
               '@media (max-width: 720px)': { padding: '32px 24px' },
             }),
@@ -133,7 +130,6 @@ export function HeroBento() {
         {Celula('2,1 bi', 'cenários tributários processados')}
         {Celula('40 min', 'em média para um diagnóstico completo')}
 
-        {/* célula larga: recorte da plataforma */}
         <div
           mix={[
             card,
@@ -141,9 +137,16 @@ export function HeroBento() {
               gridColumn: 'span 2',
               position: 'relative',
               overflow: 'hidden',
+              contain: 'content',
               height: '300px',
               padding: 0,
               '@media (max-width: 900px)': { gridColumn: 'auto' },
+              '@media (max-width: 720px)': {
+                height: 'auto',
+                display: 'flex',
+                justifyContent: 'center',
+                padding: '28px 24px',
+              },
             }),
           ]}
         >
@@ -151,18 +154,20 @@ export function HeroBento() {
             data-hero-app=""
             aria-hidden="true"
             style={{ zoom: '0.6' }}
-            mix={css({ width: '1440px', pointerEvents: 'none', userSelect: 'none' })}
+            mix={css({
+              width: '1440px',
+              pointerEvents: 'none',
+              userSelect: 'none',
+              '@media (max-width: 720px)': { display: 'none' },
+            })}
           >
             {TelaDiagnosticoVisao()}
           </div>
-          {/* o botão fica sobre o print, que é claro nos dois temas: cores do
-              tema deixariam ele invisível no escuro (card-bg quase transparente) */}
           <a
             href="#plataforma"
             mix={[
               btnPrimary,
               css({
-                // 40: acima da sidebar da réplica, que é sticky com z-index 30
                 position: 'absolute',
                 zIndex: 40,
                 left: '20px',
@@ -170,6 +175,7 @@ export function HeroBento() {
                 padding: '11px 18px',
                 fontSize: '13.5px',
                 whiteSpace: 'nowrap',
+                '@media (max-width: 720px)': { position: 'static' },
               }),
             ]}
           >
@@ -177,12 +183,9 @@ export function HeroBento() {
           </a>
         </div>
 
-        {/* célula das fontes + prova social */}
         <div
           mix={[
             card,
-            // minWidth 0: sem isso o item da grade cresce até o max-content do
-            // marquee e estoura a coluna
             css({ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '18px', minWidth: 0 }),
           ]}
         >
@@ -197,8 +200,6 @@ export function HeroBento() {
           >
             SPED · e-CAC · e-Social · NF-e baixados e cruzados automaticamente.
           </p>
-          {/* marquee: duas cópias iguais e o loop fecha em translateX(-50%);
-              a célula é estreita, então cada cópia já passa da largura dela */}
           <div
             mix={css({
               minWidth: 0,
@@ -221,6 +222,10 @@ export function HeroBento() {
                   <img
                     src={c.src}
                     alt={c.alt}
+                    width={Math.round(c.w * 0.55)}
+                    height={Math.round(c.h * 0.55)}
+                    loading="lazy"
+                    decoding="async"
                     style={{ height: `${Math.round(c.h * 0.55)}px` }}
                     mix={css({ display: 'block', width: 'auto', filter: 'var(--logo-filter)' })}
                   />
@@ -231,6 +236,10 @@ export function HeroBento() {
                   <img
                     src={c.src}
                     alt=""
+                    width={Math.round(c.w * 0.55)}
+                    height={Math.round(c.h * 0.55)}
+                    loading="lazy"
+                    decoding="async"
                     style={{ height: `${Math.round(c.h * 0.55)}px` }}
                     mix={css({ display: 'block', width: 'auto', filter: 'var(--logo-filter)' })}
                   />

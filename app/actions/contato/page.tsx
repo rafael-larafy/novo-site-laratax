@@ -130,7 +130,6 @@ export function ContatoPage() {
               </a>
             </div>
 
-            {/* formulário: visual apenas — sem backend, os contatos reais estão ao lado */}
             <div
               data-reveal-right=""
               mix={[

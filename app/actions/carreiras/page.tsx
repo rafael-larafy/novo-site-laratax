@@ -18,7 +18,6 @@ import {
 import { FinalCta } from '../home/final-cta.tsx'
 import { CardsEssencia } from '../sobre/page.tsx'
 
-// selos GPTW recriados em texto (sem a arte oficial do certificado)
 const SELOS = [
   { escopo: 'Brasil', ano: '2024' },
   { escopo: 'no Paraná', ano: '2025' },

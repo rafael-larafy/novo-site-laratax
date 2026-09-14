@@ -3,7 +3,6 @@ import { css } from "remix/ui";
 import { FONT_MONO, btnPrimary, container } from "../../ui/tokens.ts";
 import { DIAGS, KpiDiag, TelaDiagnosticoVisao } from "./plataforma-app.tsx";
 
-// visual dos cards soltos; a v3 monta a mesma composição no hero dela
 export const CSS_CARD_SOLTO = `[data-hero-solto] [data-kpi] { color: #314e58; border-radius: 12px; box-shadow: 0 30px 64px rgba(2, 17, 24, 0.3), 0 0 0 1px rgba(2, 17, 24, 0.06); }
         [data-hero-solto] [data-kpi] strong { font-size: 23px; }`
 
@@ -13,14 +12,11 @@ export function Hero() {
       id="inicio"
       mix={css({
         position: "relative",
-        // -64px: encosta a faixa de clientes no hero sem perder o ar de tela cheia
         minHeight: "calc(100vh - 64px)",
-        // svh: em mobile, 100vh esconde os CTAs atrás da toolbar do browser
         "@supports (min-height: 100svh)": { minHeight: "calc(100svh - 64px)" },
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
-        // Wash ciano no topo fica na section; os dots vão pro ::before com fade nas bordas.
         backgroundImage: `radial-gradient(ellipse 90% 60% at 50% -20%, rgba(0, 194, 239,0.22), transparent 70%)`,
         "&::before": {
           content: '""',
@@ -38,7 +34,6 @@ export function Hero() {
         },
       })}
     >                         
-      {/* prévia do app no hero: força a tela (escondida por padrão no CSS da réplica) a aparecer */}
       <style>{`[data-hero-app] [data-app-screen] { display: flex; }
         [data-hero-app] [data-kpi] { box-shadow: 0 14px 30px rgba(2, 17, 24, 0.13); }
         ${CSS_CARD_SOLTO}`}</style>
@@ -77,12 +72,10 @@ export function Hero() {
           >
             LaraTAX | A Central de comando do tributarista
           </p>
-          {/* eyebrow fica fora do reveal (já tem o scramble); h1 + sub + CTAs entram juntos da esquerda */}
           <div data-reveal-left="">
             <h1
               mix={css({
                 margin: "0 0 24px",
-                // h1 do site atual: 64px, peso 500, tracking -0.05em, lh 1.0
                 fontSize: "clamp(36px, 5.5vw, 64px)",
                 fontWeight: 500,
                 lineHeight: 1.02,
@@ -90,8 +83,9 @@ export function Hero() {
                 color: "var(--text)",
               })}
             >
-              Automatize a recuperação{" "}
-              <span mix={css({ color: "var(--accent)" })}>de tributos</span>
+              A máquina de{" "}
+              <span mix={css({ color: "var(--accent)" })}>fazer dinheiro</span> do
+              tributarista
             </h1>
             <p
               mix={css({
@@ -102,12 +96,8 @@ export function Hero() {
                 maxWidth: "32em",
               })}
             >
-              Sua operação tributária.{" "}
-              <strong mix={css({ fontWeight: 600, color: "var(--accent)" })}>
-                De ponta a ponta.
-              </strong>{" "}
-              Da baixa automática das obrigações à retificação e ao PER/DCOMP.
-              Tudo centralizado, rastreável e pronto para escalar.
+              Encontramos em 40 minutos o dinheiro que você perdeu nos últimos 5
+              anos.
             </p>
             <a href="#contato" mix={btnPrimary}>
               Agendar apresentação
@@ -131,8 +121,6 @@ export function Hero() {
   );
 }
 
-// Prévia real da réplica (tela Visão Geral do diagnóstico), emoldurada e
-// decorativa; o clique leva à demonstração interativa da seção 02.
 function PreviewPlataforma() {
   return () => (
     <a
@@ -154,6 +142,7 @@ function PreviewPlataforma() {
           mix={css({
             height: "440px",
             overflow: "hidden",
+            contain: "content",
             borderRadius: "16px",
             border: "1px solid var(--line)",
             background: "#f8fbfc",
@@ -192,7 +181,6 @@ function PreviewPlataforma() {
           mix={[
             btnPrimary,
             css({
-              // na frente dos cards soltos (z-index 40)
               position: "absolute",
               zIndex: 50,
               left: 0,
@@ -213,8 +201,6 @@ function PreviewPlataforma() {
   );
 }
 
-// Card de KPI solto: mesmo componente da réplica, em escala real, quebrando a
-// borda da moldura. Some em telas estreitas, onde não há folga lateral.
 export function CardSolto(
   rotulo: string,
   valor: string,
@@ -228,7 +214,6 @@ export function CardSolto(
       aria-hidden="true"
       mix={[
         css({
-          // acima da sidebar da réplica, que é sticky com z-index 30
           position: "absolute",
           zIndex: 40,
           width: "262px",

@@ -4,14 +4,10 @@ import { FONT_MONO, btnGhost, btnPrimary, container, surfaceBase } from '../../u
 import { CSS_CARD_SOLTO, CardSolto } from '../home/hero.tsx'
 import { DIAGS, TelaDiagnosticoVisao } from '../home/plataforma-app.tsx'
 
-// Hero centrado ("stacked narrative"): tudo no eixo central e o produto
-// entrando por baixo, cortado pela borda da seção. Contraponto ao split da
-// home e ao carrossel de vídeo da v2.
-
 const METRICAS = [
-  ['2,1 bi', 'cenários processados'],
-  ['40 min', 'por diagnóstico'],
-  ['5 anos', 'de dados fiscais'],
+  { valor: '2,1 bi', rotulo: 'cenários processados', n: '2.1', dec: '1', sufixo: ' bi' },
+  { valor: '40 min', rotulo: ' em média por diagnóstico', n: '40', sufixo: ' min' },
+  { valor: '5 anos', rotulo: 'de dados fiscais', n: '5', sufixo: ' anos' },
 ]
 
 export function HeroCentro() {
@@ -24,14 +20,12 @@ export function HeroCentro() {
           position: 'relative',
           overflow: 'hidden',
           paddingTop: '148px',
-          // sem padding embaixo: a tela do produto encosta na borda
           backgroundImage:
             'radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--accent-graphic) 18%, transparent), transparent 70%)',
           '@media (max-width: 720px)': { paddingTop: '112px' },
         }),
       ]}
     >
-      {/* fundo em vídeo com scrim: o screencast é claro e lavaria o texto */}
       <div
         aria-hidden="true"
         mix={css({
@@ -43,22 +37,17 @@ export function HeroCentro() {
             content: '""',
             position: 'absolute',
             inset: 0,
-            // o wash ciano volta por cima do vídeo, senão o fundo da seção
-            // fica escondido embaixo dele
             background:
               'radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--accent-graphic) 16%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, transparent) 0%, color-mix(in srgb, var(--surface) 95%, transparent) 55%, var(--surface) 100%)',
           },
         })}
       >
         <video
-          src="/hero-bg.mp4"
-          autoplay
+          data-video-src="/hero-bg.mp4"
           muted
           loop
           playsinline
-          preload="auto"
-          // desfocado e ampliado: entra como textura, não como conteúdo que
-          // disputa a atenção com o título (a escala esconde a borda do blur)
+          preload="none"
           mix={css({
             width: '100%',
             height: '100%',
@@ -69,7 +58,6 @@ export function HeroCentro() {
         />
       </div>
 
-      {/* a réplica esconde as telas por padrão; aqui uma delas precisa aparecer */}
       <style>{`[data-hero-app] [data-app-screen] { display: flex; }
         ${CSS_CARD_SOLTO}`}</style>
 
@@ -101,8 +89,19 @@ export function HeroCentro() {
               color: 'var(--text)',
             })}
           >
-            Todo o crédito que a sua{' '}
-            <span mix={css({ color: 'var(--accent)' })}>apuração deixou passar</span>
+            A máquina de{' '}
+            <span
+              mix={css({
+                backgroundImage:
+                  'linear-gradient(100deg, var(--accent), var(--accent-graphic) 65%, var(--accent))',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+              })}
+            >
+              fazer dinheiro
+            </span>{' '}
+            do tributarista
           </h1>
           <p
             mix={css({
@@ -113,8 +112,7 @@ export function HeroCentro() {
               color: 'var(--muted)',
             })}
           >
-            A LaraTAX baixa as obrigações, cruza cinco anos de dados fiscais e devolve um
-            diagnóstico de oportunidades pronto para virar retificação e PER/DCOMP.
+            5 anos de dados fiscais, 2,1 bilhões de cenários processados. O crédito que ficou para trás aparece no primeiro diagnóstico.
           </p>
           <div
             mix={css({
@@ -146,9 +144,12 @@ export function HeroCentro() {
             listStyle: 'none',
           })}
         >
-          {METRICAS.map(([valor, rotulo]) => (
+          {METRICAS.map((m) => (
             <li>
               <strong
+                data-count={m.n}
+                data-count-decimals={m.dec}
+                data-count-suffix={m.sufixo}
                 mix={css({
                   display: 'block',
                   fontFamily: FONT_MONO,
@@ -157,7 +158,7 @@ export function HeroCentro() {
                   color: 'var(--text)',
                 })}
               >
-                {valor}
+                {m.valor}
               </strong>
               <span
                 mix={css({
@@ -168,7 +169,7 @@ export function HeroCentro() {
                   color: 'var(--muted)',
                 })}
               >
-                {rotulo}
+                {m.rotulo}
               </span>
             </li>
           ))}
@@ -176,8 +177,6 @@ export function HeroCentro() {
 
       </div>
 
-      {/* produto entrando por baixo: cortado pela borda, com os KPIs soltos
-          quebrando a borda de cima (a moldura recorta, então eles ficam fora) */}
       <div
         data-parallax="-5"
         mix={css({
@@ -195,12 +194,15 @@ export function HeroCentro() {
           position: 'relative',
           height: '420px',
           overflow: 'hidden',
+          contain: 'content',
           borderTopLeftRadius: '18px',
           borderTopRightRadius: '18px',
           border: '1px solid var(--line)',
           borderBottom: 'none',
           background: '#f8fbfc',
-          boxShadow: '0 -8px 80px rgba(7, 224, 255, 0.18)',
+          boxShadow: '0 -10px 120px rgba(7, 224, 255, 0.28), 0 -2px 0 rgba(7, 224, 255, 0.35)',
+          transform: 'perspective(1600px) rotateX(9deg)',
+          transformOrigin: 'top center',
           maskImage: 'linear-gradient(180deg, black 62%, transparent)',
           WebkitMaskImage: 'linear-gradient(180deg, black 62%, transparent)',
           '@media (max-width: 720px)': { display: 'none' },

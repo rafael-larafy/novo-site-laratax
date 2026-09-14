@@ -85,3 +85,12 @@ header { view-transition-name: cabecalho; }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }`
+export const MODO_LEVE = `
+:root[data-leve='true'] * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:root[data-leve='true'] { --t-header-bg: #ffffff; }
+:root[data-leve='true'][data-theme='dark'] { --t-header-bg: #021118; }
+:root[data-leve='true'] [data-hero-solto] [data-kpi] { box-shadow: 0 8px 18px rgba(2, 17, 24, 0.22); }
+`

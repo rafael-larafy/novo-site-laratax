@@ -2,7 +2,6 @@ import { css } from 'remix/ui'
 
 import { COLORS, FONT_SANS } from './tokens.ts'
 
-
 const DOCK_ITEMS = [
   {
     href: '#inicio',
@@ -25,8 +24,8 @@ const DOCK_ITEMS = [
     ),
   },
   {
-    href: '#reforma',
-    label: 'Reforma',
+    href: '#retificacao',
+    label: 'Retificação',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 3v18" />
@@ -96,7 +95,7 @@ const dockBar = css({
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
   boxShadow: '0 10px 40px rgba(1, 46, 67, 0.14)',
-  '@media(max-width:80px)': {gap:'6px', padding: '8px 10px 10px'}
+  '@media (max-width: 480px)': { gap: '6px', padding: '8px 10px 10px' }
 })
 
 const dockItem = css({
@@ -112,7 +111,7 @@ const dockItem = css({
   background: 'color-mix(in srgb, var(--text) 4%, transparent)',
   transformOrigin: '50% 100%',
   transition: 'color 160ms ease, background 160ms ease, box-shadow 160ms ease',
-  willChange: 'transform',
+  '[data-dock-desktop]:hover &': { willChange: 'transform' },
   '& svg': { width: '22px', height: '22px', display: 'block' },
   '&:hover, &:focus-visible': {
     color: COLORS.navy,
@@ -128,7 +127,6 @@ const dockItem = css({
     background: 'color-mix(in srgb, var(--accent) 16%, transparent)',
     boxShadow: `inset 0 -2px 0 ${COLORS.cyan}`,
   },
-  // tooltip
   '&::after': {
     content: 'attr(data-label)',
     position: 'absolute',
@@ -156,7 +154,6 @@ const dockItem = css({
   },
   '@media (max-width:860px)' : { '&::after': {display:  'none'}},
 })
-
 
 function DockLink(item: (typeof DOCK_ITEMS)[number]) {
   return (

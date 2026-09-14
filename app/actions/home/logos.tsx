@@ -2,28 +2,16 @@ import { css } from 'remix/ui'
 
 import { FONT_MONO, container } from '../../ui/tokens.ts'
 
-// Logos extraídos do laratax.com.br (faixa "As maiores do Brasil confiam"),
-// na mesma ordem. Altura por logo: wordmarks largos pedem menos altura para
-// o peso visual ficar uniforme.
-
-type CLIENTES = {
-  src : "string",
-  alt: "string",
-  h: "number",
-}
-
 export const CLIENTES = [
-  { src: '/clientes/hedge-tax.png', alt: 'Hedge Tax', h: 30 },
-  { src: '/clientes/ag-tax.webp', alt: 'AG Tax', h: 50 },
-  { src: '/clientes/simoes-pires.svg', alt: 'Simões Pires', h: 17 },
-  { src: '/clientes/evox-fiscal.png', alt: 'Evox Fiscal', h: 30 },
-  { src: '/clientes/planning.png', alt: 'Planning', h: 28 },
-  { src: '/clientes/marins-bertoldi.webp', alt: 'Marins Bertoldi', h: 40 },
-  { src: '/clientes/crowe.png', alt: 'Crowe', h: 30 },  
+  { src: '/clientes/hedge-tax.png', alt: 'Hedge Tax', h: 30, w: 126 },
+  { src: '/clientes/ag-tax.webp', alt: 'AG Tax', h: 50, w: 94 },
+  { src: '/clientes/simoes-pires.svg', alt: 'Simões Pires', h: 17, w: 163 },
+  { src: '/clientes/evox-fiscal.png', alt: 'Evox Fiscal', h: 30, w: 101 },
+  { src: '/clientes/planning.png', alt: 'Planning', h: 28, w: 136 },
+  { src: '/clientes/marins-bertoldi.webp', alt: 'Marins Bertoldi', h: 40, w: 201 },
+  { src: '/clientes/crowe.png', alt: 'Crowe', h: 30, w: 106 },
 ]
 
-// Monocromático via --logo-filter (tema decide: escuro no claro, branco no
-// escuro) — os originais são brancos, feitos para o navy do site antigo.
 const logoItem = css({
   display: 'block',
   width: 'auto',
@@ -34,7 +22,6 @@ export function LogosMarquee() {
   return () => (
     <section
       mix={css({
-        // topo curto: encosta a faixa no hero (o vão de baixo separa da Pains)
         padding: '8px 0 48px',
         overflow: 'hidden',
       })}
@@ -78,8 +65,6 @@ export function LogosMarquee() {
           mix={css({
             display: 'flex',
             width: 'max-content',
-            // cada cópia ocupa a viewport inteira: com cópias mais estreitas
-            // que a tela, o fim do ciclo (-50%) deixava um vão à direita
             '& > div': {
               display: 'flex',
               alignItems: 'center',
@@ -90,16 +75,32 @@ export function LogosMarquee() {
             },
           })}
         >
-          {/* duas cópias da lista → translateX(-50%) fecha o loop sem emenda;
-              a segunda é só visual, escondida de leitores de tela */}
           <div>
             {CLIENTES.map((c) => (
-              <img src={c.src} alt={c.alt} style={{ height: `${c.h}px` }} mix={logoItem} />
+              <img
+                src={c.src}
+                alt={c.alt}
+                width={c.w}
+                height={c.h}
+                loading="lazy"
+                decoding="async"
+                style={{ height: `${c.h}px` }}
+                mix={logoItem}
+              />
             ))}
           </div>
           <div aria-hidden="true">
             {CLIENTES.map((c) => (
-              <img src={c.src} alt="" style={{ height: `${c.h}px` }} mix={logoItem} />
+              <img
+                src={c.src}
+                alt=""
+                width={c.w}
+                height={c.h}
+                loading="lazy"
+                decoding="async"
+                style={{ height: `${c.h}px` }}
+                mix={logoItem}
+              />
             ))}
           </div>
         </div>

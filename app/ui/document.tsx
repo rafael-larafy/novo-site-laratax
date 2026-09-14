@@ -2,7 +2,7 @@ import type { Handle, RemixNode } from 'remix/ui'
 import { css } from 'remix/ui'
 
 import { routes } from '../routes.ts'
-import { THEME_BOOTSTRAP, THEME_CSS, TRANSITION } from './theme.ts'
+import { MODO_LEVE, THEME_BOOTSTRAP, THEME_CSS, TRANSITION } from './theme.ts'
 import { FONT_SANS, surfaceBase } from './tokens.ts'
 
 export interface DocumentProps {
@@ -40,11 +40,12 @@ export function Document(handle: Handle<DocumentProps>) {
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Kode+Mono:wght@400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Kode+Mono:wght@400..700&display=swap"
           />
           <title>{title}</title>
           <script>{THEME_BOOTSTRAP}</script>
           <style>{THEME_CSS}</style>
+          <style>{MODO_LEVE}</style>
           <style>{TRANSITION}</style>
           {head}
         </head>
@@ -58,8 +59,8 @@ export function Document(handle: Handle<DocumentProps>) {
               lineHeight: 1.6,
               WebkitFontSmoothing: 'antialiased',
               MozOsxFontSmoothing: 'grayscale',
-              // clip (não hidden): hidden faz o body virar scroll container e
-              // quebra position:sticky em todos os descendentes
+              WebkitTextSizeAdjust: '100%',
+              textSizeAdjust: '100%',
               overflowX: 'clip',
               '& *, & *::before, & *::after': { boxSizing: 'border-box' },
             }),
