@@ -74,7 +74,7 @@ const DOCK_ITEMS = [
 const dockShell = css({
   position: 'fixed',
   left: 0,
-  right: 12,
+  right: 0,
   bottom: 'calc(12px + env(safe-area-inset-bottom))',
   zIndex: 90,
   display: 'flex',

@@ -56,7 +56,7 @@ export function FinalCta() {
               Fale com a gente
             </p>
             <h2 mix={[heading2, css({ margin: '0 auto 16px' })]}>
-              Em 40 minutos, veja o dinheiro que ficou para trás
+              Revolucione a operação da sua consultoria tributária
             </h2>
             <p mix={[lead, css({ margin: '0 auto 40px' })]}>
               Agende uma apresentação com nossos especialistas. Temos time disponível para atender
