@@ -750,3 +750,30 @@ if (dockItems.length && 'IntersectionObserver' in window) {
     })
   }
 }
+
+const vv = window.visualViewport
+const dockFixo = document.querySelector<HTMLElement>('[data-floating-dock]')
+if (vv && dockFixo) {
+  const LIMITE_BARRA = 150
+
+  const colar = () => {
+    const sobra = document.documentElement.clientHeight - vv.height - vv.offsetTop
+    const ajuste = sobra > 0 && sobra < LIMITE_BARRA ? sobra : 0
+    dockFixo.style.transform = ajuste ? `translateY(${-ajuste}px)` : ''
+  }
+
+  let agendado = false
+  const agendar = () => {
+    if (agendado) return
+    agendado = true
+    requestAnimationFrame(() => {
+      agendado = false
+      colar()
+    })
+  }
+
+  vv.addEventListener('resize', agendar)
+  vv.addEventListener('scroll', agendar)
+  window.addEventListener('scroll', agendar, { passive: true })
+  colar()
+}
