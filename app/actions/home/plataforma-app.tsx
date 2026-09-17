@@ -3883,9 +3883,6 @@ function PaginacaoDiag(paginas:number){
         {[1,2,3,4,5].slice(0,paginas).map((n)=>(
           <span mix={[pagina(n===1), num]}>{String(n)}</span>
         ))}
-        <span mix={seta}>›</span>
-        <span mix={seta}>»</span>
-        <span mix={[inputFake,css({marginLeft:'12px',padding:'5px 10px',gap:'8px',color:})]}></span>
         <span></span>
         <span></span>
       </div>
