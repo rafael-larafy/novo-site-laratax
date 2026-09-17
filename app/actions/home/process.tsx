@@ -53,7 +53,7 @@ export function Process() {
             '@media (max-width: 960px)': { position: 'static' },
           })}
         >
-          <p mix={eyebrow}>04 / Como funciona</p>
+          <p mix={eyebrow}>05 / Como funciona</p>
           <h2 mix={heading2}>Da procuração ao crédito recuperado</h2>
           <p mix={[lead, css({ marginBottom: 0 })]}>
             São {STEPS.length} etapas entre a assinatura da procuração e o crédito de volta ao caixa. A maior parte

@@ -21,11 +21,11 @@ export function V3Page() {
         {SpriteIcones()}
         <HeroCentro />
         <LogosMarquee />
+        <Stats />
         <Pains />
         <Platform />
         <Retificacao />
         <Process />
-        <Stats />
         <CaseStudy />
         <FinalCta />
       </main>

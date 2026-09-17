@@ -19,11 +19,11 @@ export function V2Page() {
       <main>
         {SpriteIcones()}
         <HeroSlides />
+        <Stats />
         <Pains />
         <Platform />
         <Retificacao />
         <Process />
-        <Stats />
         <CaseStudy />
         <FinalCta />
       </main>

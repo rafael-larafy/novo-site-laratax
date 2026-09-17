@@ -119,7 +119,7 @@ export function HeroBento() {
               color: 'var(--muted)',
             })}
           >
-            Diagnóstico de créditos, retificação, PER/DCOMP e reforma tributária no mesmo
+            Diagnóstico de créditos, retificação, compensação e reforma tributária no mesmo
             lugar, com a coleta das obrigações rodando sozinha por trás.
           </p>
           <a href="#contato" mix={[btnPrimary, css({ alignSelf: 'flex-start' })]}>

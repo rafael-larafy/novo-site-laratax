@@ -62,17 +62,6 @@ export function FinalCta() {
               Agende uma apresentação com nossos especialistas. Temos time disponível para atender
               o quanto antes.
             </p>
-            <p
-              mix={css({
-                margin: '0 auto 32px',
-                fontFamily: FONT_MONO,
-                fontSize: '13px',
-                color: 'var(--accent)',
-                letterSpacing: '0.08em',
-              })}
-            >
-              A transição para o IVA Dual começa em 2026. Chegue preparado.
-            </p>
             <a
               href="mailto:comercial@laratax.com.br"
               mix={[btnPrimary, css({ padding: '18px 36px', fontSize: '16px' })]}

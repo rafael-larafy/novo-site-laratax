@@ -1,3 +1,4 @@
+import type { RemixNode } from 'remix/ui'
 import { css } from 'remix/ui'
 
 import {
@@ -12,14 +13,24 @@ import {
 } from '../../ui/tokens.ts'
 
 const ciano = COLORS.cyanBright
-const vermelho = 'oklch(0.66 0.16 30)'
 
-const COMPARATIVO = [
-  { mercado: 'Upload manual de SPED, XML e guias', laratax: 'Baixa automática no e-CAC, SPED e NF-e' },
-  { mercado: 'Cada ferramenta lê só um pedaço', laratax: '5 anos cruzados, 2,1 bi de cenários' },
-  { mercado: '1 a 4 meses até o primeiro número', laratax: 'Primeiro número em média 40 minutos' },
-  { mercado: 'Termina em relatório', laratax: 'Retificação e PER/DCOMP no sistema' },
-  { mercado: 'IVA Dual ainda no roteiro', laratax: 'Pronto para o IVA Dual' },
+const TRADICIONAL = [
+  'Baixar arquivos manualmente',
+  'Fazer upload em ferramentas',
+  'Exportar para Excel',
+  'Tratar e cruzar planilhas',
+  'Identificar oportunidades',
+  'Preparar bases para retificação',
+  'Gerar novos arquivos',
+  'Controlar PER/DCOMP em planilhas',
+]
+
+const LARATAX = [
+  'Baixa automática das obrigações acessórias (SPED, e‑CAC, e‑Social)',
+  'Extração de relatórios automáticos',
+  'Diagnóstico tributário inteligente',
+  'Retificação inteligente',
+  'Controle de PER/DCOMP automático',
 ]
 
 const colunaCss = css({
@@ -29,13 +40,33 @@ const colunaCss = css({
   '@media (max-width: 560px)': { padding: '28px 24px' },
 })
 
-const rotuloColuna = css({
+const cabecalhoCss = css({
+  display: 'flex',
+  alignItems: 'baseline',
+  justifyContent: 'space-between',
+  gap: '16px',
   margin: '0 0 18px',
+})
+
+const rotuloColuna = css({
+  margin: 0,
   fontFamily: FONT_MONO,
   fontSize: '12px',
   fontWeight: 600,
   letterSpacing: '0.143em',
   textTransform: 'uppercase',
+})
+
+const chipCss = css({
+  flexShrink: 0,
+  padding: '4px 10px',
+  borderRadius: '999px',
+  border: '1px solid currentColor',
+  fontFamily: FONT_MONO,
+  fontSize: '10px',
+  letterSpacing: '0.16em',
+  textTransform: 'uppercase',
+  whiteSpace: 'nowrap',
 })
 
 const listaCss = css({
@@ -44,33 +75,41 @@ const listaCss = css({
   listStyle: 'none',
   display: 'flex',
   flexDirection: 'column',
-  gap: '24px',
+  gap: '22px',
 })
 
 const itemCss = css({
-  display: 'flex',
-  alignItems: 'flex-start',
-  gap: '14px',
-  minHeight: '24px',
+  position: 'relative',
+  paddingLeft: '30px',
   fontSize: '16px',
   lineHeight: 1.5,
-})
-
-const marcaCss = css({
-  flexShrink: 0,
-  width: '18px',
-  fontSize: '15px',
-  fontWeight: 700,
-  lineHeight: 1.5,
-  textAlign: 'center',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    left: 0,
+    top: '0.42em',
+    width: '11px',
+    height: '11px',
+    borderRadius: '50%',
+    boxSizing: 'border-box',
+  },
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    left: '5px',
+    top: 'calc(0.42em + 15px)',
+    bottom: '-26px',
+    width: '1px',
+  },
+  '&:last-child::after': { display: 'none' },
 })
 
 type Coluna = {
-  rotulo: string
+  rotulo: RemixNode
   cor: string
   linha: string
-  marca: string
-  corMarca: string
+  no: string
+  trilho: string
   itens: string[]
   corItem: string
   peso: number
@@ -79,14 +118,24 @@ type Coluna = {
 function Coluna(c: Coluna) {
   return (
     <>
-      <p mix={[rotuloColuna, css({ color: c.cor })]}>{c.rotulo}</p>
-      <div mix={css({ height: '1px', background: c.linha, margin: '0 0 28px' })} />
+      <div mix={[cabecalhoCss, css({ color: c.cor })]}>
+        <p mix={rotuloColuna}>{c.rotulo}</p>
+        <span mix={chipCss}>{c.itens.length} etapas</span>
+      </div>
+      <div mix={css({ height: '1px', background: c.linha, margin: '0 0 30px' })} />
       <ul role="list" mix={listaCss}>
         {c.itens.map((texto) => (
-          <li mix={[itemCss, css({ color: c.corItem, fontWeight: c.peso })]}>
-            <span aria-hidden="true" mix={[marcaCss, css({ color: c.corMarca })]}>
-              {c.marca}
-            </span>
+          <li
+            mix={[
+              itemCss,
+              css({
+                color: c.corItem,
+                fontWeight: c.peso,
+                '&::before': { background: c.no },
+                '&::after': { background: c.trilho },
+              }),
+            ]}
+          >
             {texto}
           </li>
         ))}
@@ -111,14 +160,14 @@ export function Pains() {
         <div mix={container}>
           <div data-reveal="" mix={css({ textAlign: 'center', marginBottom: '56px' })}>
             <p mix={[eyebrow, css({ justifyContent: 'center', '&::before': { display: 'none' } })]}>
-              01 / O problema
+              02 / O problema
             </p>
             <h2 mix={[heading2, css({ margin: '0 auto 16px' })]}>
-              A rotina fiscal manual não escala
+              A consultoria tradicional não escala
             </h2>
             <p mix={[lead, css({ margin: '0 auto', maxWidth: '46em' })]}>
               O mercado automatizou pedaços do trabalho e parou no relatório. A LaraTAX fecha o
-              ciclo inteiro, da coleta das obrigações ao PER/DCOMP.
+              ciclo inteiro, da coleta das obrigações à compensação do crédito.
             </p>
           </div>
 
@@ -128,18 +177,23 @@ export function Pains() {
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
               gap: '24px',
-              alignItems: 'stretch',
+              alignItems: 'center',
               '@media (max-width: 900px)': { gridTemplateColumns: '1fr', gap: '16px' },
             })}
           >
             <div mix={colunaCss}>
               {Coluna({
-                rotulo: 'Outras plataformas',
+                rotulo: (
+                  <>
+                    Modelo tradicional{' '}
+                    <span mix={css({ opacity: 0.7 })}>(outras plataformas)</span>
+                  </>
+                ),
                 cor: 'var(--muted)',
                 linha: 'var(--line)',
-                marca: '✗',
-                corMarca: vermelho,
-                itens: COMPARATIVO.map((i) => i.mercado),
+                no: 'color-mix(in srgb, var(--text) 26%, transparent)',
+                trilho: 'var(--line)',
+                itens: TRADICIONAL,
                 corItem: 'var(--muted)',
                 peso: 400,
               })}
@@ -160,9 +214,9 @@ export function Pains() {
                 rotulo: 'LaraTAX',
                 cor: ciano,
                 linha: 'rgba(7, 224, 255, 0.22)',
-                marca: '✓',
-                corMarca: ciano,
-                itens: COMPARATIVO.map((i) => i.laratax),
+                no: ciano,
+                trilho: 'rgba(7, 224, 255, 0.3)',
+                itens: LARATAX,
                 corItem: 'var(--text)',
                 peso: 600,
               })}

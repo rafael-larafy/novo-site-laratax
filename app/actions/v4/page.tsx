@@ -19,11 +19,11 @@ export function V4Page() {
       <main>
         {SpriteIcones()}
         <HeroBento />
+        <Stats />
         <Pains />
         <Platform />
         <Retificacao />
         <Process />
-        <Stats />
         <CaseStudy />
         <FinalCta />
       </main>

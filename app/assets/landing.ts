@@ -122,6 +122,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
         stagger: 0.1,
         ease: EASE.section,
         overwrite: true,
+        clearProps: 'transform',
       }),
   })
 
@@ -135,6 +136,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
         opacity: 0,
         duration: DUR.section,
         ease: EASE.section,
+        clearProps: 'transform',
         scrollTrigger: { trigger: el, start: 'top 78%', once: true },
       })
     })
@@ -151,6 +153,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
         stagger: 0.1,
         ease: EASE.card,
         overwrite: true,
+        clearProps: 'transform',
       }),
   })
 
@@ -685,6 +688,26 @@ if (marquees.length) {
     }
   })
   for (const m of marquees) olho.observe(m)
+}
+
+const abasRecurso = Array.from(
+  document.querySelectorAll<HTMLElement>('[data-aba-recurso]'),
+)
+if (abasRecurso.length) {
+  const paineis = Array.from(document.querySelectorAll<HTMLElement>('[data-painel-recurso]'))
+  const mostrar = (alvo: string) => {
+    for (const aba of abasRecurso) {
+      const ativa = aba.dataset.abaRecurso === alvo
+      aba.dataset.on = ativa ? 'true' : 'false'
+      aba.setAttribute('aria-selected', ativa ? 'true' : 'false')
+    }
+    for (const painel of paineis) {
+      painel.dataset.on = painel.dataset.painelRecurso === alvo ? 'true' : 'false'
+    }
+  }
+  for (const aba of abasRecurso) {
+    aba.addEventListener('click', () => mostrar(aba.dataset.abaRecurso || '0'))
+  }
 }
 
 const dockDesktop = document.querySelector<HTMLElement>('[data-dock-desktop]')
