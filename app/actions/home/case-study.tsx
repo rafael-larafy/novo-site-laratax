@@ -74,7 +74,7 @@ export function CaseStudy() {
         </h2>
         <p data-reveal="" mix={lead}>
           Indústria metalúrgica, faturamento de R$ 750 mi em 5 anos, matriz + 4 filiais, 21,6 GB de
-          dados fiscais (1.380 DARFs, 60 DCTFs, 60 EFD Contribuições, 240 SPEDs).
+          dados fiscais (1.380 DARFs, 60 DCTFs, 60 SPED Contribuições, 240 SPEDs).
         </p>
         <div
           mix={css({

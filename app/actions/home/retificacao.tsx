@@ -16,25 +16,26 @@ import {
 const BULLETS = [
   'Arquivo retificador gerado pelo sistema',
   'Memória de cálculo e lastro de cada ajuste',
-  'PER/DCOMP na sequência, sem sair da plataforma',
 ]
 
-const ENTRADAS = ['EFD ICMS/IPI', 'EFD Contribuições', 'DCTF']
-const SAIDAS = ['EFD retificada', 'DCTF retificadora', 'PER/DCOMP']
+const ENTRADAS = ['EFD Contribuições', 'e-Social']
+const SAIDAS = ['Arquivo retificador', 'Transmissão do XML']
 
-const ROW_Y = [40, 140, 240]
+const CENTRO = 152
 
-const ENTRADA_FLOWS = [
-  'M150,62 C190,62 180,152 210,152',
-  'M150,162 C180,162 185,152 210,152',
-  'M150,262 C190,262 180,152 210,152',
-]
+const linhas = (n: number) =>
+  Array.from({ length: n }, (_, i) => CENTRO - 22 - ((n - 1) * 100) / 2 + i * 100)
 
-const SAIDA_FLOWS = [
-  'M350,152 C380,152 375,62 410,62',
-  'M350,152 C380,152 380,162 410,162',
-  'M350,152 C380,152 375,262 410,262',
-]
+const Y_ENTRADA = linhas(ENTRADAS.length)
+const Y_SAIDA = linhas(SAIDAS.length)
+
+const ENTRADA_FLOWS = Y_ENTRADA.map(
+  (y) => `M150,${y + 22} C190,${y + 22} 180,${CENTRO} 210,${CENTRO}`,
+)
+
+const SAIDA_FLOWS = Y_SAIDA.map(
+  (y) => `M350,${CENTRO} C380,${CENTRO} 375,${y + 22} 410,${y + 22}`,
+)
 
 export function Retificacao() {
   return () => (
@@ -72,14 +73,14 @@ export function Retificacao() {
         ]}
       >
         <div data-reveal-left="">
-          <p mix={eyebrow}>03 / Retificação automática</p>
+          <p mix={eyebrow}>04 / Retificação automática</p>
           <h2 mix={heading2}>
             A retificação sai pronta da própria apuração
           </h2>
           <p mix={[lead, css({ marginBottom: '32px' })]}>
-            A LaraTAX compara o que foi entregue com o que os seus documentos mostram e gera o
-            arquivo retificador de EFD, EFD Contribuições e DCTF, com a memória de cálculo do
-            ajuste e o PER/DCOMP logo na sequência.
+            O LaraTAX compara o que foi entregue com o que os seus documentos mostram e gera o
+            arquivo retificador de EFD Contribuições e e-Social, com a memória de cálculo do
+            ajuste, além de transmitir de maneira automatizada os xmls retificadores.
           </p>
           <ul
             role="list"
@@ -159,7 +160,7 @@ function FlowPanel() {
       <svg
         viewBox="0 0 560 300"
         role="img"
-        aria-label="Diagrama: EFD ICMS/IPI, EFD Contribuições e DCTF entram na retificação automática, que devolve arquivo retificador, DCTF retificadora e PER/DCOMP"
+        aria-label="Diagrama: EFD Contribuições e e-Social entram na retificação automática, que devolve o arquivo retificador e a transmissão do XML"
         mix={css({ width: '100%', minWidth: '480px', height: 'auto', display: 'block' })}
       >
         <text
@@ -203,7 +204,7 @@ function FlowPanel() {
           <g>
             <rect
               x="10"
-              y={ROW_Y[i]}
+              y={Y_ENTRADA[i]}
               width="140"
               height="44"
               rx="10"
@@ -212,7 +213,7 @@ function FlowPanel() {
             />
             <text
               x="80"
-              y={ROW_Y[i]! + 27}
+              y={Y_ENTRADA[i]! + 27}
               text-anchor="middle"
               fill="var(--text)"
               font-family={FONT_MONO}
@@ -226,7 +227,7 @@ function FlowPanel() {
           <g>
             <rect
               x="410"
-              y={ROW_Y[i]}
+              y={Y_SAIDA[i]}
               width="140"
               height="44"
               rx="10"
@@ -235,7 +236,7 @@ function FlowPanel() {
             />
             <text
               x="480"
-              y={ROW_Y[i]! + 27}
+              y={Y_SAIDA[i]! + 27}
               text-anchor="middle"
               fill="var(--text)"
               font-family={FONT_MONO}

@@ -18,11 +18,23 @@ import {
   stage,
   surfaceContrast,
 } from '../../ui/tokens.ts'
+import {
+  CSS_TELA_ESTATICA,
+  SpriteIcones,
+  TelaDiagnosticoIcms,
+  TelaDiagnosticoIpi,
+  TelaDiagnosticoIrpj,
+  TelaDiagnosticoPisCofins,
+  TelaDiagnosticoPrev,
+  TelaDiagnosticoTeaser,
+  TelaDiagnosticoVisao,
+  TelaReforma,
+} from '../home/plataforma-app.tsx'
 import { FinalCta } from '../home/final-cta.tsx'
 
 const FONTES = [
-  { nome: 'Grupo SPED', desc: 'Baixa de EFD ICMS/IPI, EFD Contribuições, ECF, ECD.' },
-  { nome: 'e-CAC', desc: 'Baixa de DCTF, DCTFWEB, PER/DCOMP, MIT, Pagamentos e fontes pagadoras.' },
+  { nome: 'Grupo SPED', desc: 'Baixa de SPED Fiscal, SPED Contribuições, ECF e ECD.' },
+  { nome: 'e-CAC', desc: 'Baixa de DCTF, DCTFWEB, compensações, MIT, pagamentos e fontes pagadoras.' },
   { nome: 'e-Social', desc: "Baixa de todos os xml's." },
 ]
 
@@ -74,6 +86,132 @@ const painelVisual = css({
     'radial-gradient(ellipse 70% 60% at 50% 30%, rgba(7, 224, 255, 0.1), transparent 70%), linear-gradient(227deg, #021118, #002e43)',
 })
 
+const PAINEIS = [
+  {
+    area: 'Visão Geral',
+    titulo: 'O retrato consolidado do período',
+    texto:
+      'Oportunidades e possibilidades a explorar por tributo, DARFs recolhidos, receitas e compras cruzadas ano a ano na mesma tela.',
+    tela: () => TelaDiagnosticoVisao(),
+  },
+  {
+    area: 'ICMS',
+    titulo: 'Entradas e saídas do fluxo operacional',
+    texto:
+      'O fluxo completo de entradas e saídas, com as oportunidades em prévia e refinadas ao lado do ICMS a recolher no período.',
+    tela: () => TelaDiagnosticoIcms(),
+  },
+  {
+    area: 'IPI',
+    titulo: 'Oportunidades a explorar e o que já foi pago',
+    texto:
+      'Fluxo de entradas, oportunidades a explorar e pagamentos efetuados, sempre com o comparativo entre o valor prévio e o refinado.',
+    tela: () => TelaDiagnosticoIpi(),
+  },
+  {
+    area: 'PIS/COFINS',
+    titulo: 'Análises separadas de entradas e saídas',
+    texto:
+      'Cada lado da operação com a sua própria análise, as oportunidades por regime e o total recolhido de PIS e COFINS no período.',
+    tela: () => TelaDiagnosticoPisCofins(),
+  },
+  {
+    area: 'IRPJ/CSLL',
+    titulo: 'Créditos, pagamentos e compensações',
+    texto:
+      'Os créditos do período, os pagamentos de IRPJ e CSLL e as compensações já declaradas em DCTF, reunidos num painel só.',
+    tela: () => TelaDiagnosticoIrpj(),
+  },
+  {
+    area: 'Previdenciária',
+    titulo: 'Verbas indenizatórias e desoneração da folha',
+    texto:
+      'Recolhimentos de INSS, verbas indenizatórias e desoneração da folha, período a período, com o valor refinado ao lado do prévio.',
+    tela: () => TelaDiagnosticoPrev(),
+  },
+  {
+    area: 'Teses',
+    titulo: 'Transparência e escolha consciente',
+    texto:
+      'Mapeamento das principais teses tributárias em discussão judicial, apontando as já reconhecidas pela jurisprudência dominante (STJ, STF, CARF), com base legal clara e documentação exigida.',
+    tela: () => TelaDiagnosticoTeaser('diagnostico-teses', 'Teses'),
+  },
+  {
+    area: 'Reforma Tributária',
+    titulo: 'Sua operação simulada no IVA Dual',
+    texto:
+      'Simulação de IBS, CBS e Imposto Seletivo sobre a sua própria operação, alimentada pelo SPED ou pelas notas fiscais.',
+    tela: () => TelaReforma(),
+  },
+]
+
+const molduraTela = css({
+  position: 'relative',
+  height: '440px',
+  overflow: 'hidden',
+  contain: 'content',
+  contentVisibility: 'auto',
+  containIntrinsicHeight: 'auto 440px',
+  borderRadius: '14px',
+  border: '1px solid var(--line)',
+  background: '#f8fbfc',
+  boxShadow: '0 24px 60px rgba(2, 17, 24, 0.28)',
+  '@media (max-width: 860px)': { display: 'none' },
+})
+
+const rotuloArea = css({
+  display: 'inline-block',
+  marginBottom: '14px',
+  padding: '6px 14px',
+  borderRadius: '999px',
+  background: 'rgba(7, 224, 255, 0.12)',
+  color: 'var(--accent)',
+  fontFamily: FONT_MONO,
+  fontSize: '12px',
+  fontWeight: 700,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+})
+
+const chipArea = css({
+  appearance: 'none',
+  background: 'transparent',
+  cursor: 'pointer',
+  fontFamily: FONT_MONO,
+  fontSize: '12.5px',
+  fontWeight: 600,
+  letterSpacing: '0.1em',
+  textTransform: 'uppercase',
+  padding: '10px 16px',
+  borderRadius: '999px',
+  border: '1px solid var(--line)',
+  color: 'var(--muted)',
+  transition: 'transform 220ms cubic-bezier(0.16, 1, 0.3, 1), color 200ms ease, border-color 200ms ease, background 200ms ease, box-shadow 200ms ease',
+  '@media (hover: hover)': {
+    '&:hover': {
+      transform: 'translateY(-3px)',
+      color: 'var(--text)',
+      borderColor: 'rgba(7, 224, 255, 0.55)',
+      background: 'rgba(7, 224, 255, 0.1)',
+      boxShadow: '0 8px 20px rgba(2, 17, 24, 0.35)',
+    },
+    '&[data-on="true"]:hover': {
+      transform: 'none',
+      color: 'var(--surface)',
+      background: 'var(--accent)',
+      borderColor: 'var(--accent)',
+      boxShadow: 'none',
+    },
+  },
+  '@media (prefers-reduced-motion: reduce)': { transition: 'color 200ms ease, border-color 200ms ease' },
+  '&:focus-visible': { outline: '2px solid var(--accent)', outlineOffset: '3px' },
+  '&[data-on="true"]': {
+    color: 'var(--surface)',
+    background: 'var(--accent)',
+    borderColor: 'var(--accent)',
+  },
+})
+
 const tituloSecao = css({ maxWidth: '15em' })
 
 const colunas2 = css({
@@ -89,6 +227,7 @@ export function RecursosPage() {
     <Document>
       <Header />
       <main>
+        {SpriteIcones()}
         <section mix={[section, css({ paddingBottom: '48px', textAlign: 'center' })]}>
           <div mix={container}>
             <p mix={[eyebrow, css({ justifyContent: 'center', '&::before': { display: 'none' } })]}>Recursos</p>
@@ -295,76 +434,67 @@ export function RecursosPage() {
                 e explorar oportunidades valiosas. Cada painel oferece uma visão detalhada e abrangente, permitindo que
                 você tome decisões conscientes e estratégicas.
               </p>
-              <div data-stagger="" mix={css({ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '48px' })}>
-                {AREAS.map((a) => (
-                  <span
-                    mix={css({
-                      fontFamily: FONT_MONO,
-                      fontSize: '12.5px',
-                      fontWeight: 600,
-                      letterSpacing: '0.1em',
-                      textTransform: 'uppercase',
-                      padding: '10px 16px',
-                      borderRadius: '999px',
-                      border: '1px solid var(--line)',
-                      color: 'var(--muted)',
-                    })}
+              <div
+                role="tablist"
+                aria-label="Áreas tributárias"
+                data-stagger=""
+                mix={css({ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '48px' })}
+              >
+                {PAINEIS.map((p, i) => (
+                  <button
+                    type="button"
+                    role="tab"
+                    id={`aba-${i}`}
+                    aria-controls={`painel-${i}`}
+                    aria-selected={i === 0 ? 'true' : 'false'}
+                    data-aba-recurso={String(i)}
+                    data-on={i === 0 ? 'true' : 'false'}
+                    mix={chipArea}
                   >
-                    {a}
-                  </span>
+                    {p.area}
+                  </button>
                 ))}
               </div>
 
-              <div mix={[card, colunas2, css({ gap: '40px', alignItems: 'center' })]}>
-                <div mix={css({ display: 'flex', flexDirection: 'column', gap: '10px' })}>
-                  <div mix={css({ display: 'flex', gap: '10px' })}>
-                    {['74%', '2,1 bi', 'R$ 13M'].map((v) => (
-                      <span
-                        mix={css({
-                          flex: 1,
-                          padding: '14px 12px',
-                          borderRadius: '10px',
-                          border: '1px solid var(--line)',
-                          fontFamily: FONT_MONO,
-                          fontSize: '15px',
-                          color: 'var(--text)',
-                          wordSpacing: '-0.3em',
-                        })}
-                      >
-                        {v}
-                      </span>
-                    ))}
-                  </div>
-                  {[86, 64, 48, 30].map((l) => (
-                    <span mix={css({ display: 'block', height: '12px', borderRadius: '6px', background: 'rgba(7, 224, 255, 0.35)' })} style={{ width: `${l}%` }} />
-                  ))}
-                </div>
-                <div>
-                  <span
-                    mix={css({
-                      display: 'inline-block',
-                      marginBottom: '16px',
-                      padding: '6px 14px',
-                      borderRadius: '999px',
-                      background: 'rgba(7, 224, 255, 0.12)',
-                      color: 'var(--accent)',
-                      fontFamily: FONT_MONO,
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      letterSpacing: '0.12em',
-                    })}
+              <style>{`${CSS_TELA_ESTATICA}
+                [data-painel-recurso] { display: none; }
+                [data-painel-recurso][data-on='true'] { display: grid; animation: recurso-in 0.3s ease; }
+                @keyframes recurso-in { from { opacity: 0; transform: translateY(8px); } }
+                @media (prefers-reduced-motion: reduce) {
+                  [data-painel-recurso][data-on='true'] { animation: none; }
+                }`}</style>
+
+              <div>
+                {PAINEIS.map((p, i) => (
+                  <div
+                    role="tabpanel"
+                    id={`painel-${i}`}
+                    aria-labelledby={`aba-${i}`}
+                    data-painel-recurso={String(i)}
+                    data-on={i === 0 ? 'true' : 'false'}
+                    mix={[colunas2, css({ gap: '48px', alignItems: 'center' })]}
                   >
-                    TESES
-                  </span>
-                  <h3 mix={css({ margin: '0 0 12px', fontSize: '22px', color: 'var(--text)' })}>
-                    Transparência e Escolha Consciente
-                  </h3>
-                  <p mix={css({ margin: 0, fontSize: '15px', lineHeight: 1.6, color: 'var(--muted)' })}>
-                    Entrega de um mapeamento preciso das principais teses tributárias em discussão judicial, apontando
-                    aquelas já reconhecidas pela jurisprudência dominante (STJ, STF, CARF), com base legal clara e
-                    documentação exigida.
-                  </p>
-                </div>
+                    <div>
+                      <span mix={rotuloArea}>{p.area}</span>
+                      <h3 mix={css({ margin: '0 0 12px', fontSize: '24px', lineHeight: 1.2, color: 'var(--text)' })}>
+                        {p.titulo}
+                      </h3>
+                      <p mix={css({ margin: 0, fontSize: '15.5px', lineHeight: 1.65, color: 'var(--muted)' })}>
+                        {p.texto}
+                      </p>
+                    </div>
+                    <div mix={molduraTela}>
+                      <div
+                        data-tela-estatica=""
+                        aria-hidden="true"
+                        style={{ zoom: '0.383' }}
+                        mix={css({ width: '1440px', pointerEvents: 'none', userSelect: 'none' })}
+                      >
+                        {p.tela()}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

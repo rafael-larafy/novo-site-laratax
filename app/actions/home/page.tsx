@@ -21,11 +21,11 @@ export function HomePage() {
         {SpriteIcones()}
         <Hero />
         <LogosMarquee />
+        <Stats />
         <Pains />
         <Platform />
         <Retificacao />
         <Process />
-        <Stats />
         <CaseStudy />
         <FinalCta />
       </main>

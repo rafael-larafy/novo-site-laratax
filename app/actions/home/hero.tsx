@@ -177,25 +177,6 @@ function PreviewPlataforma() {
           css({ bottom: "-78px", right: "-52px" }),
           true,
         )}
-        <span
-          mix={[
-            btnPrimary,
-            css({
-              position: "absolute",
-              zIndex: 50,
-              left: 0,
-              right: 0,
-              bottom: "18px",
-              margin: "0 auto",
-              width: "fit-content",
-              padding: "11px 20px",
-              fontSize: "14px",
-              whiteSpace: "nowrap",
-            }),
-          ]}
-        >
-          Explorar a demonstração interativa ↓
-        </span>
       </div>
     </a>
   );

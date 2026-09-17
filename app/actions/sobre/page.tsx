@@ -122,6 +122,13 @@ const LINHA_DO_TEMPO = [
   },
 ]
 
+const WALDIR = [
+  'Contador, empresário e consultor tributário, Waldir de Lara construiu sua trajetória assessorando empresas de diferentes segmentos e complexidades, sempre com um objetivo claro: transformar o sistema tributário em uma ferramenta estratégica para o crescimento das empresas.',
+  'Ao longo de mais de duas décadas, participou da estruturação de projetos tributários, planejamento fiscal, recuperação de créditos e consultoria para empresas do Lucro Real, desenvolvendo uma visão que hoje orienta toda a atuação da Larafy.',
+  'Mais do que acompanhar as mudanças da legislação, Waldir sempre acreditou que era possível antecipá-las. Essa visão deu origem a uma consultoria que une conhecimento técnico, planejamento estratégico e inovação para apoiar empresas nas decisões que realmente impactam seus resultados.',
+  'Hoje, lidera a Larafy e compartilha sua experiência em eventos, treinamentos e projetos de alta complexidade, contribuindo para a evolução da inteligência tributária e da contabilidade consultiva no Brasil.',
+]
+
 const jornadaCss = css({
   position: 'relative',
   paddingLeft: '28px',
@@ -423,6 +430,83 @@ export function SobrePage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="lideranca" mix={section}>
+          <div
+            mix={[
+              container,
+              css({
+                display: 'grid',
+                gridTemplateColumns: '0.85fr 1.15fr',
+                gap: '56px',
+                alignItems: 'center',
+                '@media (max-width: 900px)': { gridTemplateColumns: '1fr', gap: '36px' },
+              }),
+            ]}
+          >
+            <div data-reveal-left="">
+              <img
+                src="/waldir-de-lara.jpg"
+                alt="Waldir de Lara Junior, fundador e CEO da Larafy, durante uma palestra"
+                width={1200}
+                height={1800}
+                loading="lazy"
+                decoding="async"
+                mix={css({
+                  display: 'block',
+                  width: '100%',
+                  height: 'auto',
+                  borderRadius: '18px',
+                  border: '1px solid var(--line)',
+                  boxShadow: '0 30px 70px rgba(2, 17, 24, 0.28)',
+                })}
+              />
+            </div>
+
+            <div data-reveal-right="">
+              <p mix={eyebrow}>04 / Quem lidera</p>
+              <h2 mix={[heading2, css({ margin: '0 0 8px' })]}>Waldir de Lara Junior</h2>
+              <p
+                mix={css({
+                  margin: '0 0 28px',
+                  fontFamily: FONT_MONO,
+                  fontSize: '13px',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  color: 'var(--accent)',
+                })}
+              >
+                Fundador e CEO da Larafy · +20 anos de mercado
+              </p>
+              {WALDIR.map((paragrafo) => (
+                <p
+                  mix={css({
+                    margin: '0 0 18px',
+                    fontSize: '16px',
+                    lineHeight: 1.7,
+                    color: 'var(--muted)',
+                  })}
+                >
+                  {paragrafo}
+                </p>
+              ))}
+              <blockquote
+                mix={css({
+                  margin: '32px 0 0',
+                  paddingLeft: '22px',
+                  borderLeft: '2px solid var(--accent)',
+                  fontSize: '18px',
+                  lineHeight: 1.6,
+                  fontStyle: 'italic',
+                  color: 'var(--text)',
+                })}
+              >
+                “A legislação muda todos os dias. Os princípios que orientam boas decisões permanecem
+                os mesmos: conhecimento, estratégia e responsabilidade.”
+              </blockquote>
             </div>
           </div>
         </section>

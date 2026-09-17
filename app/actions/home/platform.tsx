@@ -7,7 +7,7 @@ export function Platform() {
   return () => (
     <section id="plataforma" mix={section}>
       <div mix={container}>
-        <p mix={eyebrow}>02 / A plataforma</p>
+        <p mix={eyebrow}>03 / A plataforma</p>
         <h2 data-reveal="" mix={heading2}>
           Sua consultoria com superpoderes
         </h2>

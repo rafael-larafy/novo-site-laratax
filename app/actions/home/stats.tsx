@@ -63,7 +63,7 @@ export function Stats() {
     <section id="numeros" mix={strip}>
       <div data-shimmer="" aria-hidden="true" mix={shimmerOverlay} />
       <div mix={container}>
-        <p mix={eyebrow}>05 / Resultados</p>
+        <p mix={eyebrow}>01 / Resultados</p>
         <h2 data-reveal="" mix={[heading2, css({ fontSize: 'clamp(22px, 2.6vw, 28px)' })]}>
           Dados falam mais que palavras
         </h2>

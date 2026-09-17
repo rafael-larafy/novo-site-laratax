@@ -80,6 +80,7 @@ const ICONE = {
   copiar: { box: 24, w: 24, h: 24, d: ['M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h11v14Z'] },
   lixeira: { box: 24, w: 24, h: 24, d: ['M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z'] },
   play: { box: 24, w: 24, h:24, d: ['M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 14.5v-9l6 4.5-6 4.5Z'] },
+  sacola: { box: 24, w: 24, h: 24, d: ['M6 22c-.55 0-1.02-.2-1.41-.59C4.2 21.02 4 20.55 4 20V8c0-.55.2-1.02.59-1.41C4.98 6.2 5.45 6 6 6h2c0-1.1.39-2.04 1.17-2.83C9.96 2.39 10.9 2 12 2s2.04.39 2.83 1.17C15.61 3.96 16 4.9 16 6h2c.55 0 1.02.2 1.41.59.39.39.59.86.59 1.41v12c0 .55-.2 1.02-.59 1.41-.39.39-.86.59-1.41.59H6Zm0-2h12V8H6v12Zm4-14h4c0-.55-.2-1.02-.59-1.41C13.02 4.2 12.55 4 12 4s-1.02.2-1.41.59C10.2 4.98 10 5.45 10 6Z'] },
   caixaAberta: { box: 24, w: 24, h:24, d: ['M20 2H4c-1.1 0-2 .9-2 2v3.01c0 .72.43 1.34 1 1.69V20c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V8.7c.57-.35 1-.97 1-1.69V4c0-1.1-1-2-2-2Zm-5 12H9v-2h6v2Zm5-7H4V4h16v3Z'] },
 } as const satisfies Record<string, IconDef>
 
@@ -1424,7 +1425,7 @@ function GraficoBarras(g: (typeof GRAFICOS)[number]) {
   )
 }
 
-function TelaReforma() {
+export function TelaReforma() {
   return (
     <div data-app-screen="reforma" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
@@ -1561,6 +1562,23 @@ function TelaReforma() {
   )
 }
 
+export const CSS_TELA_ESTATICA = `
+        [data-tela-estatica] { color: ${A.text}; font-size: 14px; line-height: 1.5; text-align: left; }
+        [data-tela-estatica] [data-app-screen] { display: flex; }
+        [data-tela-estatica] [data-sub-screen] { display: none; }
+        [data-tela-estatica] [data-sub-screen][data-on='true'] { display: block; }
+        [data-tela-estatica] [data-app-modal] { display: none; }
+        [data-tela-estatica] [data-menu-lista] { display: none; }
+        [data-tela-estatica] [data-rail] [data-rail-cheio] { display: none; }
+        [data-tela-estatica] [data-diag-borrado] { filter: none; opacity: 1; }
+        [data-tela-estatica] [data-convite] { display: none; }
+        [data-tela-estatica] [data-sub-nav][data-on='true'] [data-radio] { border-color: #00c4e5; }
+        [data-tela-estatica] [data-sub-nav][data-on='true'] [data-ponto] { opacity: 1; }
+        [data-tela-estatica] [data-sub-nav][data-on='true'] [data-caixa-icone] { background: #56c2e0; color: #ffffff; }
+        [data-tela-estatica] [data-abas-projetos] [data-sub-nav] { color: #62838e; }
+        [data-tela-estatica] [data-abas-projetos] [data-sub-nav][data-on='true'] { color: #314e58; }
+`
+
 export function PlataformaApp() {
   return () => (
     <div data-app-demo="" data-reveal="">
@@ -1580,6 +1598,9 @@ export function PlataformaApp() {
         [data-abas-projetos] [data-sub-nav] { color: #62838e; }
         [data-abas-projetos] [data-sub-nav][data-on='true'] { color: #314e58; }
         [data-diag-borrado] { filter: blur(7px); pointer-events: none; user-select: none; }
+        [data-menu-aba] [data-menu-lista] { display: none; }
+        [data-menu-aba]:hover [data-menu-lista],
+        [data-menu-aba]:focus-within [data-menu-lista] { display: block; animation: app-fade-in 0.18s ease; }
         [data-rail] [data-rail-cheio] { display: none; }
         [data-rail]:hover [data-rail-cheio] { display: block; animation: rail-in 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
         [data-rail] ~ * { transition: filter 220ms ease; }
@@ -2046,7 +2067,7 @@ function TelaPerdcompCliente() {
           <div mix={painel}>
             <div mix={css({ display: 'flex', alignItems: 'baseline', gap: '16px', padding: '16px 20px' })}>
               <strong mix={css({ fontSize: '15px', fontWeight: 700 })}>Histórico de PER/DCOMP</strong>
-              <span mix={css({ fontSize: '13px', color: A.muted })}>Última atualização: — · Próxima atualização: —</span>
+              <span mix={css({ fontSize: '13px', color: A.muted })}>Última atualização: - · Próxima atualização: -</span>
               <span mix={css({ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600 })}>
                 Agrupar <span mix={css({ width: '18px', height: '18px', borderRadius: '4px', border: `1px solid ${A.lineForte}` })} />
               </span>
@@ -3731,7 +3752,7 @@ function ConviteDiag() {
   )
 }
 
-function TelaDiagnosticoTeaser(id: string, rotulo: string) {
+export function TelaDiagnosticoTeaser(id: string, rotulo: string) {
   const kpisFake = ['R$ 1.186.514,96', 'R$ 362.562,01', 'R$ 128.502,87', 'R$ 51.211,37']
   const barrasFake = [42, 68, 55, 80, 61, 74, 48, 88, 66, 58, 76, 52]
   return (
@@ -3753,6 +3774,7 @@ function TelaDiagnosticoTeaser(id: string, rotulo: string) {
           <div mix={css({ position: 'relative', minHeight: '540px' })}>
             <div
               aria-hidden="true"
+              data-diag-borrado=""
               mix={css({ display: 'flex', flexDirection: 'column', gap: '16px', filter: 'blur(7px)', opacity: 0.65, pointerEvents: 'none', userSelect: 'none' })}
             >
               <div mix={css({ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' })}>
@@ -3838,6 +3860,35 @@ const ICMS_ESTABELECIMENTOS = {
   total: ['', '', '1.388.554'],
 }
 
+
+function PaginacaoDiag(paginas:number){
+  const seta = css ({
+    display:'grid',placeItems:'center',minWidth:'28px', height:'28px',padding:'0 6px',
+    borderRadius:'6px',fontSize:'15px',color:A.muted,cursor:'pointer',
+    '&:hover': {background:A.bg},
+  })
+
+  const pagina = (ativa:boolean) =>
+    css({
+      display:'grid',placeItems:'center',minWidth:'28px',height:'28px',borderRadius:'6px',
+      fontSize:'13.5px',fontWeight: ativa ? 700 : 500, color:ativa ? A.cyan : A.slate, cursor:'pointer',
+      '&:hover' : {background:A.bg},
+    })
+
+    return (
+      <div mix={css({display:'flex', alignItems:'center',justifyContent:'center',gap:'4px',padding:'12px 16px',
+        marginTop:'auto'})}>
+        <span mix={seta}>«</span>
+        <span mix={seta}>‹</span>
+        {[1,2,3,4,5].slice(0,paginas).map((n)=>(
+          <span mix={[pagina(n===1), num]}>{String(n)}</span>
+        ))}
+        <span></span>
+        <span></span>
+      </div>
+    )
+  }
+
 function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[][]; total?: string[] }, comCaixa = false) {
   const th = css({ padding: '10px 16px', fontSize: '13.5px', fontWeight: 700, color: A.text, textAlign: 'left', whiteSpace: 'nowrap', borderBottom: `1px solid ${A.line}` })
   const td = css({ padding: '10px 16px', fontSize: '13.5px', color: A.slate, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px', borderBottom: `1px solid ${A.cinza}` })
@@ -3888,20 +3939,65 @@ function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[]
   )
 }
 
-function AbaDiag(rotulo: string, ativa: boolean, comSeta: boolean) {
-  return (
+const menuAbaLista = css({
+  position: 'absolute',
+  top: 'calc(100% + 10px)',
+  left: '-12px',
+  zIndex: 20,
+  minWidth: '220px',
+  padding: '6px',
+  borderRadius: '10px',
+  border: `1px solid ${A.line}`,
+  background: A.card,
+  boxShadow: '0 16px 40px rgba(2, 17, 24, 0.16)',
+})
+
+const menuAbaItem = css({
+  display: 'block',
+  padding: '10px 14px',
+  borderRadius: '6px',
+  fontSize: '14px',
+  fontWeight: 500,
+  color: A.slate,
+  whiteSpace: 'nowrap',
+  cursor: 'pointer',
+  '&:hover': { background: A.cyanSoft, color: A.cyan },
+})
+
+const menuAbaItemAtivo = css({ background: A.cyanSoft, color: A.cyan })
+
+const FLUXO_OPERACIONAL = ['Apuração', 'Abertura dos Ajustes', 'Saldo a Transportar/Transf'] as const
+
+function AbaDiag(rotulo: string, ativa: boolean, comSeta: boolean, opcoes?: readonly string[]) {
+  const gatilho = (
     <span mix={css({ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '14px', fontWeight: 600, color: ativa ? A.cyan : A.slate, cursor: 'pointer' })}>
       {rotulo}
       {comSeta ? Icone(ICONE.chevronBaixo, 10) : null}
     </span>
   )
+
+  if (!opcoes) return gatilho
+
+  return (
+    <span data-menu-aba="" tabindex={0} mix={css({ position: 'relative', display: 'inline-flex' })}>
+      {gatilho}
+      <span data-menu-lista="" mix={menuAbaLista}>
+        {opcoes.map((opcao, i) => (
+          <span mix={i === 0 ? [menuAbaItem, menuAbaItemAtivo] : [menuAbaItem]}>{opcao}</span>
+        ))}
+      </span>
+    </span>
+  )
 }
 
-export function KpiDiag(rotulo: string, valor: string, refinada?: { rotulo: string; valor: string; ruim?: boolean; bom?: boolean; info?: boolean; traco?: boolean; seta?: 'cima' | 'baixo'; campo?: string }, valorGrande = false, campo = '') {
+export function KpiDiag(rotulo: string, valor: string, refinada?: { rotulo: string; valor: string; ruim?: boolean; bom?: boolean; info?: boolean; traco?: boolean; seta?: 'cima' | 'baixo'; campo?: string }, valorGrande = false, campo = '', icone?: IconDef) {
   return (
     <div data-kpi="" mix={[painel, css({ position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' })]}>
       {QuadriculadoCard()}
       <div mix={css({ position: 'relative', flex: 1, padding: '22px 24px 26px' })}>
+        {icone ? (
+          <span mix={css({ display: 'flex', marginBottom: '14px', color: A.cyanVivo })}>{Icone(icone, 22)}</span>
+        ) : null}
         <span mix={css({ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '6px' })}>{rotulo}</span>
         <strong data-campo={campo} mix={[num, css({ fontSize: valorGrande ? '24px' : '19px', color: valorGrande ? A.cyan : A.text })]}>{valor}</strong>
       </div>
@@ -3927,7 +4023,7 @@ export function KpiDiag(rotulo: string, valor: string, refinada?: { rotulo: stri
   )
 }
 
-function TelaDiagnosticoIcms() {
+export function TelaDiagnosticoIcms() {
   return (
     <div data-app-screen="diagnostico-icms" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
@@ -3957,7 +4053,7 @@ function TelaDiagnosticoIcms() {
 
           <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '12px 16px' })]}>
             {AbaDiag('Resumo', true, false)}
-            {AbaDiag('Fluxo Operacional', false, true)}
+            {AbaDiag('Fluxo Operacional', false, true, FLUXO_OPERACIONAL)}
             {AbaDiag('Entradas', false, true)}
             {AbaDiag('Saídas', false, true)}
             <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
@@ -3969,9 +4065,9 @@ function TelaDiagnosticoIcms() {
           {BannerAnalise()}
 
           <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' })}>
-            {KpiDiag('Possível Oportunidades Analisar (Prévia)', DIAGS[0].icmsPrev1, { rotulo: 'Possível Oportunidades Analisar (Refinada)', valor: 'R$ 0,00', ruim: true }, false, 'icmsPrev1')}
-            {KpiDiag('Possíveis Oportunidades (Prévia)', DIAGS[0].icmsPrev2, { rotulo: 'Possíveis Oportunidades (Refinada)', valor: '-' }, false, 'icmsPrev2')}
-            {KpiDiag('ICMS a Recolher', DIAGS[0].kpiIcms, undefined, true, 'kpiIcms')}
+            {KpiDiag('Possível Oportunidades Analisar (Prévia)', DIAGS[0].icmsPrev1, { rotulo: 'Possível Oportunidades Analisar (Refinada)', valor: 'R$ 0,00', ruim: true }, false, 'icmsPrev1', ICONE.dinheiro)}
+            {KpiDiag('Possíveis Oportunidades (Prévia)', DIAGS[0].icmsPrev2, { rotulo: 'Possíveis Oportunidades (Refinada)', valor: '-' }, false, 'icmsPrev2', ICONE.busca)}
+            {KpiDiag('ICMS a Recolher', DIAGS[0].kpiIcms, undefined, true, 'kpiIcms', ICONE.sacola)}
           </div>
 
           <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'start' })}>
@@ -3986,7 +4082,7 @@ function TelaDiagnosticoIcms() {
   )
 }
 
-function TelaDiagnosticoIpi() {
+export function TelaDiagnosticoIpi() {
   return (
     <div data-app-screen="diagnostico-ipi" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
@@ -4016,7 +4112,7 @@ function TelaDiagnosticoIpi() {
 
           <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '12px 16px' })]}>
             {AbaDiag('Resumo', true, false)}
-            {AbaDiag('Fluxo Operacional', false, true)}
+            {AbaDiag('Fluxo Operacional', false, true, FLUXO_OPERACIONAL)}
             {AbaDiag('Entradas', false, true)}
             {AbaDiag('Saídas', false, true)}
             <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
@@ -4117,7 +4213,7 @@ function BannerAnaliseAtiva() {
   )
 }
 
-function TelaDiagnosticoPisCofins() {
+export function TelaDiagnosticoPisCofins() {
   return (
     <div data-app-screen="diagnostico-piscofins" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
@@ -4151,7 +4247,7 @@ function TelaDiagnosticoPisCofins() {
             <span mix={css({ padding: '7px 14px', borderRadius: '8px', background: A.cyanSoft, fontSize: '14px', fontWeight: 600, color: A.cyan })}>
               Resumo
             </span>
-            {AbaDiag('Fluxo Operacional', false, true)}
+            {AbaDiag('Fluxo Operacional', false, true, FLUXO_OPERACIONAL)}
             {AbaDiag('Análises Entradas', false, true)}
             {AbaDiag('Análises Saídas', false, true)}
             <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
@@ -4240,7 +4336,7 @@ function TabelaPrev(
   )
 }
 
-function TelaDiagnosticoPrev() {
+export function TelaDiagnosticoPrev() {
   const d0 = DIAGS[0]
   return (
     <div data-app-screen="diagnostico-previdenciario" data-on="false" mix={telaRaiz}>
@@ -4325,7 +4421,7 @@ function TelaDiagnosticoPrev() {
   )
 }
 
-function TelaDiagnosticoIrpj() {
+export function TelaDiagnosticoIrpj() {
   return (
     <div data-app-screen="diagnostico-irpjcsll" data-on="false" mix={telaRaiz}>
       {SidebarRail()}
@@ -4360,7 +4456,7 @@ function TelaDiagnosticoIrpj() {
             <span mix={css({ padding: '7px 14px', borderRadius: '8px', background: A.cyanSoft, fontSize: '14px', fontWeight: 600, color: A.cyan })}>
               Resumo
             </span>
-            {AbaDiag('Fluxo Operacional', false, true)}
+            {AbaDiag('Fluxo Operacional', false, true, FLUXO_OPERACIONAL)}
             {AbaDiag('CRÉDITOS', false, true)}
             <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
               <span mix={[btnContorno, css({ width: '40px', height: '35px', padding: 0, justifyContent: 'center' })]}>{Icone(ICONE.download, 14)}</span>
@@ -4377,7 +4473,7 @@ function TelaDiagnosticoIrpj() {
               [['0 - Bloco com dados informados', '']],
               { expansor: true, alturaMin: '560px' },
             )}
-            {KpiDiag('Pagamentos IRPJ/CSLL', '—', { rotulo: 'Compensações Efetuadas (DCTF)', valor: 'R$ 0,00' })}
+            {KpiDiag('Pagamentos IRPJ/CSLL', '-', { rotulo: 'Compensações Efetuadas (DCTF)', valor: 'R$ 0,00' })}
           </div>
         </div>
       </div>
