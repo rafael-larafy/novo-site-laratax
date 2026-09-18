@@ -82,6 +82,12 @@ const ICONE = {
   play: { box: 24, w: 24, h:24, d: ['M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 14.5v-9l6 4.5-6 4.5Z'] },
   sacola: { box: 24, w: 24, h: 24, d: ['M6 22c-.55 0-1.02-.2-1.41-.59C4.2 21.02 4 20.55 4 20V8c0-.55.2-1.02.59-1.41C4.98 6.2 5.45 6 6 6h2c0-1.1.39-2.04 1.17-2.83C9.96 2.39 10.9 2 12 2s2.04.39 2.83 1.17C15.61 3.96 16 4.9 16 6h2c.55 0 1.02.2 1.41.59.39.39.59.86.59 1.41v12c0 .55-.2 1.02-.59 1.41-.39.39-.86.59-1.41.59H6Zm0-2h12V8H6v12Zm4-14h4c0-.55-.2-1.02-.59-1.41C13.02 4.2 12.55 4 12 4s-1.02.2-1.41.59C10.2 4.98 10 5.45 10 6Z'] },
   caixaAberta: { box: 24, w: 24, h:24, d: ['M20 2H4c-1.1 0-2 .9-2 2v3.01c0 .72.43 1.34 1 1.69V20c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V8.7c.57-.35 1-.97 1-1.69V4c0-1.1-1-2-2-2Zm-5 12H9v-2h6v2Zm5-7H4V4h16v3Z'] },
+  caminhao: { box: 24, w: 24, h: 24, d: ['M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4ZM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5Zm13.5-9 1.96 2.5H17V9.5h2.5Zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5Z'] },
+  banco: { box: 24, w: 24, h: 24, d: ['M4 10v7h3v-7H4Zm6 0v7h3v-7h-3ZM2 22h19v-3H2v3Zm14-12v7h3v-7h-3Zm-4.5-9L2 6v2h19V6l-9.5-5Z'] },
+  checkCirculo: { box: 24, w: 24, h: 24, d: ['M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9Z'] },
+  alertaTriangulo: { box: 24, w: 24, h: 24, d: ['M1 21h22L12 2 1 21Zm12-3h-2v-2h2v2Zm0-4h-2v-4h2v4Z'] },
+  controles: { box: 24, w: 24, h: 24, d: ['M3 17v2h6v-2H3ZM3 5v2h10V5H3Zm10 16v-2h8v-2h-8v-2h-2v6h2ZM7 9v2H3v2h4v2h2V9H7Zm14 4v-2H11v2h10Zm-6-4h2V7h4V5h-4V3h-2v6Z'] },
+  grafico: { box: 24, w: 24, h: 24, d: ['M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2ZM9 17H7v-7h2v7Zm4 0h-2V7h2v10Zm4 0h-2v-4h2v4Z'] },
 } as const satisfies Record<string, IconDef>
 
 const CHAVE_ICONE = new Map<IconDef, string>(
@@ -3916,7 +3922,7 @@ function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[]
               {dados.colunas.map((c, i) => (
                 <th mix={th}>
                   {c}
-                  {i === 1 && !comCaixa ? <span mix={css({ marginLeft: '6px', display: 'inline-flex', color: A.muted })}>{Icone(ICONE.setaBaixo, 10)}</span> : null}
+                  {i === 1 && !comCaixa && c !== 'Total' ? <span mix={css({ marginLeft: '6px', display: 'inline-flex', color: A.muted })}>{Icone(ICONE.setaBaixo, 10)}</span> : null}
                 </th>
               ))}
             </tr>
@@ -3981,7 +3987,29 @@ const FLUXO_OPERACIONAL: OpcaoAba[] = [
   { rotulo: 'Saldo a Transportar/Transf' },
 ]
 
-const FLUXO_OPERACIONAL_ICMS: OpcaoAba[] = [...FLUXO_OPERACIONAL, { rotulo: 'ICMS Devido' }]
+const FLUXO_OPERACIONAL_ICMS: OpcaoAba[] = [
+  { rotulo: 'Apuração', alvo: 'apuracao' },
+  { rotulo: 'Abertura dos Ajustes', alvo: 'ajustes' },
+  { rotulo: 'Saldo a Transportar/Transf', alvo: 'saldo' },
+  { rotulo: 'ICMS Devido', alvo: 'devido' },
+]
+
+const ENTRADAS_ICMS: OpcaoAba[] = [
+  { rotulo: 'Notas de Entradas', alvo: 'notas-entradas' },
+  { rotulo: 'Insumos e Revenda', alvo: 'insumos-revenda' },
+  { rotulo: 'Uso/Consumo e Combustíveis', alvo: 'uso-consumo' },
+  { rotulo: 'Energia Elétrica', alvo: 'energia' },
+  { rotulo: 'Fretes', alvo: 'fretes' },
+  { rotulo: 'CIAP', alvo: 'ciap' },
+  { rotulo: 'Operações com Créditos Indevidos', alvo: 'creditos-indevidos' },
+]
+
+const SAIDAS_ICMS: OpcaoAba[] = [
+  { rotulo: 'Notas de Saídas' },
+  { rotulo: 'Operações com Débitos Indevidos' },
+  { rotulo: 'Revisão de Alíquota - Importada' },
+  { rotulo: 'Operações ZFM - Consumidor Final' },
+]
 
 const gatilhoAba = css ({
   display:'inline-flex',alignItems:'center',gap:'6px', padding:0,
@@ -4083,30 +4111,56 @@ export function TelaDiagnosticoIcms() {
             </div>
           </div>
 
-          <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '12px 16px' })]}>
-            {AbaDiag('Resumo', true, false)}
-            {AbaDiag('Fluxo Operacional', false, true, FLUXO_OPERACIONAL_ICMS)}
-            {AbaDiag('Entradas', false, true)}
-            {AbaDiag('Saídas', false, true)}
-            <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
-              <span mix={btnContorno}>{Icone(ICONE.download, 14)} Exportar</span>
-              <span mix={btnPrimario}>{Icone(ICONE.checklist, 14)} Gerar retificação</span>
-            </span>
-          </div>
+          <div data-sub-scope="" mix={css({ position: 'relative', display: 'grid', gap: '16px' })}>
+            <div mix={[painel, css({ display: 'flex', alignItems: 'center', gap: '20px', padding: '12px 16px' })]}>
+              {AbaDiag('Resumo', true, false, undefined, 'resumo')}
+              {AbaDiag('Fluxo Operacional', false, true, FLUXO_OPERACIONAL_ICMS)}
+              {AbaDiag('Entradas', false, true, ENTRADAS_ICMS)}
+              {AbaDiag('Saídas', false, true, SAIDAS_ICMS)}
+              <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
+                <span mix={btnContorno}>{Icone(ICONE.download, 14)} Exportar</span>
+                <span mix={btnPrimario}>{Icone(ICONE.checklist, 14)} Gerar retificação</span>
+              </span>
+            </div>
 
-          {BannerAnalise()}
+            <div data-sub-screen="resumo" data-on="true">
+              <div mix={css({ display: 'grid', gap: '16px' })}>
+                {BannerAnalise()}
+                <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' })}>
+                  {KpiDiag('Possível Oportunidades Analisar (Prévia)', DIAGS[0].icmsPrev1, { rotulo: 'Possível Oportunidades Analisar (Refinada)', valor: 'R$ 0,00', ruim: true }, false, 'icmsPrev1', ICONE.dinheiro)}
+                  {KpiDiag('Possíveis Oportunidades (Prévia)', DIAGS[0].icmsPrev2, { rotulo: 'Possíveis Oportunidades (Refinada)', valor: '-' }, false, 'icmsPrev2', ICONE.busca)}
+                  {KpiDiag('ICMS a Recolher', DIAGS[0].kpiIcms, undefined, true, 'kpiIcms', ICONE.sacola)}
+                </div>
+                <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'start' })}>
+                  {TabelaDiag(ICMS_EXPLORAR)}
+                  {TabelaDiag(ICMS_OPORTUNIDADES)}
+                  {TabelaDiag(ICMS_EMPRESAS)}
+                  {TabelaDiag(ICMS_ESTABELECIMENTOS, true)}
+                </div>
+              </div>
+            </div>
 
-          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' })}>
-            {KpiDiag('Possível Oportunidades Analisar (Prévia)', DIAGS[0].icmsPrev1, { rotulo: 'Possível Oportunidades Analisar (Refinada)', valor: 'R$ 0,00', ruim: true }, false, 'icmsPrev1', ICONE.dinheiro)}
-            {KpiDiag('Possíveis Oportunidades (Prévia)', DIAGS[0].icmsPrev2, { rotulo: 'Possíveis Oportunidades (Refinada)', valor: '-' }, false, 'icmsPrev2', ICONE.busca)}
-            {KpiDiag('ICMS a Recolher', DIAGS[0].kpiIcms, undefined, true, 'kpiIcms', ICONE.sacola)}
-          </div>
+            <div data-sub-screen="apuracao" data-on="false">{FluxoApuracaoIcms()}</div>
 
-          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'start' })}>
-            {TabelaDiag(ICMS_EXPLORAR)}
-            {TabelaDiag(ICMS_OPORTUNIDADES)}
-            {TabelaDiag(ICMS_EMPRESAS)}
-            {TabelaDiag(ICMS_ESTABELECIMENTOS, true)}
+            <div data-sub-screen="ajustes" data-on="false">{FluxoAjustesIcms()}</div>
+
+            <div data-sub-screen="saldo" data-on="false">{FluxoSaldoIcms()}</div>
+
+            <div data-sub-screen="devido" data-on="false">{FluxoDevidoIcms()}</div>
+
+            <div data-sub-screen="notas-entradas" data-on="false">{NotasEntradasIcms()}</div>
+
+            <div data-sub-screen="insumos-revenda" data-on="false">{PainelCreditoIcms(INSUMOS_REVENDA)}</div>
+
+            <div data-sub-screen="uso-consumo" data-on="false">{PainelCreditoIcms(USO_CONSUMO)}</div>
+
+            <div data-sub-screen="energia" data-on="false">{PainelCreditoIcms(ENERGIA_ELETRICA)}</div>
+
+            <div data-sub-screen="fretes" data-on="false">{PainelCreditoIcms(FRETES)}</div>
+
+            <div data-sub-screen="ciap" data-on="false">{PainelCreditoIcms(CIAP)}</div>
+
+            <div data-sub-screen="creditos-indevidos" data-on="false">{PainelCreditoIcms(CREDITOS_INDEVIDOS)}</div>
           </div>
         </div>
       </div>
@@ -4280,6 +4334,1027 @@ function FluxoApuracao () {
       <div mix={gradeDupla}>
         {TabelaDiag(IPI_MEMORIAS_SAIDAS,true)}
         {TabelaDiag(IPI_MEMORIAS_ENTRADAS,true)}
+      </div>
+    </div>
+  )
+}
+
+const ICMS_APURACAO_PROPRIO = {
+  titulo: 'Apuração ICMS Próprio',
+  colunas: ['Grupo', '2021', '2022', '2023', '2024', '2025', 'Total'],
+  linhas: [
+    ['Saídas', 'R$ 177.971.291,55', 'R$ 178.260.738,36', 'R$ 186.855.688,80', 'R$ 321.815.921,50', 'R$ 337.737.972,29', 'R$ 1.202.641.612,50'],
+    ['Débitos', 'R$ 21.987.289,11', 'R$ 21.286.225,68', 'R$ 20.840.634,35', 'R$ 25.011.795,40', 'R$ 25.237.950,11', 'R$ 114.363.894,65'],
+    ['Ajuste a Débito', 'R$ 2.737.206,78', 'R$ 2.754.014,12', 'R$ 6.609.262,80', 'R$ 6.382.539,36', 'R$ 10.419.251,50', 'R$ 28.902.274,56'],
+    ['Total Débitos', 'R$ 24.724.495,89', 'R$ 24.040.239,80', 'R$ 27.449.897,15', 'R$ 31.394.334,76', 'R$ 35.657.201,61', 'R$ 143.266.169,21'],
+    ['Entradas', 'R$ 179.027.145,98', 'R$ 200.407.943,99', 'R$ 240.988.026,87', 'R$ 369.840.178,96', 'R$ 398.291.404,90', 'R$ 1.388.554.700,70'],
+    ['Base de Cálculo', 'R$ 158.561.421,37', 'R$ 175.590.567,57', 'R$ 220.333.386,86', 'R$ 340.582.161,54', 'R$ 371.758.732,41', 'R$ 1.266.826.269,75'],
+    ['Créditos', 'R$ 16.184.475,70', 'R$ 18.120.316,85', 'R$ 20.062.887,61', 'R$ 22.098.368,82', 'R$ 21.581.501,59', 'R$ 98.047.550,57'],
+    ['Ajuste a Crédito', 'R$ 2.734.919,13', 'R$ 2.741.632,02', 'R$ 6.592.077,05', 'R$ 7.726.231,72', 'R$ 12.549.317,77', 'R$ 32.344.177,69'],
+  ],
+  total: ['Total', 'R$ 762.873.355,09', 'R$ 802.834.227,90', 'R$ 920.093.863,87', 'R$ 1.455.540.922,07', 'R$ 1.553.710.525,59', 'R$ 5.495.052.894,52'],
+}
+
+const ICMS_CFOP_ENTRADAS = {
+  titulo: 'Entradas - CFOP',
+  colunas: ['CFOP', 'Descrição'],
+  linhas: [
+    ['2101', 'Compra para industrialização ou prod rural'],
+    ['2152', 'Transferência para comercialização'],
+    ['1101', 'Compra para industrialização ou prod rural'],
+    ['1949', 'Outra entrada de mercadoria ou prestação de serviço não especificada'],
+    ['1601', 'Recebimento, por transferência, de crédito de ICMS'],
+    ['2122', 'Compra para industrialização em que a mercadoria foi remetida pelo fornecedor ao industrializador'],
+    ['1925', 'Retorno de mercadoria remetida para industrialização por conta e ordem do adquirente'],
+  ],
+  total: ['', ''],
+  paginas: 4,
+}
+
+const ICMS_CFOP_SAIDAS = {
+  titulo: 'Saídas - CFOP',
+  colunas: ['CFOP', 'Descrição'],
+  linhas: [
+    ['5101', 'Venda de prod do estabelecimento'],
+    ['6101', 'Venda de prod do estabelecimento'],
+    ['6152', 'Transferência de mercadoria adquirida ou recebida de terc'],
+    ['5901', 'Remessa para industrialização por encomenda'],
+    ['6107', 'Venda de prod do estabelecimento, destinada a não contribuinte'],
+    ['5102', 'Venda de mercadoria adquirida ou recebida de terc'],
+    ['5922', 'Lançamento efetuado a título de simples faturamento decorrente de venda para entrega futura'],
+  ],
+  total: ['', ''],
+  paginas: 3,
+}
+
+const ICMS_CST_ENTRADAS = {
+  titulo: 'Entradas - CST',
+  colunas: ['CST ICMS', 'Item', 'Base de Cálculo ICMS', 'ICMS'],
+  linhas: [
+    ['00', 'R$ 1.155.905.971,06', 'R$ 1.142.728.930,40', 'R$ 83.685.017,24'],
+    ['51', 'R$ 106.318.946,24', 'R$ 105.615.116,09', 'R$ 12.611.321,03'],
+    ['90', 'R$ 27.216.563,70', 'R$ 14.640.113,46', 'R$ 1.141.712,11'],
+    ['20', 'R$ 5.727.331,15', 'R$ 3.507.865,68', 'R$ 603.381,79'],
+    ['01', 'R$ 1.050.774,51', 'R$ 293.209,84', 'R$ 3.239,22'],
+    ['03', 'R$ 4.595.036,30', 'R$ 26.998,90', 'R$ 1.981,72'],
+    ['50', 'R$ 61.729.668,24', 'R$ 7.447,74', 'R$ 0,00'],
+    ['02', 'R$ 8.017.241,67', 'R$ 5.162,64', 'R$ 619,55'],
+  ],
+  total: ['', 'R$ 1.388.554.700,70', 'R$ 1.266.826.269,75', 'R$ 98.047.550,57'],
+}
+
+const ICMS_CST_SAIDAS = {
+  titulo: 'Saídas - CST',
+  colunas: ['CST ICMS', 'Item', 'Base de Cálculo ICMS', 'ICMS'],
+  linhas: [
+    ['00', 'R$ 784.144.082,89', 'R$ 775.786.955,93', 'R$ 78.739.435,61'],
+    ['51', 'R$ 279.470.488,63', 'R$ 273.663.827,07', 'R$ 33.099.879,65'],
+    ['41', 'R$ 87.872.845,52', 'R$ 0,00', 'R$ 0,00'],
+    ['50', 'R$ 25.347.078,79', 'R$ 53.146,16', 'R$ 6.377,69'],
+    ['20', 'R$ 17.125.112,13', 'R$ 11.408.894,60', 'R$ 2.130.542,98'],
+    ['90', 'R$ 8.323.772,20', 'R$ 8.235.696,80', 'R$ 387.636,13'],
+    ['40', 'R$ 220.693,78', 'R$ 0,00', 'R$ 0,00'],
+    ['60', 'R$ 136.869,16', 'R$ 0,00', 'R$ 0,00'],
+  ],
+  total: ['', 'R$ 1.202.641.612,50', 'R$ 1.069.149.085,36', 'R$ 114.363.894,65'],
+}
+
+const ICMS_ALIQ_ENTRADAS = {
+  titulo: 'Entradas - Alíquotas ICMS',
+  colunas: ['Alíquota ICMS', 'Item', 'Base de Cálculo ICMS', 'ICMS'],
+  linhas: [
+    ['4', 'R$ 683.211.401,49', 'R$ 682.774.906,50', 'R$ 27.310.994,08'],
+    ['12', 'R$ 459.117.120,90', 'R$ 458.845.075,95', 'R$ 55.032.856,84'],
+    ['0', 'R$ 121.130.842,42', 'R$ 2.275.224,20', 'R$ 0,00'],
+    ['19,5', 'R$ 55.899.731,77', 'R$ 55.406.469,44', 'R$ 6.806.262,20'],
+    ['18', 'R$ 41.362.780,59', 'R$ 40.365.002,67', 'R$ 5.058.405,98'],
+    ['19', 'R$ 21.892.660,84', 'R$ 21.330.732,45', 'R$ 2.926.336,24'],
+    ['17', 'R$ 5.040.820,16', 'R$ 4.936.201,12', 'R$ 839.154,27'],
+  ],
+  total: ['', 'R$ 1.388.554.700,70', 'R$ 1.266.826.269,75', 'R$ 98.047.550,57'],
+  paginas: 2,
+}
+
+const ICMS_ALIQ_SAIDAS = {
+  titulo: 'Saídas - Alíquotas ICMS',
+  colunas: ['Alíquota ICMS', 'Item', 'Base de Cálculo ICMS', 'ICMS'],
+  linhas: [
+    ['4', 'R$ 342.075.569,19', 'R$ 338.292.721,12', 'R$ 13.531.708,90'],
+    ['12', 'R$ 255.321.525,59', 'R$ 250.714.073,50', 'R$ 30.085.640,55'],
+    ['18', 'R$ 221.085.068,91', 'R$ 218.361.502,62', 'R$ 32.862.966,27'],
+    ['19,5', 'R$ 155.439.291,79', 'R$ 149.088.359,57', 'R$ 21.693.280,83'],
+    ['0', 'R$ 114.054.543,81', 'R$ 217.907,01', 'R$ 0,00'],
+    ['19', 'R$ 103.491.950,19', 'R$ 102.177.619,66', 'R$ 15.052.309,41'],
+    ['7', 'R$ 6.128.036,68', 'R$ 6.123.894,81', 'R$ 428.672,89'],
+    ['17', 'R$ 5.044.989,68', 'R$ 4.172.370,41', 'R$ 709.303,07'],
+  ],
+  total: ['', 'R$ 1.202.641.612,50', 'R$ 1.069.149.085,36', 'R$ 114.363.894,65'],
+  paginas: 2,
+}
+
+const ICMS_APURACAO_DIFAL = {
+  titulo: 'Apuração DIFAL',
+  colunas: ['Saldo credor transportar DIFAL', '2021', '2022', '2023', '2024', '2025', 'Total'],
+  linhas: [
+    ['Saldo Credor Períodos Anteriores', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['Total Débitos', 'R$ 320.647,71', 'R$ 716.011,25', 'R$ 165.411,38', 'R$ 234.961,79', 'R$ 611.449,74', 'R$ 2.048.481,87'],
+    ['(-) Deduções DIFAL', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['Difal a Recolher', 'R$ 320.647,71', 'R$ 716.011,25', 'R$ 165.411,38', 'R$ 234.961,79', 'R$ 610.172,29', 'R$ 2.047.204,42'],
+    ['Débito Especial', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['Saldo Credor à Transportar', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+  ],
+  total: ['Total', 'R$ 641.295,42', 'R$ 1.432.022,50', 'R$ 330.822,76', 'R$ 469.923,58', 'R$ 1.221.622,03', 'R$ 4.095.686,29'],
+}
+
+const ICMS_APURACAO_FCP = {
+  titulo: 'FCP',
+  colunas: ['Grupo', '2021', '2022', '2023', '2024', '2025', 'Total'],
+  linhas: [
+    ['Saldo Credor do Período Anterior', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['Total do Débito', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['Estorno de Créditos', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['Estorno de Débitos', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['Saldo Devedor antes das deduções', 'R$ 4.438,74', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 4.438,74'],
+    ['Deduções', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['FCP a Recolher', 'R$ 4.438,74', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 4.438,74'],
+    ['Saldo Credor a Transportar', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+  ],
+  total: ['Total', 'R$ 8.877,48', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 8.877,48'],
+}
+
+const ICMS_APURACAO_SUB = {
+  titulo: 'Sub - Apuração',
+  colunas: ['Grupo', 'Total'],
+  linhas: [
+    ['Total Débitos', 'R$ 0,00'],
+    ['Ajuste a Débito', 'R$ 0,00'],
+    ['Estorno de Créditos', 'R$ 0,00'],
+    ['Total do Crédito', 'R$ 0,00'],
+    ['Ajuste a Crédito', 'R$ 0,00'],
+    ['Estorno de Débitos', 'R$ 0,00'],
+    ['Saldo Credor Período Anterior', 'R$ 0,00'],
+    ['Deduções', 'R$ 0,00'],
+    ['Valor a Recolher', 'R$ 0,00'],
+  ],
+  total: ['Total', 'R$ 0,00'],
+}
+
+const ICMS_AJUSTES_E111 = {
+  titulo: 'Ajustes de ICMS - Bloco E111',
+  colunas: ['Período', 'Código ajuste apuração', 'Descrição ajustes tabela 5 1 1', 'Ajuste apuração'],
+  linhas: [
+    ['01/10/2025', 'PR000080', 'ICMS; Outros débitos; Débito decorrente da diferença de alíquotas interna e interestadual, conforme art. 13-A do RICMS', 'R$ 1.842.263,14'],
+    ['01/10/2025', 'PR020212', 'ICMS; Outros créditos; Crédito decorrente da diferença de alíquotas interna e interestadual conforme o § 3º do art. 1º do Decreto 442/2015', 'R$ 1.842.263,14'],
+    ['01/01/2024', 'PR000080', 'ICMS; Outros débitos; Débito decorrente da diferença de alíquotas interna e interestadual, conforme art. 13-A do RICMS', 'R$ 1.224.164,58'],
+    ['01/01/2024', 'PR020212', 'ICMS; Outros créditos; Crédito decorrente da diferença de alíquotas interna e interestadual conforme o § 3º do art. 1º do Decreto 442/2015', 'R$ 1.224.164,58'],
+    ['01/08/2025', 'PR000080', 'ICMS; Outros débitos; Débito decorrente da diferença de alíquotas interna e interestadual, conforme art. 13-A do RICMS', 'R$ 1.044.224,19'],
+    ['01/08/2025', 'PR020212', 'ICMS; Outros créditos; Crédito decorrente da diferença de alíquotas interna e interestadual conforme o § 3º do art. 1º do Decreto 442/2015', 'R$ 1.044.224,19'],
+    ['01/03/2025', 'PR000080', 'ICMS; Outros débitos; Débito decorrente da diferença de alíquotas interna e interestadual, conforme art. 13-A do RICMS', 'R$ 989.866,04'],
+    ['01/03/2025', 'PR020212', 'ICMS; Outros créditos; Crédito decorrente da diferença de alíquotas interna e interestadual conforme o § 3º do art. 1º do Decreto 442/2015', 'R$ 989.866,04'],
+  ],
+  paginas: 5,
+}
+
+function FluxoAjustesIcms() {
+  return (
+    <div mix={css({ display: 'grid', gap: '16px' })}>
+      <h4 mix={css({ margin: 0, fontSize: '18px', fontWeight: 600, color: A.text })}>Abertura dos Ajustes</h4>
+      {TabelaDiag(ICMS_AJUSTES_E111, true)}
+    </div>
+  )
+}
+
+const ICMS_TRANSF_ENTRADAS = {
+  titulo: 'Entradas',
+  colunas: ['Período', 'Transferências entradas', 'BC ICMS transferências entradas', 'ICMS transferências entradas'],
+  linhas: [
+    ['2023', 'R$ 4.592.358,98', 'R$ 4.591.838,34', 'R$ 206.632,73'],
+    ['2024', 'R$ 97.586.176,04', 'R$ 97.482.577,47', 'R$ 3.926.148,37'],
+    ['2025', 'R$ 102.072.947,69', 'R$ 102.030.255,67', 'R$ 4.312.417,44'],
+  ],
+  total: ['', 'R$ 204.251.482,71', 'R$ 204.104.671,48', 'R$ 8.445.198,54'],
+}
+
+const ICMS_TRANSF_SAIDAS = {
+  titulo: 'Saídas',
+  colunas: ['Período', 'Transferências saídas', 'BC ICMS transferências saídas', 'ICMS transferências saídas'],
+  linhas: [
+    ['2023', 'R$ 4.591.838,33', 'R$ 4.591.838,34', 'R$ 207.932,15'],
+    ['2024', 'R$ 97.653.649,23', 'R$ 97.655.808,31', 'R$ 3.926.842,60'],
+    ['2025', 'R$ 101.072.386,03', 'R$ 100.371.299,07', 'R$ 4.311.290,45'],
+  ],
+  total: ['', 'R$ 203.317.873,59', 'R$ 202.618.945,72', 'R$ 8.446.065,20'],
+}
+
+const ICMS_SALDO_PERIODO = {
+  titulo: 'Período',
+  colunas: ['Período', 'Saldo credor período anterior E110', 'Revisão carregamento saldo ICMS', 'Diferença saldo credor ICMS'],
+  linhas: [
+    ['2021', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['2022', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['2023', 'R$ 108.360,22', 'R$ 0,00', 'R$ 108.360,22'],
+    ['2024', 'R$ 2.055.636,43', 'R$ 0,00', 'R$ 2.055.636,43'],
+    ['2025', 'R$ 1.386.087,09', 'R$ 0,00', 'R$ 1.386.087,09'],
+  ],
+  total: ['', 'R$ 3.550.083,74', 'R$ 0,00', 'R$ 3.550.083,74'],
+}
+
+const gradeTripla = css({ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' })
+
+function FluxoSaldoIcms() {
+  return (
+    <div mix={css({ display: 'grid', gap: '16px' })}>
+      <h4 mix={css({ margin: 0, fontSize: '18px', fontWeight: 600, color: A.text })}>Saldo a Transportar</h4>
+      <div mix={gradeTripla}>
+        {KpiDiag('Entradas', 'R$ 204.251.482,71', undefined, false, '', ICONE.caixaAberta)}
+        {KpiDiag('Saídas', 'R$ 203.317.873,59', undefined, false, '', ICONE.caminhao)}
+        {KpiDiag('Diferença', '- R$ 933.609,12', undefined, false, '', ICONE.menuOutros)}
+      </div>
+      <div mix={gradeDupla}>
+        {TabelaDiag(ICMS_TRANSF_ENTRADAS, true)}
+        {TabelaDiag(ICMS_TRANSF_SAIDAS, true)}
+      </div>
+      <div mix={gradeTripla}>
+        {KpiDiag('Saldo Credor Período Anterior', 'R$ 3.550.083,74', undefined, false, '', ICONE.banco)}
+        {KpiDiag('Saldo Credor Período Inicial', 'R$ 0,00', undefined, false, '', ICONE.banco)}
+        {KpiDiag('Diferença', 'R$ 3.550.083,74', undefined, false, '', ICONE.menuOutros)}
+      </div>
+      {TabelaDiag(ICMS_SALDO_PERIODO, true)}
+    </div>
+  )
+}
+
+const ICMS_DEVIDO_PERIODO = {
+  titulo: 'Período',
+  colunas: ['Grupo', '2021', '2022', '2023', '2024', '2025', 'Total'],
+  linhas: [
+    ['ICMS a Recolher', 'R$ 5.824.393,43', 'R$ 3.178.291,11', 'R$ 751.040,73', 'R$ 1.416.892,32', 'R$ 1.922.316,67', 'R$ 13.092.934,26'],
+    ['ICMS-ST a Recolher', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'],
+    ['DIFAL a Recolher', 'R$ 320.647,71', 'R$ 716.011,25', 'R$ 165.411,38', 'R$ 234.961,79', 'R$ 610.172,29', 'R$ 2.047.204,42'],
+  ],
+  total: ['Total', 'R$ 6.145.041,14', 'R$ 3.894.302,36', 'R$ 916.452,11', 'R$ 1.651.854,11', 'R$ 2.532.488,96', 'R$ 15.140.138,68'],
+}
+
+function FluxoDevidoIcms() {
+  return (
+    <div mix={css({ display: 'grid', gap: '16px' })}>
+      <h4 mix={css({ margin: 0, fontSize: '18px', fontWeight: 600, color: A.text })}>ICMS Devido</h4>
+      <div mix={gradeTripla}>
+        {KpiDiag('ICMS a Recolher', '—', undefined, false, '', ICONE.banco)}
+        {KpiDiag('ICMS-ST a Recolher', '—', undefined, false, '', ICONE.banco)}
+        {KpiDiag('DIFAL a Recolher', 'R$ 2.047.204,42', undefined, false, '', ICONE.banco)}
+      </div>
+      {TabelaDiag(ICMS_DEVIDO_PERIODO)}
+    </div>
+  )
+}
+
+const VALOR_FORNECEDOR = [
+  'R$ 412.908.317,44', 'R$ 268.551.902,10', 'R$ 191.770.446,83', 'R$ 158.204.663,29',
+  'R$ 133.619.784,52', 'R$ 127.440.158,97', 'R$ 96.059.427,55',
+]
+
+const PERIODOS_MEMORIA_NE = [
+  '01/08/2023', '01/12/2022', '01/08/2024', '01/03/2023', '01/03/2023',
+  '01/05/2023', '01/02/2023', '01/01/2023', '01/05/2024', '01/03/2024',
+]
+
+const CODIGOS_PARTICIPANTE = ['367991', '6148318', '8819665', '657737', '5970054', '2268056']
+
+const ICMS_NE_PERIODO = {
+  titulo: 'Período',
+  colunas: ['Período', 'Valor Item', 'Base de Cálculo ICMS', 'Valor ICMS'],
+  linhas: [
+    ['2021', 'R$ 179.027.145,98', 'R$ 158.561.421,37', 'R$ 16.184.475,70'],
+    ['2022', 'R$ 200.407.943,99', 'R$ 175.590.567,57', 'R$ 18.120.316,85'],
+    ['2023', 'R$ 240.988.026,87', 'R$ 220.333.386,86', 'R$ 20.062.887,61'],
+    ['2024', 'R$ 369.840.178,96', 'R$ 340.582.161,54', 'R$ 22.098.368,82'],
+    ['2025', 'R$ 398.291.404,90', 'R$ 371.758.732,41', 'R$ 21.581.501,59'],
+  ],
+  total: ['', 'R$ 1.388.554.700,70', 'R$ 1.266.826.269,75', 'R$ 98.047.550,57'],
+}
+
+const ICMS_NE_CST = {
+  titulo: 'CST',
+  colunas: ['CST ICMS', 'Valor Item', 'Base de Cálculo ICMS'],
+  linhas: [
+    ['00', 'R$ 1.155.905.971,06', 'R$ 1.142.728.930,40'],
+    ['51', 'R$ 106.318.946,24', 'R$ 105.615.116,09'],
+    ['50', 'R$ 61.729.668,24', 'R$ 7.447,74'],
+    ['90', 'R$ 27.216.563,70', 'R$ 14.640.113,46'],
+    ['60', 'R$ 8.308.531,54', 'R$ 0,00'],
+    ['02', 'R$ 8.017.241,67', 'R$ 5.162,64'],
+    ['41', 'R$ 6.368.116,18', 'R$ 0,00'],
+    ['20', 'R$ 5.727.331,15', 'R$ 3.507.865,68'],
+  ],
+  total: ['', 'R$ 1.388.554.700,70', 'R$ 1.266.826.269,75'],
+}
+
+const ICMS_NE_ORIGEM = {
+  titulo: 'Origem/ Destino',
+  colunas: ['Destino', 'Origem', 'Valor Item', 'Base de Cálculo ICMS'],
+  linhas: [
+    ['PR', 'SC', 'R$ 615.866.925,89', 'R$ 603.039.482,52'],
+    ['PR', 'PR', 'R$ 303.822.819,58', 'R$ 205.917.182,42'],
+    ['SC', 'SC', 'R$ 103.330.619,73', 'R$ 102.905.309,58'],
+    ['SC', 'PR', 'R$ 85.551.718,20', 'R$ 85.115.320,48'],
+    ['PR', 'RS', 'R$ 79.352.067,14', 'R$ 76.545.423,79'],
+    ['PR', 'ES', 'R$ 67.851.158,49', 'R$ 67.325.845,85'],
+    ['PR', 'SP', 'R$ 43.285.160,51', 'R$ 38.308.801,53'],
+  ],
+  total: ['', '', 'R$ 1.388.554.700,70', 'R$ 1.266.826.269,75'],
+  paginas: 2,
+}
+
+const ICMS_NE_FORNECEDORES = {
+  titulo: 'Fornecedores',
+  colunas: ['Nome Fornecedor', 'CNPJ/CPF', 'Valor Item'],
+  linhas: EMPRESAS.slice(4, 11).map((e, i) => [e.empresa, e.cnpj, VALOR_FORNECEDOR[i]]),
+  total: ['', '', 'R$ 1.388.554.700,70'],
+  paginas: 5,
+}
+
+const ICMS_NE_MEMORIA = {
+  titulo: 'Memória de cálculo',
+  colunas: ['CNPJ', 'Período', 'Tipo operação', 'Indicador emitente', 'Código participante', 'CNPJ participante', 'CPF participante', 'Nome participante'],
+  linhas: PERIODOS_MEMORIA_NE.map((periodo, i) => [
+    EMPRESAS[0].cnpj, periodo, '0 - Aquisição', '1 - Terceiros',
+    CODIGOS_PARTICIPANTE[i % CODIGOS_PARTICIPANTE.length], '', '',
+    EMPRESAS[12 + (i % 4)].empresa,
+  ]),
+  paginas: 5,
+}
+
+function NotasEntradasIcms() {
+  return (
+    <div mix={css({ display: 'grid', gap: '16px' })}>
+      <h4 mix={css({ margin: 0, fontSize: '18px', fontWeight: 600, color: A.text })}>Notas de Entradas</h4>
+      <div mix={gradeTripla}>
+        {KpiDiag('Entradas', 'R$ 1.388.554.700,70', undefined, false, '', ICONE.caixaAberta)}
+        {KpiDiag('Base de Cálculo ICMS', 'R$ 1.266.826.269,75', undefined, false, '', ICONE.sacola)}
+        {KpiDiag('Total ICMS', 'R$ 98.047.550,57', undefined, false, '', ICONE.sacola)}
+      </div>
+      <div mix={gradeTripla}>
+        {TabelaDiag(ICMS_NE_PERIODO, true)}
+        {TabelaDiag({ ...ICMS_CFOP_ENTRADAS, titulo: 'CFOP' }, true)}
+        {TabelaDiag(ICMS_NE_CST, true)}
+      </div>
+      <div mix={gradeDupla}>
+        {TabelaDiag(ICMS_NE_ORIGEM, true)}
+        {TabelaDiag(ICMS_NE_FORNECEDORES, true)}
+      </div>
+      {TabelaDiag(ICMS_NE_MEMORIA, true)}
+    </div>
+  )
+}
+
+const IR_PERIODO = {
+  titulo: 'Período',
+  colunas: ['Período', 'Base sem Crédito', 'Possível Oportunidade'],
+  linhas: [
+    ['2021', 'R$ 5.225,50', 'R$ 78,38'],
+    ['2022', 'R$ 16.267,00', 'R$ 244,00'],
+    ['2023', 'R$ 4.037.475,53', 'R$ 464.514,25'],
+    ['2024', 'R$ 1.729.547,97', 'R$ 183.652,86'],
+    ['2025', 'R$ 78.599,76', 'R$ 6.744,00'],
+  ],
+  total: ['', 'R$ 5.867.115,76', 'R$ 655.233,49'],
+}
+
+const IR_CFOP = {
+  titulo: 'CFOP',
+  colunas: ['CFOP', 'Descrição CFOP'],
+  linhas: [
+    ['2101', 'Compra para industrialização ou prod rural'],
+    ['1101', 'Compra para industrialização ou prod rural'],
+    ['1102', 'Compra para comercialização'],
+    ['2401', 'Compra para industrialização ou prod rural'],
+    ['1401', 'Compra para industrialização ou prod rural'],
+    ['2102', 'Compra para comercialização'],
+  ],
+  total: ['', ''],
+}
+
+const IR_CST = {
+  titulo: 'CST',
+  colunas: ['CST ICMS', 'Base sem Crédito', 'Possível Oportunidade'],
+  linhas: [
+    ['00', 'R$ 4.093.075,52', 'R$ 481.401,55'],
+    ['90', 'R$ 742.255,46', 'R$ 89.070,64'],
+    ['01', 'R$ 369.387,45', 'R$ 5.546,66'],
+    ['61', 'R$ 283.468,49', 'R$ 34.016,18'],
+    ['10', 'R$ 222.605,83', 'R$ 26.439,66'],
+    ['20', 'R$ 155.190,00', 'R$ 18.622,84'],
+    ['70', 'R$ 1.133,01', 'R$ 135,96'],
+  ],
+  total: ['', 'R$ 5.867.115,76', 'R$ 655.233,49'],
+}
+
+const IR_CONTA = {
+  titulo: 'Conta Contábil',
+  colunas: ['Conta contábil', 'Base sem Crédito', 'Possível Oportunidade'],
+  linhas: [
+    ['', 'R$ 5.795.177,37', 'R$ 650.422,77'],
+    ['123', 'R$ 27.293,60', 'R$ 2.266,17'],
+    ['116', 'R$ 26.352,29', 'R$ 2.270,17'],
+    ['11301010001', 'R$ 17.492,50', 'R$ 262,38'],
+    ['11301010002', 'R$ 800,00', 'R$ 12,00'],
+  ],
+  total: ['', 'R$ 5.867.115,76', 'R$ 655.233,49'],
+}
+
+const IR_ITENS = {
+  titulo: 'Itens',
+  colunas: ['NCM', 'Descrição item'],
+  linhas: [
+    ['72104910', 'BGI - 1,95mm x 1.200mm x C Z80'],
+    ['72104910', 'BGI - 1,25mm x 1.200mm x C Z80'],
+    ['72083890', 'BOBINA LQ A36 3x1200'],
+    ['72083990', 'BOBINA LQ A36 2,65x1200'],
+    ['72107010', 'BOBINA DE ACO GALVALUME PRE-PINTADA'],
+    ['39072939', 'FLEXX CL 2060 TB 200'],
+  ],
+  total: ['', ''],
+  paginas: 5,
+}
+
+const IR_FORNECEDORES = {
+  titulo: 'Fornecedores',
+  colunas: ['CNPJ CPF participante', 'Nome participante'],
+  linhas: EMPRESAS.slice(16, 22).map((e) => [e.cnpj, e.empresa]),
+  total: ['', ''],
+  paginas: 5,
+}
+
+const IR_DOCS: Array<[string, string, string, string]> = [
+  ['01/09/2024', '11190', '35240962986732000', '12/09/2024'],
+  ['01/02/2023', '87398', '42230203076832000', '06/02/2023'],
+  ['01/02/2023', '87629', '42230203076832000', '14/02/2023'],
+  ['01/05/2023', '90351', '42230503076832000', '23/05/2023'],
+  ['01/06/2023', '13121', '35230605866605000', '09/06/2023'],
+  ['01/02/2025', '14861', '35250205866605000', '20/02/2025'],
+  ['01/05/2024', '70442', '41240503566285000', '12/05/2024'],
+  ['01/01/2023', '323120', '41230117469701000', '16/01/2023'],
+  ['01/08/2024', '357949', '41240817469701000', '13/08/2024'],
+  ['01/06/2024', '354949', '41240617469701000', '20/06/2024'],
+]
+
+const IR_MEMORIA = {
+  titulo: 'Memória de cálculo',
+  colunas: ['CNPJ', 'Nome da empresa', 'Período', 'Tipo operação', 'Indicador emitente', 'Número documento', 'Situação', 'Chave NF-e', 'Data documento'],
+  linhas: IR_DOCS.map(([periodo, doc, chave, data]) => [
+    EMPRESAS[0].cnpj, EMPRESAS[0].empresa, periodo, '0 - Entrada', '1 - Terceiros', doc, '00', chave, data,
+  ]),
+  paginas: 5,
+}
+
+function CardStatus(rotulo: string, valor: string, icone: IconDef, cor: string, fundo: string) {
+  return (
+    <div mix={[painel, css({ position: 'relative', overflow: 'hidden', padding: '22px 24px 26px', background: `linear-gradient(180deg, ${A.card} 35%, ${fundo})` })]}>
+      {QuadriculadoCard()}
+      <span mix={css({ position: 'relative', display: 'flex', color: cor })}>{Icone(icone, 22)}</span>
+      <span mix={css({ position: 'relative', display: 'block', marginTop: '14px', marginBottom: '6px', fontSize: '14px', fontWeight: 600, color: A.slate })}>{rotulo}</span>
+      <strong mix={[num, css({ position: 'relative', fontSize: '19px', color: cor })]}>{valor}</strong>
+    </div>
+  )
+}
+
+const gradeQuadrupla = css({ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' })
+
+const UC_PERIODO = {
+  titulo: 'Período',
+  colunas: ['Período', 'Base sem Crédito', 'Possível Oportunidade'],
+  linhas: [
+    ['2021', 'R$ 12.480,90', 'R$ 1.435,30'],
+    ['2022', 'R$ 38.115,20', 'R$ 4.382,25'],
+    ['2023', 'R$ 611.204,33', 'R$ 70.288,50'],
+    ['2024', 'R$ 498.770,15', 'R$ 57.358,57'],
+    ['2025', 'R$ 124.331,80', 'R$ 14.907,02'],
+  ],
+  total: ['', 'R$ 1.284.902,38', 'R$ 148.371,64'],
+}
+
+const UC_CFOP = {
+  titulo: 'CFOP',
+  colunas: ['CFOP', 'Descrição CFOP'],
+  linhas: [
+    ['1556', 'Compra de material para uso ou consumo'],
+    ['2556', 'Compra de material para uso ou consumo'],
+    ['1653', 'Compra de combustível ou lubrificante para comercialização'],
+    ['2653', 'Compra de combustível ou lubrificante para comercialização'],
+    ['1407', 'Compra de mercadoria para uso ou consumo sujeita a substituição tributária'],
+    ['2407', 'Compra de mercadoria para uso ou consumo sujeita a substituição tributária'],
+  ],
+  total: ['', ''],
+}
+
+const UC_CST = {
+  titulo: 'CST',
+  colunas: ['CST ICMS', 'Base sem Crédito', 'Possível Oportunidade'],
+  linhas: [
+    ['00', 'R$ 884.106,72', 'R$ 102.107,15'],
+    ['90', 'R$ 201.455,18', 'R$ 23.268,08'],
+    ['01', 'R$ 84.220,40', 'R$ 9.727,45'],
+    ['61', 'R$ 61.330,55', 'R$ 7.083,66'],
+    ['10', 'R$ 38.904,21', 'R$ 4.493,40'],
+    ['20', 'R$ 13.652,30', 'R$ 1.576,93'],
+    ['70', 'R$ 1.233,02', 'R$ 114,97'],
+  ],
+  total: ['', 'R$ 1.284.902,38', 'R$ 148.371,64'],
+}
+
+const UC_CONTA = {
+  titulo: 'Conta Contábil',
+  colunas: ['Conta contábil', 'Base sem Crédito', 'Possível Oportunidade'],
+  linhas: [
+    ['', 'R$ 1.201.884,45', 'R$ 139.088,90'],
+    ['341', 'R$ 44.207,18', 'R$ 5.021,40'],
+    ['205', 'R$ 27.106,30', 'R$ 3.017,44'],
+    ['11302010001', 'R$ 9.904,45', 'R$ 1.114,90'],
+    ['11302010002', 'R$ 1.800,00', 'R$ 129,00'],
+  ],
+  total: ['', 'R$ 1.284.902,38', 'R$ 148.371,64'],
+}
+
+const UC_ITENS = {
+  titulo: 'Itens',
+  colunas: ['NCM', 'Descrição item'],
+  linhas: [
+    ['27101921', 'OLEO DIESEL S10'],
+    ['27101259', 'GASOLINA COMUM'],
+    ['34031900', 'OLEO LUBRIFICANTE INDUSTRIAL'],
+    ['27101932', 'GRAXA LUBRIFICANTE'],
+    ['38112100', 'ADITIVO PARA OLEO LUBRIFICANTE'],
+    ['28112200', 'GAS ARGONIO INDUSTRIAL'],
+  ],
+  total: ['', ''],
+  paginas: 4,
+}
+
+const UC_FORNECEDORES = {
+  titulo: 'Fornecedores',
+  colunas: ['CNPJ CPF participante', 'Nome participante'],
+  linhas: EMPRESAS.slice(24, 30).map((e) => [e.cnpj, e.empresa]),
+  total: ['', ''],
+  paginas: 3,
+}
+
+const UC_DOCS: Array<[string, string, string, string]> = [
+  ['01/03/2024', '48210', '41240318204775000', '07/03/2024'],
+  ['01/07/2023', '15733', '35230744160822000', '19/07/2023'],
+  ['01/11/2024', '52908', '41241118204775000', '22/11/2024'],
+  ['01/04/2025', '61045', '41250418204775000', '09/04/2025'],
+  ['01/09/2023', '16902', '35230944160822000', '27/09/2023'],
+  ['01/02/2024', '46188', '41240218204775000', '14/02/2024'],
+  ['01/06/2025', '63317', '41250618204775000', '18/06/2025'],
+  ['01/10/2022', '11204', '35221044160822000', '05/10/2022'],
+  ['01/05/2024', '49760', '41240518204775000', '23/05/2024'],
+  ['01/08/2025', '64891', '41250818204775000', '11/08/2025'],
+]
+
+const UC_MEMORIA = {
+  titulo: 'Memória de cálculo',
+  colunas: ['CNPJ', 'Nome da empresa', 'Período', 'Tipo operação', 'Indicador emitente', 'Número documento', 'Situação', 'Chave NF-e', 'Data documento'],
+  linhas: UC_DOCS.map(([periodo, doc, chave, data]) => [
+    EMPRESAS[0].cnpj, EMPRESAS[0].empresa, periodo, '0 - Entrada', '1 - Terceiros', doc, '00', chave, data,
+  ]),
+  paginas: 4,
+}
+
+const EE_PERIODO = {
+  titulo: 'Período',
+  colunas: ['Período', 'Operação energia elétrica', 'Base de Cálculo ICMS'],
+  linhas: [
+    ['2021', 'R$ 77.781,66', 'R$ 53.463,29'],
+    ['2022', 'R$ 61.865,07', 'R$ 42.522,49'],
+    ['2023', 'R$ 64.701,12', 'R$ 44.472,27'],
+    ['2024', 'R$ 22.806,62', 'R$ 15.677,45'],
+    ['2025', 'R$ 62.351,78', 'R$ 42.872,62'],
+  ],
+  total: ['', 'R$ 289.506,25', 'R$ 199.008,12'],
+}
+
+const EE_CONTA = {
+  titulo: 'Conta Contábil',
+  colunas: ['Conta contábil', 'Operação energia elétrica', 'Base de Cálculo ICMS'],
+  linhas: [
+    ['', 'R$ 227.154,47', 'R$ 156.135,50'],
+    ['774', 'R$ 62.351,78', 'R$ 42.872,62'],
+    ['0', 'R$ 0,00', 'R$ 0,00'],
+    ['11301010001', 'R$ 0,00', 'R$ 0,00'],
+    ['11301010002', 'R$ 0,00', 'R$ 0,00'],
+    ['11301010004', 'R$ 0,00', 'R$ 0,00'],
+  ],
+  total: ['', 'R$ 289.506,25', 'R$ 199.008,12'],
+}
+
+const EE_FORNECEDORES = {
+  titulo: 'Fornecedores',
+  colunas: ['CNPJ CPF participante', 'Nome participante'],
+  linhas: EMPRESAS.slice(30, 36).map((e) => [e.cnpj, e.empresa]),
+  total: ['', ''],
+  paginas: 2,
+}
+
+const EE_DOCS: Array<[string, string, string, string]> = [
+  ['2023-08-01', '240465', '35230819578006000', '2023-08-14'],
+  ['2022-12-01', '20870', '41221226304470000', '2022-12-09'],
+  ['2024-08-01', '34538', '42240806139591000', '2024-08-11'],
+  ['2023-03-01', '72', '42230310312140000', '2023-03-06'],
+  ['2023-05-01', '292', '42230510312140000', '2023-05-08'],
+  ['2023-02-01', '58', '42230210312140000', '2023-02-07'],
+  ['2023-01-01', '5430', '42230127160358000', '2023-01-10'],
+  ['2024-05-01', '1058', '42240551181896000', '2024-05-13'],
+  ['2024-03-01', '727', '42240251181896000', '2024-03-12'],
+  ['2024-04-01', '897', '42240451181896000', '2024-04-15'],
+]
+
+const EE_MEMORIA = {
+  titulo: 'Memória de cálculo',
+  colunas: ['CNPJ', 'Nome da empresa', 'Período', 'Tipo operação', 'Indicador emitente', 'Número documento', 'Situação', 'Chave NF-e', 'Data documento'],
+  linhas: EE_DOCS.map(([periodo, doc, chave, data]) => [
+    EMPRESAS[0].cnpj, EMPRESAS[0].empresa, periodo, '0 - Aquisição', '1 - Terceiros', doc, '00', chave, data,
+  ]),
+  paginas: 5,
+}
+
+const FR_PERIODO = {
+  titulo: 'Período',
+  colunas: ['Período', 'Fretes sem créditos', 'Possível oportunidade'],
+  linhas: [
+    ['2025', 'R$ 518.791,66', 'R$ 16.183,42'],
+    ['2024', 'R$ 482.241,81', 'R$ 9.511,95'],
+    ['2023', 'R$ 425.671,21', 'R$ 7.001,74'],
+    ['2022', 'R$ 269.268,06', 'R$ 11.234,00'],
+    ['2021', 'R$ 184.490,10', 'R$ 7.280,26'],
+  ],
+  total: ['', 'R$ 1.880.462,84', 'R$ 51.211,37'],
+}
+
+const FR_CFOP = {
+  titulo: 'CFOP',
+  colunas: ['CFOP completo'],
+  linhas: [
+    ['2352 - Aquisição de serviço de transporte por estabelecimento industrial'],
+    ['2932 - Aquisição de serviço de transporte iniciado em unidade federada diversa daquela onde inscrito o prestador'],
+    ['2353 - Aquisição de serviço de transporte por estabelecimento comercial'],
+  ],
+  total: [''],
+}
+
+const FR_CST = {
+  titulo: 'CST',
+  colunas: ['CST ICMS', 'Fretes sem créditos', 'Possível oportunidade'],
+  linhas: [
+    ['90', 'R$ 1.584.475,87', 'R$ 40.349,52'],
+    ['00', 'R$ 295.986,97', 'R$ 10.861,85'],
+  ],
+  total: ['', 'R$ 1.880.462,84', 'R$ 51.211,37'],
+}
+
+const FR_CONTA = {
+  titulo: 'Conta Contábil',
+  colunas: ['Conta contábil', 'Fretes sem créditos', 'Possível oportunidade'],
+  linhas: [
+    ['', 'R$ 809.619,80', 'R$ 12.760,90'],
+    ['796', 'R$ 618.061,43', 'R$ 19.950,58'],
+    ['0', 'R$ 452.781,61', 'R$ 18.499,89'],
+  ],
+  total: ['', 'R$ 1.880.462,84', 'R$ 51.211,37'],
+}
+
+const FR_ITENS = {
+  titulo: 'Itens',
+  colunas: ['NCM', 'Descrição item', 'Fretes sem créditos'],
+  linhas: [['N/A', 'N/A', 'R$ 1.880.462,84']],
+  total: ['', '', 'R$ 1.880.462,84'],
+}
+
+const FR_FORNECEDORES = {
+  titulo: 'Fornecedores',
+  colunas: ['Nome participante'],
+  linhas: EMPRESAS.slice(36, 43).map((e) => [e.empresa]),
+  total: [''],
+  paginas: 2,
+}
+
+const FR_DOCS: Array<[string, string, string, string]> = [
+  ['01/07/2025', '18422', '41250744160822000', '09/07/2025'],
+  ['01/04/2024', '90137', '41240418204775000', '16/04/2024'],
+  ['01/11/2023', '77205', '42231103076832000', '23/11/2023'],
+  ['01/09/2022', '52981', '35220958666050000', '12/09/2022'],
+  ['01/02/2021', '31460', '41210226304470000', '05/02/2021'],
+  ['01/06/2025', '17388', '41250644160822000', '18/06/2025'],
+  ['01/12/2024', '95710', '41241218204775000', '27/12/2024'],
+  ['01/05/2023', '70663', '42230503076832000', '22/05/2023'],
+  ['01/08/2022', '50214', '35220858666050000', '19/08/2022'],
+  ['01/10/2021', '34825', '41211026304470000', '14/10/2021'],
+]
+
+const FR_MEMORIA = {
+  titulo: 'Memória de cálculo',
+  colunas: ['CNPJ', 'Nome da empresa', 'Período', 'Tipo operação', 'Indicador emitente', 'Número documento', 'Situação', 'Chave NF-e', 'Data documento'],
+  linhas: FR_DOCS.map(([periodo, doc, chave, data]) => [
+    EMPRESAS[0].cnpj, EMPRESAS[0].empresa, periodo, '0 - Aquisição', '1 - Terceiros', doc, '00', chave, data,
+  ]),
+  paginas: 3,
+}
+
+const CIAP_INFO = {
+  titulo: 'Informações - Aquisições Ativo Imobilizado (EFD ICMS/IPI)',
+  colunas: ['Período', 'Saídas Totais', 'Saídas Efetivas', 'Saídas Tributadas', 'Saídas Não Tributadas', 'Índice CIAP - CLIENTE', 'Índice CIAP - LARATAX', 'Diferença Índice'],
+  linhas: [
+    ['2021', 'R$ 177.971.291,55', 'R$ 157.845.416,38', 'R$ 157.482.029,66', 'R$ 363.386,72', '1.151,00%', '1.200,00%', '48,00%'],
+    ['2022', 'R$ 178.260.738,36', 'R$ 158.706.580,51', 'R$ 158.608.520,85', 'R$ 98.059,66', '1.173,00%', '1.199,00%', '26,00%'],
+    ['2023', 'R$ 186.855.688,80', 'R$ 166.734.796,74', 'R$ 164.677.696,38', 'R$ 2.057.100,36', '859,00%', '1.699,00%', '840,00%'],
+    ['2024', 'R$ 321.815.921,50', 'R$ 300.529.399,16', 'R$ 297.807.809,97', 'R$ 2.721.589,19', '1.030,00%', '2.398,00%', '1.367,00%'],
+    ['2025', 'R$ 337.737.972,29', 'R$ 314.477.700,81', 'R$ 293.107.717,84', 'R$ 21.369.982,97', '863,00%', '2.116,00%', '1.253,00%'],
+  ],
+}
+
+const CIAP_INDICE = {
+  titulo: 'Índice - Por ano',
+  colunas: ['Período', 'Índice CIAP - CLIENTE', 'Índice CIAP - LARATAX', 'Diferença Índice'],
+  linhas: [
+    ['2021', '1.151,00%', '1.200,00%', 'R$ 1.152,02'],
+    ['2022', '1.173,00%', '1.199,00%', 'R$ 649,89'],
+    ['2023', '859,00%', '1.699,00%', 'R$ 2.530,46'],
+    ['2024', '1.030,00%', '2.398,00%', 'R$ 2.375,35'],
+    ['2025', '863,00%', '2.116,00%', 'R$ 1.417,57'],
+  ],
+  total: ['', '5.076,00%', '8.612,00%', 'R$ 8.125,29'],
+}
+
+const CIAP_BLOCO_G = {
+  titulo: 'CIAP - BLOCO G (EFD ICMS/IPI)',
+  colunas: ['Período', 'ICMS (G125)', 'ICMS (G140)'],
+  linhas: [
+    ['2021', 'R$ 25.867,18', 'R$ 13.050,35'],
+    ['2022', 'R$ 31.693,21', 'R$ 114.002,36'],
+    ['2023', 'R$ 52.279,36', 'R$ 29.443,35'],
+    ['2024', 'R$ 49.000,91', 'R$ 59.468,57'],
+    ['2025', 'R$ 10.918,44', 'R$ 521,79'],
+  ],
+  total: ['', 'R$ 169.759,10', 'R$ 216.486,42'],
+}
+
+const CIAP_MEMORIA = {
+  titulo: 'Memória de cálculo',
+  colunas: ['Período', 'Diferença índice', 'Parcela G110', 'Saídas EFD-F', 'Saídas não tributadas', 'Saídas tributadas', 'Total saídas efetivas EFD-F', 'Gera crédito'],
+  linhas: [
+    ['01/12/2021', '3,00%', 'R$ 2.300,88', 'R$ 10.883.374,98', 'R$ 3.701,08', 'R$ 9.577.544,98', 'R$ 9.581.246,06', ''],
+    ['01/08/2021', '3,18%', 'R$ 2.293,73', 'R$ 18.581.461,70', 'R$ 0,00', 'R$ 16.487.289,33', 'R$ 16.487.289,33', ''],
+    ['01/07/2022', '1,48%', 'R$ 2.158,86', 'R$ 13.995.953,19', 'R$ 0,00', 'R$ 12.345.350,95', 'R$ 12.345.350,95', ''],
+    ['01/06/2023', '4,59%', 'R$ 6.574,91', 'R$ 14.970.230,74', 'R$ 94.484,50', 'R$ 13.322.641,17', 'R$ 13.417.125,67', ''],
+    ['01/10/2024', '13,33%', 'R$ 900,00', 'R$ 19.655.521,46', 'R$ 267.005,66', 'R$ 16.982.983,84', 'R$ 17.249.989,50', ''],
+    ['01/03/2023', '3,70%', 'R$ 4.367,94', 'R$ 16.692.632,69', 'R$ 272.927,62', 'R$ 14.618.109,73', 'R$ 14.891.037,35', ''],
+    ['01/02/2023', '100,00%', '', 'R$ 12.875.076,21', 'R$ 1.539,61', 'R$ 12.334.132,58', 'R$ 12.335.672,19', ''],
+    ['01/08/2024', '2,02%', 'R$ 5.796,42', 'R$ 20.885.383,96', 'R$ 35.100,00', 'R$ 18.331.535,38', 'R$ 18.366.635,38', ''],
+    ['01/06/2024', '7,02%', 'R$ 6.110,22', 'R$ 18.604.942,37', 'R$ 140.169,63', 'R$ 16.311.674,68', 'R$ 16.451.844,31', ''],
+    ['01/11/2021', '3,69%', 'R$ 2.280,50', 'R$ 12.712.264,95', 'R$ 1.550,00', 'R$ 11.335.987,50', 'R$ 11.337.537,50', ''],
+  ],
+  paginas: 5,
+}
+
+const OCI_PERIODO = {
+  titulo: 'Período',
+  colunas: ['Período', 'Base sem Crédito', 'Possível Oportunidade'],
+  linhas: [
+    ['2021', 'R$ 1.357.090,28', 'R$ 198.249,55'],
+    ['2022', 'R$ 1.764.420,64', 'R$ 284.114,58'],
+    ['2023', 'R$ 14.849.679,80', 'R$ 1.940.163,32'],
+    ['2024', 'R$ 57.553.775,68', 'R$ 3.495.975,08'],
+    ['2025', 'R$ 233.494,62', 'R$ 18.302,95'],
+  ],
+  total: ['', 'R$ 75.758.461,02', 'R$ 5.936.805,48'],
+}
+
+const OCI_CFOP = {
+  titulo: 'CFOP',
+  colunas: ['CFOP completo'],
+  linhas: [
+    ['1949 - Outra entrada de mercadoria ou prestação de serviço não especificada'],
+    ['2949 - Outra entrada de mercadoria ou prestação de serviço não especificada'],
+    ['2910 - Entrada de bonificação, doação ou brinde'],
+    ['1910 - Entrada de bonificação, doação ou brinde'],
+    ['2911 - Entrada de amostra grátis'],
+  ],
+  total: [''],
+}
+
+const OCI_CST = {
+  titulo: 'CST',
+  colunas: ['CST ICMS', 'Base sem Crédito', 'Possível Oportunidade'],
+  linhas: [
+    ['00', 'R$ 75.477.042,73', 'R$ 5.903.033,60'],
+    ['51', 'R$ 281.418,29', 'R$ 33.771,88'],
+  ],
+  total: ['', 'R$ 75.758.461,02', 'R$ 5.936.805,48'],
+}
+
+const OCI_CONTA = {
+  titulo: 'Conta Contábil',
+  colunas: ['Conta contábil', 'Base sem Crédito', 'Possível Oportunidade'],
+  linhas: [
+    ['', 'R$ 47.143.763,72', 'R$ 2.198.345,22'],
+    ['Não informado', 'R$ 28.558.212,10', 'R$ 3.731.682,04'],
+    ['123', 'R$ 56.070,00', 'R$ 6.728,40'],
+    ['11301010004', 'R$ 415,20', 'R$ 49,82'],
+  ],
+  total: ['', 'R$ 75.758.461,02', 'R$ 5.936.805,48'],
+}
+
+const OCI_ITENS = {
+  titulo: 'Itens',
+  colunas: ['Descrição item'],
+  linhas: [
+    ['N/A'],
+    ['BOBINA DE ACO LAMINADO PLANO, NÃO LIGADO, GALVANIZADO'],
+    ['CHAPA LAMINADA PLANA, DE AÇO CARBONO NÃO LIGADO'],
+    ['PRODUTOS LAMINADOS PLANOS, DE FERRO OU AÇO NÃO LIGADO'],
+    ['PRODUTOS LAMINADOS PLANOS, DE FERRO OU AÇO NÃO LIGADO, REVESTIDO'],
+    ['BOBINA DE AÇO GALVALUME 0,38MM DE ESPESSURA X 1.200MM'],
+  ],
+  total: [''],
+  paginas: 5,
+}
+
+const OCI_FORNECEDORES = {
+  titulo: 'Fornecedores',
+  colunas: ['CNPJ CPF participante', 'Nome participante'],
+  linhas: EMPRESAS.slice(43, 49).map((e) => [e.cnpj, e.empresa]),
+  total: ['', ''],
+  paginas: 5,
+}
+
+const OCI_DOCS: Array<[string, string, string, string]> = [
+  ['103299', '41231203833260000', '05/12/2023', '2023-12-06'],
+  ['99432', '41230903833260000', '01/09/2023', '2023-09-04'],
+  ['106260', '41240203833260000', '29/02/2024', '2024-03-01'],
+  ['89386', '41221203833260000', '09/12/2022', '2022-12-12'],
+  ['101358', '41231003833260000', '20/10/2023', '2023-10-23'],
+  ['76966', '41211103833260000', '30/11/2021', '2021-11-30'],
+  ['99018', '41230803833260000', '23/08/2023', '2023-08-24'],
+  ['89886', '41221203833260000', '22/12/2022', '2022-12-23'],
+  ['91372', '41230203833260000', '14/02/2023', '2023-02-15'],
+  ['80378', '41220303833260000', '29/03/2022', '2022-03-30'],
+]
+
+const OCI_MEMORIA = {
+  titulo: 'Memória de cálculo',
+  colunas: ['CNPJ', 'Nome da empresa', 'Tipo operação', 'Indicador emitente', 'Número documento', 'Situação', 'Chave NF-e', 'Data documento', 'Data entrada'],
+  linhas: OCI_DOCS.map(([doc, chave, dataDoc, dataEnt]) => [
+    EMPRESAS[0].cnpj, EMPRESAS[0].empresa, '0 - Entrada', '0 - Emissão própria', doc, '00', chave, dataDoc, dataEnt,
+  ]),
+  paginas: 5,
+}
+
+type PainelCredito = {
+  titulo: string
+  kpis: Array<{ rotulo: string; valor: string; icone: IconDef }>
+  semClassificacao: string
+  grupos: DadosTabela[][]
+  memoria: DadosTabela
+}
+
+function PainelCreditoIcms(d: PainelCredito) {
+  return (
+    <div mix={css({ display: 'grid', gap: '16px' })}>
+      <h4 mix={css({ margin: 0, fontSize: '18px', fontWeight: 600, color: A.text })}>{d.titulo}</h4>
+      <div mix={gradeTripla}>
+        {d.kpis.map((k) => KpiDiag(k.rotulo, k.valor, undefined, false, '', k.icone))}
+      </div>
+      <div mix={gradeQuadrupla}>
+        {CardStatus('Verde', 'R$ 0,00', ICONE.checkCirculo, A.green, A.greenBg)}
+        {CardStatus('Amarelo', 'R$ 0,00', ICONE.alertaTriangulo, A.amarelo, '#fefce8')}
+        {CardStatus('Vermelho', 'R$ 0,00', ICONE.alertaBanner, A.red, A.redBg)}
+        {CardStatus('Sem classificação', d.semClassificacao, ICONE.ajuda, A.text, '#eff6ff')}
+      </div>
+      {d.grupos.map((grupo) => (
+        <div mix={css({ display: 'grid', gridTemplateColumns: `repeat(${grupo.length}, 1fr)`, gap: '16px' })}>
+          {grupo.map((t) => TabelaDiag(t, true))}
+        </div>
+      ))}
+      {TabelaDiag(d.memoria, true)}
+    </div>
+  )
+}
+
+const kpisCredito = (base: string, oportunidade: string): PainelCredito['kpis'] => [
+  { rotulo: 'Base de Cálculo sem Crédito de ICMS', valor: base, icone: ICONE.sacola },
+  { rotulo: 'Possível Oportunidade', valor: oportunidade, icone: ICONE.dinheiro },
+  { rotulo: 'Oportunidade Refinada', valor: 'R$ 0,00', icone: ICONE.dinheiro },
+]
+
+const INSUMOS_REVENDA: PainelCredito = {
+  titulo: 'Insumos e Revenda',
+  kpis: kpisCredito('R$ 5.867.115,76', 'R$ 655.233,49'),
+  semClassificacao: 'R$ 5.867.115,76',
+  grupos: [[IR_PERIODO, IR_CFOP, IR_CST], [IR_CONTA, IR_ITENS, IR_FORNECEDORES]],
+  memoria: IR_MEMORIA,
+}
+
+const USO_CONSUMO: PainelCredito = {
+  titulo: 'Uso/Consumo e Combustíveis',
+  kpis: kpisCredito('R$ 1.284.902,38', 'R$ 148.371,64'),
+  semClassificacao: 'R$ 1.284.902,38',
+  grupos: [[UC_PERIODO, UC_CFOP, UC_CST], [UC_CONTA, UC_ITENS, UC_FORNECEDORES]],
+  memoria: UC_MEMORIA,
+}
+
+const FRETES: PainelCredito = {
+  titulo: 'Fretes',
+  kpis: [
+    { rotulo: 'Base sem Crédito', valor: 'R$ 1.880.462,84', icone: ICONE.dinheiro },
+    { rotulo: 'Possível Oportunidade', valor: 'R$ 51.211,37', icone: ICONE.dinheiro },
+    { rotulo: 'Oportunidade Refinada', valor: '—', icone: ICONE.dinheiro },
+  ],
+  semClassificacao: 'R$ 0,00',
+  grupos: [[FR_PERIODO, FR_CFOP, FR_CST], [FR_CONTA, FR_ITENS, FR_FORNECEDORES]],
+  memoria: FR_MEMORIA,
+}
+
+const CIAP: PainelCredito = {
+  titulo: 'CIAP',
+  kpis: [
+    { rotulo: 'Índice Cliente', valor: '—', icone: ICONE.pessoas },
+    { rotulo: 'Índice LaraTAX', valor: '—', icone: ICONE.grafico },
+    { rotulo: 'Possível Oportunidade', valor: '—', icone: ICONE.dinheiro },
+  ],
+  semClassificacao: 'R$ 0,00',
+  grupos: [[CIAP_INFO], [CIAP_INDICE, CIAP_BLOCO_G]],
+  memoria: CIAP_MEMORIA,
+}
+
+const CREDITOS_INDEVIDOS: PainelCredito = {
+  titulo: 'Operações com Créditos Indevidos',
+  kpis: [
+    { rotulo: 'Base com Crédito Indevido', valor: '—', icone: ICONE.banco },
+    { rotulo: 'Possível Contingência', valor: '—', icone: ICONE.dinheiro },
+    { rotulo: 'Contingência Refinada', valor: '—', icone: ICONE.checklist },
+  ],
+  semClassificacao: 'R$ 75.758.461,02',
+  grupos: [[OCI_PERIODO, OCI_CFOP, OCI_CST], [OCI_CONTA, OCI_ITENS, OCI_FORNECEDORES]],
+  memoria: OCI_MEMORIA,
+}
+
+const ENERGIA_ELETRICA: PainelCredito = {
+  titulo: 'Energia Elétrica',
+  kpis: [
+    { rotulo: 'Operação', valor: 'R$ 289.506,25', icone: ICONE.controles },
+    { rotulo: 'Base de Cálculo ICMS', valor: 'R$ 199.008,12', icone: ICONE.sacola },
+    { rotulo: 'Possível Oportunidade', valor: '—', icone: ICONE.dinheiro },
+  ],
+  semClassificacao: 'R$ 1.388.554.700,70',
+  grupos: [[EE_PERIODO, EE_CONTA, EE_FORNECEDORES]],
+  memoria: EE_MEMORIA,
+}
+
+const abaApuracao = css({
+  display: 'inline-flex', alignItems: 'center', gap: '7px',
+  padding: '10px 2px', border: 'none', background: 'none', font: 'inherit',
+  fontSize: '14px', fontWeight: 600, color: A.slate,
+  borderBottom: '2px solid transparent', cursor: 'pointer',
+  '&[data-on="true"]': { color: A.cyan, borderBottomColor: A.cyan },
+})
+
+type DadosTabela = { titulo: string; colunas: string[]; linhas: string[][]; total?: string[]; paginas?: number }
+
+const ABAS_APURACAO_ICMS: Array<{ id: string; rotulo: string; icone: IconDef; tabela: DadosTabela }> = [
+  { id: 'proprio', rotulo: 'ICMS Próprio', icone: ICONE.receiptLong, tabela: ICMS_APURACAO_PROPRIO },
+  { id: 'difal', rotulo: 'DIFAL', icone: ICONE.layers, tabela: ICMS_APURACAO_DIFAL },
+  { id: 'fcp', rotulo: 'Fundo de Combate a Pobreza (FCP)', icone: ICONE.monitorHeart, tabela: ICMS_APURACAO_FCP },
+  { id: 'sub', rotulo: 'Sub - Apuração', icone: ICONE.menuMemoria, tabela: ICMS_APURACAO_SUB },
+]
+
+function FluxoApuracaoIcms() {
+  return (
+    <div mix={css({ display: 'grid', gap: '16px' })}>
+      <h4 mix={css({ margin: 0, fontSize: '18px', fontWeight: 600, color: A.text })}>Apuração</h4>
+      <div data-sub-scope="" mix={css({ display: 'grid', gap: '16px' })}>
+        <div mix={css({ display: 'flex', alignItems: 'center', gap: '26px' })}>
+          {ABAS_APURACAO_ICMS.map((a, i) => (
+            <button type="button" data-sub-nav="" data-sub-target={a.id} data-on={i === 0 ? 'true' : 'false'} mix={abaApuracao}>
+              {Icone(a.icone, 14)}
+              {a.rotulo}
+            </button>
+          ))}
+        </div>
+        {ABAS_APURACAO_ICMS.map((a, i) => (
+          <div data-sub-screen={a.id} data-on={i === 0 ? 'true' : 'false'}>{TabelaDiag(a.tabela)}</div>
+        ))}
+      </div>
+      <div mix={gradeDupla}>
+        {TabelaDiag(ICMS_CFOP_ENTRADAS, true)}
+        {TabelaDiag(ICMS_CFOP_SAIDAS, true)}
+      </div>
+      <div mix={gradeDupla}>
+        {TabelaDiag(ICMS_CST_ENTRADAS, true)}
+        {TabelaDiag(ICMS_CST_SAIDAS, true)}
+      </div>
+      <div mix={gradeDupla}>
+        {TabelaDiag(ICMS_ALIQ_ENTRADAS, true)}
+        {TabelaDiag(ICMS_ALIQ_SAIDAS, true)}
       </div>
     </div>
   )
