@@ -159,7 +159,7 @@ export function Pains() {
       >
         <div mix={container}>
           <div data-reveal="" mix={css({ textAlign: 'center', marginBottom: '56px' })}>
-            <p mix={[eyebrow, css({ justifyContent: 'center', '&::before': { display: 'none' } })]}>
+            <p mix={[eyebrow, css({ justifyContent: 'center' })]}>
               02 / O problema
             </p>
             <h2 mix={[heading2, css({ margin: '0 auto 16px' })]}>

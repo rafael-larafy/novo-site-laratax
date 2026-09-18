@@ -1601,6 +1601,7 @@ export function PlataformaApp() {
         [data-menu-aba] [data-menu-lista] { display: none; }
         [data-menu-aba]:hover [data-menu-lista],
         [data-menu-aba]:focus-within [data-menu-lista] { display: block; animation: app-fade-in 0.18s ease; }
+        [data-menu-aba]:has([data-sub-nav][data-on='true']) [data-gatilho-aba] { color: #00c4e5; }
         [data-rail] [data-rail-cheio] { display: none; }
         [data-rail]:hover [data-rail-cheio] { display: block; animation: rail-in 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
         [data-rail] ~ * { transition: filter 220ms ease; }
@@ -3883,17 +3884,22 @@ function PaginacaoDiag(paginas:number){
         {[1,2,3,4,5].slice(0,paginas).map((n)=>(
           <span mix={[pagina(n===1), num]}>{String(n)}</span>
         ))}
-        <span></span>
-        <span></span>
+        <span mix={seta}>›</span>
+        <span mix={seta}>»</span>
+        <span mix={[inputFake,css({marginLeft:'12px',padding:'5px 10px',gap:'8px',color:A.slate})]}>
+        <span mix={num}>20</span>
+        {Icone(ICONE.chevronBaixo,10)}
+        </span>
       </div>
     )
   }
 
-function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[][]; total?: string[] }, comCaixa = false) {
+function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[][]; total?: string[];paginas?: number }, comCaixa = false) {
   const th = css({ padding: '10px 16px', fontSize: '13.5px', fontWeight: 700, color: A.text, textAlign: 'left', whiteSpace: 'nowrap', borderBottom: `1px solid ${A.line}` })
   const td = css({ padding: '10px 16px', fontSize: '13.5px', color: A.slate, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px', borderBottom: `1px solid ${A.cinza}` })
   const tdTotal = css({ padding: '11px 16px', fontSize: '13.5px', fontWeight: 700, color: '#ffffff', background: A.navy, whiteSpace: 'nowrap' })
   const botaoIcone = css({ display: 'grid', placeItems: 'center', width: '30px', height: '30px', borderRadius: '6px', color: A.muted, cursor: 'pointer', '&:hover': { background: A.bg } })
+  const destacaUltima = dados.colunas[dados.colunas.length - 1] === 'Total'
   return (
     <div mix={[painel, css({ display: 'flex', flexDirection: 'column' })]}>
       <div mix={css({ display: 'flex', alignItems: 'center', padding: '14px 16px' })}>
@@ -3910,7 +3916,7 @@ function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[]
               {dados.colunas.map((c, i) => (
                 <th mix={th}>
                   {c}
-                  {i === 1 && c !== 'nome_empresa' ? <span mix={css({ marginLeft: '6px', display: 'inline-flex', color: A.muted })}>{Icone(ICONE.setaBaixo, 10)}</span> : null}
+                  {i === 1 && !comCaixa ? <span mix={css({ marginLeft: '6px', display: 'inline-flex', color: A.muted })}>{Icone(ICONE.setaBaixo, 10)}</span> : null}
                 </th>
               ))}
             </tr>
@@ -3920,7 +3926,7 @@ function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[]
               <tr>
                 {comCaixa ? <td mix={td}>{Caixa(false)}</td> : null}
                 {linha.map((valor, i) => (
-                  <td mix={[td, i === 0 && !comCaixa ? css({ color: A.text }) : num, i === linha.length - 1 ? css({ fontWeight: 700, color: A.text }) : css({})]}>{valor}</td>
+                  <td mix={[td, i === 0 && !comCaixa ? css({ color: A.text }) : num, destacaUltima && i === linha.length - 1 ? css({ fontWeight: 700, color: A.text }) : css({})]}>{valor}</td>
                 ))}
               </tr>
             ))}
@@ -3935,6 +3941,7 @@ function TabelaDiag(dados: { titulo: string; colunas: string[]; linhas: string[]
           </tbody>
         </table>
       </div>
+      {dados.paginas ? PaginacaoDiag(dados.paginas): null}
     </div>
   )
 }
@@ -3953,26 +3960,47 @@ const menuAbaLista = css({
 })
 
 const menuAbaItem = css({
-  display: 'block',
+  display: 'block', width:'100%', textAlign:'left',
   padding: '10px 14px',
   borderRadius: '6px',
+  border:'none', background:'none', font:'inherit',
   fontSize: '14px',
   fontWeight: 500,
   color: A.slate,
   whiteSpace: 'nowrap',
   cursor: 'pointer',
-  '&:hover': { background: A.cyanSoft, color: A.cyan },
+  '&:hover': { background: A.bg },
+  '&[data-on="true"]' : {background: A.cyanSoft,color:A.cyan}
 })
 
-const menuAbaItemAtivo = css({ background: A.cyanSoft, color: A.cyan })
+type OpcaoAba = {rotulo:string; alvo?:string}
 
-const FLUXO_OPERACIONAL = ['Apuração', 'Abertura dos Ajustes', 'Saldo a Transportar/Transf'] as const
+const FLUXO_OPERACIONAL: OpcaoAba[] = [
+  { rotulo: 'Apuração', alvo: 'apuracao' },
+  { rotulo: 'Abertura dos Ajustes' },
+  { rotulo: 'Saldo a Transportar/Transf' },
+]
 
-function AbaDiag(rotulo: string, ativa: boolean, comSeta: boolean, opcoes?: readonly string[]) {
-  const gatilho = (
-    <span mix={css({ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '14px', fontWeight: 600, color: ativa ? A.cyan : A.slate, cursor: 'pointer' })}>
+const FLUXO_OPERACIONAL_ICMS: OpcaoAba[] = [...FLUXO_OPERACIONAL, { rotulo: 'ICMS Devido' }]
+
+const gatilhoAba = css ({
+  display:'inline-flex',alignItems:'center',gap:'6px', padding:0,
+  border:'none', background:'none',font:'inherit',fontSize:'14px',fontWeight:600,
+  color:A.slate, cursor:'pointer',
+  '&[data-on="true"]' : {color:A.cyan}
+})
+
+function AbaDiag(rotulo: string, ativa: boolean, comSeta: boolean, opcoes?: OpcaoAba[], alvo?: string) {
+  const seta = comSeta? Icone(ICONE.chevronBaixo,10) :  null
+  const gatilho = alvo? (
+    <button type="button" data-gatilho-aba="" data-sub-nav="" data-sub-target={alvo} data-on={ativa ? 'true' : 'false'} mix={gatilhoAba}>
       {rotulo}
-      {comSeta ? Icone(ICONE.chevronBaixo, 10) : null}
+      {seta}
+    </button>
+  ) : (
+    <span data-gatilho-aba="" data-on={ativa ? 'true' : 'false'} mix={gatilhoAba}>
+      {rotulo}
+      {seta}
     </span>
   )
 
@@ -3982,9 +4010,13 @@ function AbaDiag(rotulo: string, ativa: boolean, comSeta: boolean, opcoes?: read
     <span data-menu-aba="" tabindex={0} mix={css({ position: 'relative', display: 'inline-flex' })}>
       {gatilho}
       <span data-menu-lista="" mix={menuAbaLista}>
-        {opcoes.map((opcao, i) => (
-          <span mix={i === 0 ? [menuAbaItem, menuAbaItemAtivo] : [menuAbaItem]}>{opcao}</span>
-        ))}
+        {opcoes.map((o) => 
+        o.alvo ? (
+          <button type='button' data-sub-nav="" data-sub-target={o.alvo} data-on="false" mix={menuAbaItem}> {o.rotulo}</button>
+        ) : (
+          <span mix={menuAbaItem}>{o.rotulo}</span>
+        )
+        )}
       </span>
     </span>
   )
@@ -4053,7 +4085,7 @@ export function TelaDiagnosticoIcms() {
 
           <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '12px 16px' })]}>
             {AbaDiag('Resumo', true, false)}
-            {AbaDiag('Fluxo Operacional', false, true, FLUXO_OPERACIONAL)}
+            {AbaDiag('Fluxo Operacional', false, true, FLUXO_OPERACIONAL_ICMS)}
             {AbaDiag('Entradas', false, true)}
             {AbaDiag('Saídas', false, true)}
             <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
@@ -4110,30 +4142,144 @@ export function TelaDiagnosticoIpi() {
             </div>
           </div>
 
-          <div mix={[painel, css({ position: 'relative', display: 'flex', alignItems: 'center', gap: '20px', padding: '12px 16px' })]}>
-            {AbaDiag('Resumo', true, false)}
-            {AbaDiag('Fluxo Operacional', false, true, FLUXO_OPERACIONAL)}
-            {AbaDiag('Entradas', false, true)}
-            {AbaDiag('Saídas', false, true)}
-            <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
-              <span mix={btnContorno}>{Icone(ICONE.download, 14)} Exportar</span>
-              <span mix={btnPrimario}>{Icone(ICONE.checklist, 14)} Gerar retificação</span>
-            </span>
-          </div>
+          <div data-sub-scope="" mix={css({ position: 'relative', display: 'grid', gap: '16px' })}>
+            <div mix={[painel, css({ display: 'flex', alignItems: 'center', gap: '20px', padding: '12px 16px' })]}>
+              {AbaDiag('Resumo', true, false, undefined, 'resumo')}
+              {AbaDiag('Fluxo Operacional', false, true, FLUXO_OPERACIONAL)}
+              {AbaDiag('Entradas', false, true)}
+              {AbaDiag('Saídas', false, true)}
+              <span mix={css({ marginLeft: 'auto', display: 'flex', gap: '8px' })}>
+                <span mix={btnContorno}>{Icone(ICONE.download, 14)} Exportar</span>
+                <span mix={btnPrimario}>{Icone(ICONE.checklist, 14)} Gerar retificação</span>
+              </span>
+            </div>
 
-          {BannerAnalise()}
+            <div data-sub-screen="resumo" data-on="true">
+              <div mix={css({ display: 'grid', gap: '16px' })}>
+                {BannerAnalise()}
+                <div mix={css({ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' })}>
+                  {KpiDiag('Possível Oportunidades (Prévia)', 'R$ 0,00', { rotulo: 'Possível Oportunidades (Refinada)', valor: 'R$ 0,00', traco: true })}
+                  {KpiDiag('Oportunidades a Explorar (Prévia)', DIAGS[0].ipiExp, { rotulo: 'Oportunidades a Explorar (Refinada)', valor: 'R$ 0,00', bom: true, seta: 'baixo' }, false, 'ipiExp')}
+                  {KpiDiag('Pagamentos Efetuados', 'R$ 0,00', { rotulo: 'Compensações Efetuadas (DCTF)', valor: DIAGS[0].ipiComp, bom: true, campo: 'ipiComp' })}
+                </div>
+                <div mix={gradeDupla}>
+                  {TabelaDiag(IPI_OPORTUNIDADES)}
+                  {TabelaDiag(IPI_EXPLORAR)}
+                </div>
+              </div>
+            </div>
 
-          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' })}>
-            {KpiDiag('Possível Oportunidades (Prévia)', 'R$ 0,00', { rotulo: 'Possível Oportunidades (Refinada)', valor: 'R$ 0,00', traco: true })}
-            {KpiDiag('Oportunidades a Explorar (Prévia)', DIAGS[0].ipiExp, { rotulo: 'Oportunidades a Explorar (Refinada)', valor: 'R$ 0,00', bom: true, seta: 'baixo' }, false, 'ipiExp')}
-            {KpiDiag('Pagamentos Efetuados', 'R$ 0,00', { rotulo: 'Compensações Efetuadas (DCTF)', valor: DIAGS[0].ipiComp, bom: true, campo: 'ipiComp' })}
-          </div>
-
-          <div mix={css({ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'stretch' })}>
-            {TabelaDiag(IPI_OPORTUNIDADES)}
-            {TabelaDiag(IPI_EXPLORAR)}
+            <div data-sub-screen="apuracao" data-on="false">{FluxoApuracao()}</div>
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+const IPI_APURACAO = {
+  titulo: 'Apuração IPI',
+  colunas: ['Label','2021','2022','2023', 'Total'],
+  linhas:[
+    ['Saídas', 'R$ 177.971.291,55', 'R$ 178.260.738,36', 'R$ 186.859.104,22', 'R$ 1.202.641.612,50'],
+    ['IPI saídas', 'R$ 5.344.220,49', 'R$ 3.812.452,12', 'R$ 2.736.712,08', 'R$ 19.046.669,53'],
+    ['Ajuste débito IPI', 'R$ 0,00', 'R$ 1.689.789,44', 'R$ 3.836.311,45', 'R$ 13.816.527,05'],
+    ['Total débitos IPI', 'R$ 5.344.220,49', 'R$ 5.502.241,56', 'R$ 6.573.023,53', 'R$ 32.863.196,58'],
+    ['Entradas', 'R$ 179.027.145,98', 'R$ 200.407.943,99', 'R$ 240.987.416,33', 'R$ 1.388.554.700,70'],
+    ['IPI entradas', 'R$ 7.520.309,30', 'R$ 5.280.491,63', 'R$ 4.924.371,52', 'R$ 31.643.488,36'],
+    ['Ajuste crédito IPI', 'R$ 0,00', 'R$ 69.776,50', 'R$ 339,69', 'R$ 203.951,11'],
+    ['Total créditos IPI', 'R$ 7.520.309,30', 'R$ 5.350.268,13', 'R$ 4.924.711,21', 'R$ 31.847.439,47'],
+  ],
+  paginas:2,
+}
+
+const IPI_PER = {
+  titulo: 'Relação PER - Ressarcimento IPI',
+  colunas: ['Período','Número','Tipo'],
+  linhas: [
+    ['20/12/2022', '119078557120122213012099', 'Ressarcimento'],
+    ['09/02/2023', '223405705309022313010974', 'Ressarcimento'],
+    ['17/02/2023', '078638623917022313017025', 'Ressarcimento'],
+    ['23/02/2023', '271020083223022313010034', 'Ressarcimento'],
+    ['20/03/2023', '223796680720032313017680', 'Ressarcimento'],
+    ['28/04/2023', '412194916328042313019645', 'Ressarcimento'],
+    ['22/11/2024', '302040960622112417017757', 'Ressarcimento'],
+  ],
+  paginas: 5,
+}
+
+const IPI_CFOP_SAIDAS = {
+  titulo:'CFOP/CST - Saídas',
+  colunas:['CFOP completo'],
+  linhas:[
+    ['5101 - Venda de prod do estabelecimento'],
+    ['6101 - Venda de prod do estabelecimento'],
+    ['6152 - Transferência de mercadoria adquirida ou recebida de terc'],
+    ['5901 - Remessa para industrialização por encomenda'],
+    ['6107 - Venda de prod do estabelecimento, destinada a não contribuinte'],
+    ['5102 - Venda de mercadoria adquirida ou recebida de terc'],
+    ['5922 - Lançamento efetuado a título de simples faturamento decorrente de venda para entrega futura'],
+  ],
+  total:[''],
+  paginas:3,
+}
+
+const IPI_CFOP_ENTRADAS = {
+  titulo:'CFOP/CST - Entradas',
+  colunas:['CFOP completo'],
+  linhas:[
+    ['2101 - Compra para industrialização ou prod rural'],
+    ['2152 - Transferência para comercialização'],
+    ['1101 - Compra para industrialização ou prod rural'],
+    ['1949 - Outra entrada de mercadoria ou prestação de serviço não especificada'],
+    ['1601 - Recebimento, por transferência, de crédito de ICMS'],
+    ['2122 - Compra para industrialização em que a mercadoria foi remetida pelo fornecedor ao industrializador'],
+    ['1925 - Retorno de mercadoria remetida para industrialização por conta e ordem do adquirente'],
+  ],
+  total:[''],
+  paginas:4,
+}
+
+const linhasMemoria = (periodos:string[], tipo:string) =>
+  periodos.map((p,i) => [EMPRESAS [i % 2].cnpj, EMPRESAS[i % 2].empresa,p,tipo])
+
+const IPI_MEMORIAS_SAIDAS = {
+  titulo:'Memórias de Cálculo - Saídas',
+  colunas:['CNPJ','Nome empresa','Período','Tipo de operação'],
+  linhas:linhasMemoria (
+    ['01/05/2025', '01/08/2024', '01/06/2024', '01/06/2025', '01/09/2025', '01/04/2022', '01/05/2024', '01/10/2023'],
+    '1 - Saída'
+  ),
+  paginas: 5,
+}
+
+const IPI_MEMORIAS_ENTRADAS = {
+  titulo:'Memórias de Cálculo - Entradas',
+  colunas:['CNPJ','Nome empresa','Período','Tipo de operação'],
+  linhas: linhasMemoria (
+    ['01/08/2023', '01/12/2022', '01/08/2024', '01/03/2023', '01/03/2023', '01/03/2023', '01/05/2023', '01/05/2023'],
+    '0 - Entrada',
+  ),
+  paginas:5,
+}
+
+const gradeDupla = css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'stretch' })
+
+function FluxoApuracao () {
+  return (
+    <div mix={css({display:'grid',gap:'16px'})}>
+      <h4 mix={css({margin:0,fontSize:'18px',fontWeight:600,color:A.text})}>Apuração</h4>
+      <div mix={gradeDupla}>
+        {TabelaDiag(IPI_APURACAO)}
+        {TabelaDiag(IPI_PER,true)}
+      </div>
+      <div mix={gradeDupla}>
+        {TabelaDiag(IPI_CFOP_SAIDAS,true)}
+        {TabelaDiag(IPI_CFOP_ENTRADAS,true)}
+      </div>
+      <div mix={gradeDupla}>
+        {TabelaDiag(IPI_MEMORIAS_SAIDAS,true)}
+        {TabelaDiag(IPI_MEMORIAS_ENTRADAS,true)}
       </div>
     </div>
   )

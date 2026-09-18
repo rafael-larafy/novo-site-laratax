@@ -84,14 +84,6 @@ export const eyebrow = css({
   color: 'var(--accent)',
   display: 'flex',
   alignItems: 'center',
-  gap: '12px',
-  '&::before': {
-    content: '""',
-    width: '24px',
-    height: '1px',
-    background: 'currentColor',
-    display: 'inline-block',
-  },
 })
 
 export const heading2 = css({
