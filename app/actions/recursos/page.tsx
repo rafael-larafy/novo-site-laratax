@@ -230,7 +230,7 @@ export function RecursosPage() {
         {SpriteIcones()}
         <section mix={[section, css({ paddingBottom: '48px', textAlign: 'center' })]}>
           <div mix={container}>
-            <p mix={[eyebrow, css({ justifyContent: 'center', '&::before': { display: 'none' } })]}>Recursos</p>
+            <p mix={[eyebrow, css({ justifyContent: 'center' })]}>Recursos</p>
             <h1
               data-reveal=""
               mix={css({

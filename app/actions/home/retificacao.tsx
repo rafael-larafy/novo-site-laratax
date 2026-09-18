@@ -73,7 +73,7 @@ export function Retificacao() {
         ]}
       >
         <div data-reveal-left="">
-          <p mix={eyebrow}>04 / Retificação automática</p>
+          <p mix={eyebrow}>04 / Retificação semi-automática</p>
           <h2 mix={heading2}>
             A retificação sai pronta da própria apuração
           </h2>
@@ -273,7 +273,7 @@ function FlowPanel() {
           font-family={FONT_MONO}
           font-size="12"
         >
-          automática
+           semi-automática
         </text>
       </svg>
       <p
